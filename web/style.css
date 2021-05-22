@@ -1,0 +1,139 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --font-family: "Nunito";
+  --start-color: #1488cc;
+  --end-color: #2b32b2;
+}
+
+body {
+  background: var(--end-color); /* fallback for old browsers */
+  background: -webkit-linear-gradient(
+    to left bottom,
+    var(--end-color),
+    var(--start-color)
+  ); /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(
+    to left bottom,
+    var(--end-color),
+    var(--start-color)
+  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+  font-family: var(--font-family);
+  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: calc(var(--vh, 1vh) * 100);
+  width: 100vw;
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+main {
+  display: flex;
+  justify-content: space-evenly;
+  flex-direction: column;
+}
+
+main header {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+main h1 {
+  text-align: center;
+  color: white;
+  font-size: 4vw;
+}
+
+#bottom-section {
+  flex-basis: 50%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.slider {
+  width: 30vw;
+  height: 5px;
+  overflow-x: hidden;
+  align-self: center;
+  position: relative;
+  margin-top: 10vh;
+}
+
+.line {
+  opacity: 0.24;
+  background: white;
+  width: 150%;
+  height: 5px;
+}
+
+.subline {
+  background: white;
+  width: 100%;
+  height: 5px;
+  position: absolute;
+  top: 0;
+}
+.inc {
+  animation: increase 2s infinite;
+}
+.dec {
+  animation: decrease 2s 0.5s infinite;
+}
+
+footer {
+  padding-bottom: 16px;
+}
+
+footer p {
+  color: white;
+  font-size: 2.5vw;
+  text-align: center;
+  padding: 0 16px;
+  opacity: 0.5;
+}
+
+footer p:first-child {
+  padding: 0 16px 4px 16px;
+}
+
+footer a {
+  text-decoration-color: white;
+  color: white;
+}
+
+@media (min-width: 768px) {
+  main h1 {
+    font-size: 3vw;
+  }
+
+  footer p {
+    font-size: 1vw;
+  }
+}
+
+@keyframes increase {
+  from {
+    transform: translateX(-5%) scaleX(0.05);
+  }
+  to {
+    transform: translateX(130%) scaleX(1);
+  }
+}
+@keyframes decrease {
+  from {
+    transform: translateX(-80%) scaleX(0.8);
+  }
+  to {
+    transform: translateX(110%) scaleX(0.1);
+  }
+}

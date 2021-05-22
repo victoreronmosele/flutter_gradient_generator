@@ -14,7 +14,10 @@
     <base href="/" />
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1"
+    />
     <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
     <meta name="description" content="A new Flutter project." />
 
@@ -25,62 +28,57 @@
       name="apple-mobile-web-app-title"
       content="Flutter Gradient Generator"
     />
-    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
     <link
       href="https://fonts.googleapis.com/css2?family=Nunito&amp;display=swap"
       rel="stylesheet"
     />
     <title>Flutter Gradient Generator</title>
     <link rel="manifest" href="manifest.json" />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-      }
-
-      body {
-        background: #1488cc; /* fallback for old browsers */
-        background: -webkit-linear-gradient(
-          to left bottom,
-          #2b32b2,
-          #1488cc
-        ); /* Chrome 10-25, Safari 5.1-6 */
-        background: linear-gradient(
-          to left bottom,
-          #2b32b2,
-          #1488cc
-        ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
-        font-family: "Nunito";
-      }
-
-      main {
-        height: 100vh;
-        width: 100vw;
-        margin: 0 auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }
-
-      h1 {
-        text-align: center;
-        color: white;
-        font-size: 4vw;
-      }
-
-      @media (min-width: 768px) {
-        h1 {
-          font-size: 3vw;
-        }
-      }
-    </style>
+    <script>
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    </script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <main>
-      <h1>Flutter Gradient Generator</h1>
+    <main id="splash-screen">
+      <header>
+        <h1>Flutter&trade; Gradient Generator</h1>
+      </header>
+
+      <div id="bottom-section">
+        <div class="slider">
+          <div class="line"></div>
+          <div class="subline inc"></div>
+          <div class="subline dec"></div>
+        </div>
+
+        <footer>
+          <p>
+            Flutter and the related logo are trademarks of Google LLC. We are
+            not endorsed by or affiliated with Google LLC.
+          </p>
+          <p>
+            <a
+              href="https://github.com/victoreronmosele/flutter_gradient_generator"
+              target="_blank"
+              rel="noopener"
+              >Built</a
+            >
+            by
+            <a
+              href="https://victoreronmosele.com"
+              target="_blank"
+              rel="noopener"
+              >Victor Eronmosele</a
+            >
+          </p>
+        </footer>
+      </div>
     </main>
     <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
