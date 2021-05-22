@@ -14,7 +14,10 @@
     <base href="/" />
 
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, minimum-scale=1"
+    />
     <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
     <meta name="description" content="A new Flutter project." />
 
@@ -25,17 +28,58 @@
       name="apple-mobile-web-app-title"
       content="Flutter Gradient Generator"
     />
-    <link rel="apple-touch-icon" href="icons/Icon-192.png" />
-
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="favicon.png" />
-  
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+    <link rel="manifest" href="/site.webmanifest">
+    <link
+      href="https://fonts.googleapis.com/css2?family=Nunito&amp;display=swap"
+      rel="stylesheet"
+    />
     <title>Flutter Gradient Generator</title>
     <link rel="manifest" href="manifest.json" />
-
+    <script>
+      let vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    </script>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-  
+    <main id="splash-screen">
+      <header>
+        <h1>Flutter&trade; Gradient Generator</h1>
+      </header>
+
+      <div id="bottom-section">
+        <div class="slider">
+          <div class="line"></div>
+          <div class="subline inc"></div>
+          <div class="subline dec"></div>
+        </div>
+
+        <footer>
+          <p>
+            Flutter and the related logo are trademarks of Google LLC. We are
+            not endorsed by or affiliated with Google LLC.
+          </p>
+          <p>
+            <a
+              href="https://github.com/victoreronmosele/flutter_gradient_generator"
+              target="_blank"
+              rel="noopener"
+              >Built</a
+            >
+            by
+            <a
+              href="https://victoreronmosele.com"
+              target="_blank"
+              rel="noopener"
+              >Victor Eronmosele</a
+            >
+          </p>
+        </footer>
+      </div>
+    </main>
     <!-- This script installs service_worker.js to provide PWA functionality to
        application. For more information, see:
        https://developers.google.com/web/fundamentals/primers/service-workers -->
