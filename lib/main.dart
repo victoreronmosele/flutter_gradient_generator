@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:dart_style/dart_style.dart';
+import 'package:syntax_highlighter/syntax_highlighter.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,49 +20,97 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: Icon(Icons.add),
+      body: Row(
+        children: [
+          Expanded(child: GeneratorScreen()),
+          Expanded(child: PreviewScreen()),
+        ],
       ),
     );
   }
 }
 
+class PreviewScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.blue,
+            Colors.red,
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GeneratorScreen extends StatelessWidget {
+  final String _exampleCode = '''class PreviewScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          begin: Alignment.topRight,
+          end: Alignment.bottomLeft,
+          colors: [
+            Colors.blue,
+            Colors.red,
+          ],
+        ),
+      ),
+    );
+  }
+}''';
+
+  const GeneratorScreen({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final SyntaxHighlighterStyle style =
+        Theme.of(context).brightness == Brightness.dark
+            ? SyntaxHighlighterStyle.darkThemeStyle()
+            : SyntaxHighlighterStyle.lightThemeStyle();
+
+    return Column(
+      children: [
+        RichText(
+          text: TextSpan(
+            style: const TextStyle(
+              fontFamily: 'monospace',
+            ),
+            children: <TextSpan>[
+              DartSyntaxHighlighter(style).format(
+                DartFormatter().format(_exampleCode),
+              ),
+              DartSyntaxHighlighter(style).format(Text(
+                "Cow",
+                style: TextStyle(
+                  color: Colors.green,
+                ),
+              ).toStringDeep()),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
