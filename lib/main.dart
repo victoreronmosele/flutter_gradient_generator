@@ -1,6 +1,6 @@
-import 'package:any_syntax_highlighter/any_syntax_highlighter.dart';
-import 'package:any_syntax_highlighter/themes/any_syntax_highlighter_theme_collection.dart';
+import 'package:dart_style/dart_style.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(MyApp());
@@ -67,13 +67,9 @@ class GeneratorScreen extends StatelessWidget {
 
   GeneratorScreen({Key? key, required this.colorList}) : super(key: key);
 
-  final _maximumLineNumber = 15;
-
   String get _colorsInIndividualLines => colorList.join(',\n ');
 
-  late String _exampleCode = 
-  
-  '''
+  late String _exampleCode = '''
   Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
@@ -88,15 +84,14 @@ class GeneratorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: AnySyntaxHighlighter(
-        _exampleCode,
-        padding: 0,
-        isSelectableText: true,
-        fontSize: 16,
-        theme: AnySyntaxHighlighterThemeCollection.defaultLightTheme,
-        maxLines: _maximumLineNumber,
-        textWidthBasis: TextWidthBasis.longestLine,
-      ),
-    );
+        child: TextButton(
+      child: Text('Get Gradient Code'),
+      onPressed: () {
+        Clipboard.setData(new ClipboardData(text: _exampleCode)).then((_) {
+          Scaffold.of(context).showSnackBar(
+              SnackBar(content: Text("Gradient code copied to clipboard")));
+        });
+      },
+    ));
   }
 }
