@@ -1,6 +1,6 @@
+import 'package:any_syntax_highlighter/any_syntax_highlighter.dart';
+import 'package:any_syntax_highlighter/themes/any_syntax_highlighter_theme_collection.dart';
 import 'package:flutter/material.dart';
-import 'package:dart_style/dart_style.dart';
-import 'package:syntax_highlighter/syntax_highlighter.dart';
 
 void main() {
   runApp(MyApp());
@@ -14,28 +14,30 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key? key, this.title}) : super(key: key);
-
-  final String? title;
+  MyHomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  final List<Color> colorList = [Colors.red, Colors.blue, Colors.green];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
-          Expanded(child: GeneratorScreen()),
-          Expanded(child: PreviewScreen()),
+          Expanded(child: GeneratorScreen(colorList: colorList)),
+          Expanded(child: PreviewScreen(colorList: colorList)),
         ],
       ),
     );
@@ -43,6 +45,9 @@ class _MyHomePageState extends State<MyHomePage> {
 }
 
 class PreviewScreen extends StatelessWidget {
+  final List<Color> colorList;
+
+  const PreviewScreen({Key? key, required this.colorList}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -50,10 +55,7 @@ class PreviewScreen extends StatelessWidget {
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            Colors.blue,
-            Colors.red,
-          ],
+          colors: colorList,
         ),
       ),
     );
@@ -61,56 +63,40 @@ class PreviewScreen extends StatelessWidget {
 }
 
 class GeneratorScreen extends StatelessWidget {
-  final String _exampleCode = '''class PreviewScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
+  final List<Color> colorList;
+
+  GeneratorScreen({Key? key, required this.colorList}) : super(key: key);
+
+  final _maximumLineNumber = 15;
+
+  String get _colorsInIndividualLines => colorList.join(',\n ');
+
+  late String _exampleCode = 
+  
+  '''
+  Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topRight,
           end: Alignment.bottomLeft,
-          colors: [
-            Colors.blue,
-            Colors.red,
-          ],
+          colors: [\n ${_colorsInIndividualLines}]
         ),
       ),
-    );
-  }
-}''';
-
-  const GeneratorScreen({
-    Key? key,
-  }) : super(key: key);
+  ),
+''';
 
   @override
   Widget build(BuildContext context) {
-    final SyntaxHighlighterStyle style =
-        Theme.of(context).brightness == Brightness.dark
-            ? SyntaxHighlighterStyle.darkThemeStyle()
-            : SyntaxHighlighterStyle.lightThemeStyle();
-
-    return Column(
-      children: [
-        RichText(
-          text: TextSpan(
-            style: const TextStyle(
-              fontFamily: 'monospace',
-            ),
-            children: <TextSpan>[
-              DartSyntaxHighlighter(style).format(
-                DartFormatter().format(_exampleCode),
-              ),
-              DartSyntaxHighlighter(style).format(Text(
-                "Cow",
-                style: TextStyle(
-                  color: Colors.green,
-                ),
-              ).toStringDeep()),
-            ],
-          ),
-        ),
-      ],
+    return Center(
+      child: AnySyntaxHighlighter(
+        _exampleCode,
+        padding: 0,
+        isSelectableText: true,
+        fontSize: 16,
+        theme: AnySyntaxHighlighterThemeCollection.defaultLightTheme,
+        maxLines: _maximumLineNumber,
+        textWidthBasis: TextWidthBasis.longestLine,
+      ),
     );
   }
 }

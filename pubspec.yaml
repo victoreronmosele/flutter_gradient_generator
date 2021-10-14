@@ -28,11 +28,8 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  syntax_highlighter: 
-    git:
-      url: git://github.com/victoreronmosele/syntax_highlighter.git
-      ref: c0554996f4ca454a4955c3a3fc68dec2cfa06ea4
   dart_style: ^2.0.1
+  any_syntax_highlighter:
 
 dev_dependencies:
   flutter_test:
