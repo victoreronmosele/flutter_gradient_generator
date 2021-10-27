@@ -1,6 +1,11 @@
-import 'package:dart_style/dart_style.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
+import 'package:flutter_gradient_generator/models/gradient_factory.dart';
+import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
+import 'package:flutter_gradient_generator/ui/screens/generator_screen.dart';
+import 'package:flutter_gradient_generator/ui/screens/preview_screen.dart';
 
 void main() {
   runApp(MyApp());
@@ -10,7 +15,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Gradient Generator',
+      title: AppStrings.appTitle,
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
@@ -29,69 +34,47 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final List<Color> colorList = [Colors.red, Colors.blue, Colors.green];
+  final AbstractGradient defaultGradient =
+      LinearStyleGradient(colorList: [Colors.red, Colors.blue]);
+
+  AbstractGradient? gradient;
+
+  @override
+  void initState() {
+    super.initState();
+    gradient = defaultGradient;
+  }
+
+  void onGradientStyleChanged(GradientStyle newGradientStyle) {
+    if (gradient!.getGradientStyle() != newGradientStyle) {
+      final AbstractGradient newGradient = GradientFactory().getGradient(
+          gradientStyle: newGradientStyle, colorList: gradient!.getColorList());
+
+      setState(() {
+        gradient = newGradient;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
+    final int generatorScreenFlex = 25;
+    final int previewScreenFlex = 75;
+
     return Scaffold(
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(child: GeneratorScreen(colorList: colorList)),
-          Expanded(child: PreviewScreen(colorList: colorList)),
+          Expanded(
+              flex: generatorScreenFlex,
+              child: GeneratorScreen(
+                  gradient: gradient!,
+                  onGradientStyleChanged: onGradientStyleChanged)),
+          Expanded(
+              flex: previewScreenFlex,
+              child: PreviewScreen(gradient: gradient!)),
         ],
       ),
     );
-  }
-}
-
-class PreviewScreen extends StatelessWidget {
-  final List<Color> colorList;
-
-  const PreviewScreen({Key? key, required this.colorList}) : super(key: key);
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: colorList,
-        ),
-      ),
-    );
-  }
-}
-
-class GeneratorScreen extends StatelessWidget {
-  final List<Color> colorList;
-
-  GeneratorScreen({Key? key, required this.colorList}) : super(key: key);
-
-  String get _colorsInIndividualLines => colorList.join(',\n ');
-
-  late String _exampleCode = '''
-  Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
-          colors: [\n ${_colorsInIndividualLines}]
-        ),
-      ),
-  ),
-''';
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-        child: TextButton(
-      child: Text('Get Gradient Code'),
-      onPressed: () {
-        Clipboard.setData(new ClipboardData(text: _exampleCode)).then((_) {
-          Scaffold.of(context).showSnackBar(
-              SnackBar(content: Text("Gradient code copied to clipboard")));
-        });
-      },
-    ));
   }
 }
