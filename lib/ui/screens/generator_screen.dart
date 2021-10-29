@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
+import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class GeneratorScreen extends StatelessWidget {
   final AbstractGradient gradient;
@@ -97,7 +98,9 @@ class GeneratorScreen extends StatelessWidget {
               ),
             ),
             SizedBox(height: 16),
-            DirectionWidget(),
+            DirectionWidget(
+              gradientStyle: gradient.getGradientStyle(),
+            ),
             SizedBox(height: 24),
             Text(
               'Colors',
@@ -159,59 +162,95 @@ class GeneratorScreen extends StatelessWidget {
 }
 
 class DirectionWidget extends StatelessWidget {
-  const DirectionWidget({
+  final GradientStyle gradientStyle;
+
+  DirectionWidget({
     Key? key,
+    required this.gradientStyle,
   }) : super(key: key);
+
+  final int circleDirectionIconSetNumber = 1;
+  final int circleDirectionIconNumberInSet = 1;
+
+  final List<List<IconData>> iconSetList = [
+    [
+      MaterialCommunityIcons.arrow_top_left,
+      MaterialCommunityIcons.arrow_up,
+      MaterialCommunityIcons.arrow_top_right
+    ],
+    [
+      MaterialCommunityIcons.arrow_left,
+      MaterialCommunityIcons.circle_outline,
+      MaterialCommunityIcons.arrow_right,
+    ],
+    [
+      MaterialCommunityIcons.arrow_bottom_left,
+      MaterialCommunityIcons.arrow_down,
+      MaterialCommunityIcons.arrow_bottom_right,
+    ]
+  ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
-      children: [
-    
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-             TextButton(
-                  child: Icon(Icons.keyboard_arrow_up_sharp),
-                  onPressed: () async {},
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      primary: Colors.black,
-                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                      fixedSize: const Size(84, 24),
-                      side: BorderSide(
-                        color: Color(0xfff1f4f8),
-                      )),
-                ),
-                 TextButton(
-                  child: Icon(Icons.keyboard_arrow_up_sharp),
-                  onPressed: () async {},
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      primary: Colors.black,
-                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                      fixedSize: const Size(84, 24),
-                      side: BorderSide(
-                        color: Color(0xfff1f4f8),
-                      )),
-                ),
-                 TextButton(
-                  child: Icon(Icons.keyboard_arrow_up_sharp),
-                  onPressed: () async {},
-                  style: TextButton.styleFrom(
-                      backgroundColor: Colors.white,
-                      primary: Colors.black,
-                      textStyle: TextStyle(fontWeight: FontWeight.bold),
-                      fixedSize: const Size(84, 24),
-                      side: BorderSide(
-                        color: Color(0xfff1f4f8),
-                      )),
-                ),
-          ],
-        ),
-        Row(),
-        Row(),
-      ],
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: iconSetList.map((List<IconData> iconSet) {
+          final int iconSetIndex = iconSetList.indexOf(iconSet);
+          final int firstIconSetIndex = 0;
+
+          return Column(
+            children: [
+              if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
+              Row(
+                  children: iconSet.map((icon) {
+                final int iconIndex = iconSet.indexOf(icon);
+                final int firstIconIndex = 0;
+
+                final bool isCircleRadialButton =
+                    iconSetIndex == circleDirectionIconSetNumber &&
+                        iconIndex == circleDirectionIconNumberInSet;
+
+                return Expanded(
+                  child: Row(
+                    children: [
+                      if (iconIndex != firstIconIndex) SizedBox(width: 8.0),
+                      Expanded(
+                        child: Visibility(
+                          child: DirectionButton(icon: icon),
+                          visible: isCircleRadialButton
+                              ? gradientStyle == GradientStyle.radial
+                              : true,
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              }).toList()),
+            ],
+          );
+        }).toList());
+  }
+}
+
+class DirectionButton extends StatelessWidget {
+  final IconData icon;
+  const DirectionButton({Key? key, required this.icon}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TextButton(
+      child: Icon(
+        icon,
+        size: 12.0,
+      ),
+      onPressed: () async {},
+      style: TextButton.styleFrom(
+          backgroundColor: Colors.white,
+          primary: Colors.black,
+          textStyle: TextStyle(fontWeight: FontWeight.bold),
+          side: BorderSide(
+            color: Color(0xfff1f4f8),
+          )),
     );
   }
 }
