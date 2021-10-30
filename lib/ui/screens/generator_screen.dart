@@ -32,8 +32,8 @@ class GeneratorScreen extends StatelessWidget {
     final bool isRadialGradientStyleSelected =
         gradientStyle == GradientStyle.radial;
 
-    final Color selectedStyleButtonColor = Color(0xfff1f4f8);
-    final Color unselectedStyleButtonColor = Colors.white;
+    final Color selectedStyleButtonColor = AppColors.grey;
+    final Color unselectedStyleButtonColor = AppColors.white;
 
     final Color linearStyleButtonColor = isLinearGradientStyleSelected
         ? selectedStyleButtonColor
@@ -135,7 +135,7 @@ class GeneratorScreen extends StatelessWidget {
                               textStyle: TextStyle(fontWeight: FontWeight.bold),
                               fixedSize: const Size(64, 24),
                               side: BorderSide(
-                                color: Color(0xfff1f4f8),
+                                color: AppColors.grey,
                               )),
                         ),
                       ],
@@ -152,7 +152,7 @@ class GeneratorScreen extends StatelessWidget {
                       textStyle: TextStyle(fontWeight: FontWeight.bold),
                       fixedSize: const Size(84, 24),
                       side: BorderSide(
-                        color: Color(0xfff1f4f8),
+                        color: AppColors.grey,
                       )),
                 ),
               ],
@@ -271,7 +271,7 @@ class DirectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final Color greyColor = Color(0xfff1f4f8);
+    final Color greyColor = AppColors.grey;
     return TextButton(
       child: Icon(
         icon,
