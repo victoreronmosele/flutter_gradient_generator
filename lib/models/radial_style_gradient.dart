@@ -9,6 +9,8 @@ class RadialStyleGradient extends AbstractGradient {
       required GradientDirection gradientDirection})
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
+  final double _radialGradientRadius = 0.8;
+
   String get _widgetStringTemplate =>
       '''class PreviewScreen extends StatelessWidget {
   @override
@@ -18,6 +20,7 @@ class RadialStyleGradient extends AbstractGradient {
         gradient: RadialGradient(
           colors: ${getColorList()},
           center: $_centerAlignment,
+          radius: $_radialGradientRadius,
         ),
       ),
     );
@@ -75,6 +78,7 @@ class RadialStyleGradient extends AbstractGradient {
     return RadialGradient(
       colors: getColorList(),
       center: _centerAlignment,
+      radius: _radialGradientRadius,
     );
   }
 }
