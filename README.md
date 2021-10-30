@@ -1,16 +1,52 @@
-# flutter_gradient_generator
+# Flutter Gradient Generator
+Flutter Gradient Generator is a web app that generates linear and radial gradients for Flutter widgets.
 
-A new Flutter project.
+<img src="./screenshots/screenshot.png" alt="Screenshot of the Flutter Gradient Generator web app" width="80%"/>
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
+## Usage
 
-A few resources to get you started if this is your first Flutter project:
+1. Visit [the web app](https://flutter-gradient-generator.web.app/).
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
+2. Choose the gradient style. The options are:
+   - linear
+   - radial.
 
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+3. Choose the gradient direction. The options are:
+   - top-left
+   - top-center
+   - top-right
+   - center-left
+   - center (only works for radial gradients)
+   - center-right
+   - bottom-left
+   - bottom-center
+   - bottom-right
+
+4. Choose the gradient colors. You can either 
+   - use the color pickers to select your colors or,
+   - use random colors by clicking the random button
+
+5. Click on "Get Gradient Code" and the code will be copied to your clipboard.
+
+## Roadmap
+
+- [x] Linear gradient
+- [x] Radial gradient
+- [ ] Color picker
+- [ ] Dark mode
+
+## Contact
+
+Victor Eronmosele - victoreronmosele@gmail.com
+
+Project Link: [https://github.com/victoreronmosele/flutter_gradient_generator](https://github.com/victoreronmosele/flutter_gradient_generator)
+
+## Acknowledgments
+
+* [CSS Gradient Generator](https://www.css-gradient.com/) for the visual design inspiration.
+
+
+## License
+Distributed under the GPL 3.0 License. See LICENSE.txt for more information.
+
