@@ -9,8 +9,6 @@ class LinearStyleGradient extends AbstractGradient {
       required GradientDirection gradientDirection})
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
-  String get _colorsInIndividualLines => getColorList().join(',\n ');
-
   String get _widgetStringTemplate =>
       '''class PreviewScreen extends StatelessWidget {
   @override
@@ -18,16 +16,16 @@ class LinearStyleGradient extends AbstractGradient {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-          begin: $_getBeginAlignment,
-          end: $_getEndAlignment,
-          colors: [\n ${_colorsInIndividualLines}]
+          colors: ${getColorList()},
+          begin: $_beginAlignment,
+          end: $_endAlignment,
         ),
       ),
     );
   }
 }''';
 
-  Alignment get _getBeginAlignment {
+  Alignment get _beginAlignment {
     Alignment alignment;
     switch (getGradientDirection()) {
       case GradientDirection.topLeft:
@@ -62,7 +60,7 @@ class LinearStyleGradient extends AbstractGradient {
     return alignment;
   }
 
-  Alignment get _getEndAlignment {
+  Alignment get _endAlignment {
     Alignment alignment;
 
     switch (getGradientDirection()) {
@@ -111,7 +109,7 @@ class LinearStyleGradient extends AbstractGradient {
   Gradient toFlutterGradient() {
     return LinearGradient(
         colors: getColorList(),
-        begin: _getBeginAlignment,
-        end: _getEndAlignment);
+        begin: _beginAlignment,
+        end: _endAlignment);
   }
 }

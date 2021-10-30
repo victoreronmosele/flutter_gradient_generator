@@ -9,8 +9,6 @@ class RadialStyleGradient extends AbstractGradient {
       required GradientDirection gradientDirection})
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
-  String get _colorsInIndividualLines => getColorList().join(',\n ');
-
   String get _widgetStringTemplate =>
       '''class PreviewScreen extends StatelessWidget {
   @override
@@ -18,14 +16,49 @@ class RadialStyleGradient extends AbstractGradient {
     return Container(
       decoration: BoxDecoration(
         gradient: RadialGradient(
-          center: Alignment.topRight,
-                    colors: [\n ${_colorsInIndividualLines}]
-
+          colors: ${getColorList()},
+          center: $_centerAlignment,
         ),
       ),
     );
   }
 }''';
+
+  Alignment get _centerAlignment {
+    Alignment alignment;
+
+    switch (getGradientDirection()) {
+      case GradientDirection.topLeft:
+        alignment = Alignment.topLeft;
+        break;
+      case GradientDirection.topCenter:
+        alignment = Alignment.topCenter;
+        break;
+      case GradientDirection.topRight:
+        alignment = Alignment.topRight;
+        break;
+      case GradientDirection.centerLeft:
+        alignment = Alignment.centerLeft;
+        break;
+      case GradientDirection.center:
+        alignment = Alignment.center;
+        break;
+      case GradientDirection.centerRight:
+        alignment = Alignment.centerRight;
+        break;
+      case GradientDirection.bottomLeft:
+        alignment = Alignment.bottomLeft;
+        break;
+      case GradientDirection.bottomCenter:
+        alignment = Alignment.bottomCenter;
+        break;
+      case GradientDirection.bottomRight:
+        alignment = Alignment.bottomRight;
+        break;
+    }
+
+    return alignment;
+  }
 
   @override
   String toWidgetString() {
@@ -41,6 +74,7 @@ class RadialStyleGradient extends AbstractGradient {
   Gradient toFlutterGradient() {
     return RadialGradient(
       colors: getColorList(),
+      center: _centerAlignment,
     );
   }
 }
