@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/models/gradient_factory.dart';
@@ -34,8 +35,9 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final AbstractGradient defaultGradient =
-      LinearStyleGradient(colorList: [Colors.red, Colors.blue]);
+  final AbstractGradient defaultGradient = LinearStyleGradient(
+      colorList: [Colors.red, Colors.blue],
+      gradientDirection: GradientDirection.topLeft);
 
   AbstractGradient? gradient;
 
@@ -48,7 +50,24 @@ class _MyHomePageState extends State<MyHomePage> {
   void onGradientStyleChanged(GradientStyle newGradientStyle) {
     if (gradient!.getGradientStyle() != newGradientStyle) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
-          gradientStyle: newGradientStyle, colorList: gradient!.getColorList());
+        gradientStyle: newGradientStyle,
+        colorList: gradient!.getColorList(),
+        gradientDirection: gradient!.getGradientDirection(),
+      );
+
+      setState(() {
+        gradient = newGradient;
+      });
+    }
+  }
+
+  void onGradientDirectionChanged(GradientDirection newGradientDirection) {
+    if (gradient!.getGradientDirection() != newGradientDirection) {
+      final AbstractGradient newGradient = GradientFactory().getGradient(
+        gradientStyle: gradient!.getGradientStyle(),
+        colorList: gradient!.getColorList(),
+        gradientDirection: newGradientDirection,
+      );
 
       setState(() {
         gradient = newGradient;
@@ -69,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
               flex: generatorScreenFlex,
               child: GeneratorScreen(
                   gradient: gradient!,
-                  onGradientStyleChanged: onGradientStyleChanged)),
+                  onGradientStyleChanged: onGradientStyleChanged,
+                  onGradientDirectionChanged: onGradientDirectionChanged)),
           Expanded(
               flex: previewScreenFlex,
               child: PreviewScreen(gradient: gradient!)),

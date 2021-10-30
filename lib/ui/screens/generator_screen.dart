@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
@@ -8,9 +9,13 @@ import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 class GeneratorScreen extends StatelessWidget {
   final AbstractGradient gradient;
   final void Function(GradientStyle) onGradientStyleChanged;
+  final void Function(GradientDirection) onGradientDirectionChanged;
 
   const GeneratorScreen(
-      {Key? key, required this.gradient, required this.onGradientStyleChanged})
+      {Key? key,
+      required this.gradient,
+      required this.onGradientStyleChanged,
+      required this.onGradientDirectionChanged})
       : super(key: key);
 
   @override
@@ -99,8 +104,9 @@ class GeneratorScreen extends StatelessWidget {
             ),
             SizedBox(height: 16),
             DirectionWidget(
-              gradientStyle: gradient.getGradientStyle(),
-            ),
+                gradientStyle: gradient.getGradientStyle(),
+                selectedGradientDirection: gradient.getGradientDirection(),
+                onGradientDirectionChanged: onGradientDirectionChanged),
             SizedBox(height: 24),
             Text(
               'Colors',
@@ -163,47 +169,57 @@ class GeneratorScreen extends StatelessWidget {
 
 class DirectionWidget extends StatelessWidget {
   final GradientStyle gradientStyle;
+  final GradientDirection selectedGradientDirection;
+  final void Function(GradientDirection) onGradientDirectionChanged;
 
-  DirectionWidget({
-    Key? key,
-    required this.gradientStyle,
-  }) : super(key: key);
+  DirectionWidget(
+      {Key? key,
+      required this.gradientStyle,
+      required this.selectedGradientDirection,
+      required this.onGradientDirectionChanged})
+      : super(key: key);
 
   final int circleDirectionIconSetNumber = 1;
   final int circleDirectionIconNumberInSet = 1;
 
-  final List<List<IconData>> iconSetList = [
-    [
-      MaterialCommunityIcons.arrow_top_left,
-      MaterialCommunityIcons.arrow_up,
-      MaterialCommunityIcons.arrow_top_right
-    ],
-    [
-      MaterialCommunityIcons.arrow_left,
-      MaterialCommunityIcons.circle_outline,
-      MaterialCommunityIcons.arrow_right,
-    ],
-    [
-      MaterialCommunityIcons.arrow_bottom_left,
-      MaterialCommunityIcons.arrow_down,
-      MaterialCommunityIcons.arrow_bottom_right,
-    ]
+  final List<Map<GradientDirection, IconData>> iconSetList = [
+    {
+      GradientDirection.topLeft: MaterialCommunityIcons.arrow_top_left,
+      GradientDirection.topCenter: MaterialCommunityIcons.arrow_up,
+      GradientDirection.topRight: MaterialCommunityIcons.arrow_top_right,
+    },
+    {
+      GradientDirection.centerLeft: MaterialCommunityIcons.arrow_left,
+      GradientDirection.center: MaterialCommunityIcons.circle_outline,
+      GradientDirection.centerRight: MaterialCommunityIcons.arrow_right,
+    },
+    {
+      GradientDirection.bottomLeft: MaterialCommunityIcons.arrow_bottom_left,
+      GradientDirection.bottomCenter: MaterialCommunityIcons.arrow_down,
+      GradientDirection.bottomRight: MaterialCommunityIcons.arrow_bottom_right,
+    }
   ];
 
   @override
   Widget build(BuildContext context) {
     return Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: iconSetList.map((List<IconData> iconSet) {
-          final int iconSetIndex = iconSetList.indexOf(iconSet);
+        children: iconSetList.map(
+            (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
+          final int iconSetIndex =
+              iconSetList.indexOf(gradientDirectionToIconSetMap);
           final int firstIconSetIndex = 0;
 
           return Column(
             children: [
               if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
               Row(
-                  children: iconSet.map((icon) {
-                final int iconIndex = iconSet.indexOf(icon);
+                  children: gradientDirectionToIconSetMap.values.map((icon) {
+                final int iconIndex =
+                    gradientDirectionToIconSetMap.values.toList().indexOf(icon);
+                final GradientDirection gradientDirection =
+                    gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
+
                 final int firstIconIndex = 0;
 
                 final bool isCircleRadialButton =
@@ -216,7 +232,13 @@ class DirectionWidget extends StatelessWidget {
                       if (iconIndex != firstIconIndex) SizedBox(width: 8.0),
                       Expanded(
                         child: Visibility(
-                          child: DirectionButton(icon: icon),
+                          child: DirectionButton(
+                              icon: icon,
+                              gradientDirection: gradientDirection,
+                              isSelected: gradientDirection ==
+                                  selectedGradientDirection,
+                              onGradientDirectionChanged:
+                                  onGradientDirectionChanged),
                           visible: isCircleRadialButton
                               ? gradientStyle == GradientStyle.radial
                               : true,
@@ -234,22 +256,35 @@ class DirectionWidget extends StatelessWidget {
 
 class DirectionButton extends StatelessWidget {
   final IconData icon;
-  const DirectionButton({Key? key, required this.icon}) : super(key: key);
+  final GradientDirection gradientDirection;
+  final bool isSelected;
+  final void Function(GradientDirection) onGradientDirectionChanged;
+
+  const DirectionButton(
+      {Key? key,
+      required this.icon,
+      required this.gradientDirection,
+      required this.isSelected,
+      required this.onGradientDirectionChanged})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final Color greyColor = Color(0xfff1f4f8);
     return TextButton(
       child: Icon(
         icon,
         size: 12.0,
       ),
-      onPressed: () async {},
+      onPressed: () {
+        onGradientDirectionChanged(gradientDirection);
+      },
       style: TextButton.styleFrom(
-          backgroundColor: Colors.white,
+          backgroundColor: isSelected ? greyColor : Colors.white,
           primary: Colors.black,
           textStyle: TextStyle(fontWeight: FontWeight.bold),
           side: BorderSide(
-            color: Color(0xfff1f4f8),
+            color: greyColor,
           )),
     );
   }

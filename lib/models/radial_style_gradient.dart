@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 
 class RadialStyleGradient extends AbstractGradient {
-  RadialStyleGradient({required List<Color> colorList})
-      : super(colorList: colorList);
+  RadialStyleGradient(
+      {required List<Color> colorList,
+      required GradientDirection gradientDirection})
+      : super(colorList: colorList, gradientDirection: gradientDirection);
 
   String get _colorsInIndividualLines => getColorList().join(',\n ');
 
@@ -14,9 +17,8 @@ class RadialStyleGradient extends AbstractGradient {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topRight,
-          end: Alignment.bottomLeft,
+        gradient: RadialGradient(
+          center: Alignment.topRight,
                     colors: [\n ${_colorsInIndividualLines}]
 
         ),
