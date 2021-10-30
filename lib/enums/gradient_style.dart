@@ -1,0 +1,4 @@
+enum GradientStyle {
+  linear,
+  radial
+}
