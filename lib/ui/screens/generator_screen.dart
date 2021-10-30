@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
@@ -309,6 +310,30 @@ class _GetGradientButtonState extends State<GetGradientButton> {
       ? AppStrings.gradientCodeCopied
       : AppStrings.getGradientCode;
 
+  Color _getBackgroundColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return AppColors.darkGrey;
+    }
+    return AppColors.grey;
+  }
+
+  Color _getForegroundColor(Set<MaterialState> states) {
+    const Set<MaterialState> interactiveStates = <MaterialState>{
+      MaterialState.pressed,
+      MaterialState.hovered,
+      MaterialState.focused,
+    };
+    if (states.any(interactiveStates.contains)) {
+      return AppColors.white;
+    }
+    return AppColors.black;
+  }
+
   @override
   Widget build(BuildContext context) {
     return FractionallySizedBox(
@@ -328,11 +353,14 @@ class _GetGradientButtonState extends State<GetGradientButton> {
             _showCopiedText = false;
           });
         },
-        style: TextButton.styleFrom(
-          backgroundColor: Color(0xfff1f4f8),
-          primary: Colors.black,
-          textStyle: TextStyle(fontWeight: FontWeight.bold),
-          padding: EdgeInsets.all(24),
+        style: ButtonStyle(
+          backgroundColor:
+              MaterialStateProperty.resolveWith(_getBackgroundColor),
+          foregroundColor:
+              MaterialStateProperty.resolveWith(_getForegroundColor),
+          textStyle:
+              MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.bold)),
+          padding: MaterialStateProperty.all(EdgeInsets.all(24)),
         ),
       ),
     );
