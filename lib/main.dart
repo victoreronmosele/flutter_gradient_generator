@@ -17,6 +17,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appTitle,
+      debugShowCheckedModeBanner: false,
       home: MyHomePage(),
     );
   }
@@ -33,10 +34,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   final AbstractGradient defaultGradient = LinearStyleGradient(
-      colorList: [
-        Color(0xff67510D),
-        Color(0xff4E9DE1)
-      ], //[Colors.red, Colors.blue],
+      colorList: [Color(0xffFD2B0B), Color(0xff7199EB)],
       gradientDirection: GradientDirection.topLeft);
 
   AbstractGradient? gradient;
