@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
@@ -75,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-  
-
     return Scaffold(
       body: Row(
         children: [
@@ -84,8 +83,7 @@ class _MyHomePageState extends State<MyHomePage> {
               gradient: gradient!,
               onGradientStyleChanged: onGradientStyleChanged,
               onGradientDirectionChanged: onGradientDirectionChanged),
-          Flexible(
-              child: PreviewScreen(gradient: gradient!)),
+          Flexible(child: PreviewScreen(gradient: gradient!)),
         ],
       ),
     );

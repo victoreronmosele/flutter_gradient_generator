@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
@@ -45,7 +46,7 @@ class GeneratorScreen extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(32.0),
+        padding: const EdgeInsets.all(AppDimensions.generatorScreenPadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -159,9 +160,12 @@ class GeneratorScreen extends StatelessWidget {
               ],
             ),
             SizedBox(height: 48),
-            GetGradientButton(onTap: () async {
-              await Clipboard.setData(new ClipboardData(text: _generatedCode));
-            }),
+            SizedBox(
+              width: AppDimensions.generatorScreenContentWidth,
+              child: GetGradientButton(onTap: () async {
+                await Clipboard.setData(new ClipboardData(text: _generatedCode));
+              }),
+            ),
           ],
         ),
       ),
