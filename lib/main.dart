@@ -75,21 +75,16 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final int generatorScreenFlex = 25;
-    final int previewScreenFlex = 75;
+  
 
     return Scaffold(
       body: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Expanded(
-              flex: generatorScreenFlex,
-              child: GeneratorScreen(
-                  gradient: gradient!,
-                  onGradientStyleChanged: onGradientStyleChanged,
-                  onGradientDirectionChanged: onGradientDirectionChanged)),
-          Expanded(
-              flex: previewScreenFlex,
+          GeneratorScreen(
+              gradient: gradient!,
+              onGradientStyleChanged: onGradientStyleChanged,
+              onGradientDirectionChanged: onGradientDirectionChanged),
+          Flexible(
               child: PreviewScreen(gradient: gradient!)),
         ],
       ),

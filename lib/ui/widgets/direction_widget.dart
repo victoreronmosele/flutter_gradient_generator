@@ -40,53 +40,50 @@ class DirectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: iconSetList.map(
             (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
-          final int iconSetIndex =
-              iconSetList.indexOf(gradientDirectionToIconSetMap);
-          final int firstIconSetIndex = 0;
+      final int iconSetIndex =
+          iconSetList.indexOf(gradientDirectionToIconSetMap);
+      final int firstIconSetIndex = 0;
 
-          return Column(
-            children: [
-              if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
-              Row(
-                  children: gradientDirectionToIconSetMap.values.map((icon) {
-                final int iconIndex =
-                    gradientDirectionToIconSetMap.values.toList().indexOf(icon);
-                final GradientDirection gradientDirection =
-                    gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
+      return Column(
+        children: [
+          if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
+          Row(
+              children: gradientDirectionToIconSetMap.values.map((icon) {
+            final int iconIndex =
+                gradientDirectionToIconSetMap.values.toList().indexOf(icon);
+            final GradientDirection gradientDirection =
+                gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
 
-                final int firstIconIndex = 0;
+            final int firstIconIndex = 0;
 
-                final bool isCircleRadialButton =
-                    iconSetIndex == circleDirectionIconSetNumber &&
-                        iconIndex == circleDirectionIconNumberInSet;
+            final bool isCircleRadialButton =
+                iconSetIndex == circleDirectionIconSetNumber &&
+                    iconIndex == circleDirectionIconNumberInSet;
 
-                return Expanded(
-                  child: Row(
-                    children: [
-                      if (iconIndex != firstIconIndex) SizedBox(width: 8.0),
-                      Expanded(
-                        child: Visibility(
-                          child: DirectionButton(
-                              icon: icon,
-                              gradientDirection: gradientDirection,
-                              isSelected: gradientDirection ==
-                                  selectedGradientDirection,
-                              onGradientDirectionChanged:
-                                  onGradientDirectionChanged),
-                          visible: isCircleRadialButton
-                              ? gradientStyle == GradientStyle.radial
-                              : true,
-                        ),
-                      ),
-                    ],
-                  ),
-                );
-              }).toList()),
-            ],
-          );
-        }).toList());
+            return Row(
+              children: [
+                if (iconIndex != firstIconIndex) SizedBox(width: 8.0),
+                Visibility(
+                    child: DirectionButton(
+                        icon: icon,
+                        gradientDirection: gradientDirection,
+                        isSelected:
+                            gradientDirection == selectedGradientDirection,
+                        onGradientDirectionChanged: onGradientDirectionChanged),
+                    visible: isCircleRadialButton
+                        ? gradientStyle == GradientStyle.radial
+                        : true,
+                    maintainSize: true,
+                    maintainAnimation: true,
+                    maintainState:true,
+                    ),
+              ],
+            );
+          }).toList()),
+        ],
+      );
+    }).toList());
   }
 }
