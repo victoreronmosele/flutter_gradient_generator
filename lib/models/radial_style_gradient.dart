@@ -12,20 +12,12 @@ class RadialStyleGradient extends AbstractGradient {
   final double _radialGradientRadius = 0.8;
 
   String get _widgetStringTemplate =>
-      '''class PreviewScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: RadialGradient(
+      '''RadialGradient(
           colors: ${getColorList()},
           center: $_centerAlignment,
           radius: $_radialGradientRadius,
-        ),
-      ),
-    );
-  }
-}''';
+        )
+        ''';
 
   Alignment get _centerAlignment {
     Alignment alignment;
