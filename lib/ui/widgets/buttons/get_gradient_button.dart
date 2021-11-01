@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 
 class GetGradientButton extends StatefulWidget {
@@ -63,13 +64,14 @@ class _GetGradientButtonState extends State<GetGradientButton> {
         });
       },
       style: ButtonStyle(
-        backgroundColor:
-            MaterialStateProperty.resolveWith(_getBackgroundColor),
-        foregroundColor:
-            MaterialStateProperty.resolveWith(_getForegroundColor),
+        backgroundColor: MaterialStateProperty.resolveWith(_getBackgroundColor),
+        foregroundColor: MaterialStateProperty.resolveWith(_getForegroundColor),
         textStyle:
             MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.bold)),
-        padding: MaterialStateProperty.all(EdgeInsets.all(24)),
+        padding: MaterialStateProperty.all(
+            EdgeInsets.all(AppDimensions.widebuttonPadding)),
+        fixedSize: MaterialStateProperty.all((Size(
+            AppDimensions.wideButtonWidth, AppDimensions.wideButtonHeight))),
       ),
     );
   }

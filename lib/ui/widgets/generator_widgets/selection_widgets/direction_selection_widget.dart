@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
-import 'package:flutter_gradient_generator/ui/widgets/direction_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
-class DirectionWidget extends StatelessWidget {
+class DirectionSelectionWidget extends StatelessWidget {
   final GradientStyle gradientStyle;
   final GradientDirection selectedGradientDirection;
   final void Function(GradientDirection) onGradientDirectionChanged;
 
-  DirectionWidget(
+  DirectionSelectionWidget(
       {Key? key,
       required this.gradientStyle,
       required this.selectedGradientDirection,
@@ -40,32 +41,44 @@ class DirectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-        children: iconSetList.map(
-            (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
-      final int iconSetIndex =
-          iconSetList.indexOf(gradientDirectionToIconSetMap);
-      final int firstIconSetIndex = 0;
+            crossAxisAlignment: CrossAxisAlignment.start,
 
-      return Column(
-        children: [
-          if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
-          Row(
-              children: gradientDirectionToIconSetMap.values.map((icon) {
-            final int iconIndex =
-                gradientDirectionToIconSetMap.values.toList().indexOf(icon);
-            final GradientDirection gradientDirection =
-                gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
+      children: [
+      Text(
+        'Direction',
+        style: TextStyle(
+          fontSize: 16.0,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      SizedBox(height: 16),
+      ...iconSetList.map(
+          (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
+        final int iconSetIndex =
+            iconSetList.indexOf(gradientDirectionToIconSetMap);
+        final int firstIconSetIndex = 0;
 
-            final int firstIconIndex = 0;
+        return Column(
+          children: [
+            if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
+            Row(
+                children: gradientDirectionToIconSetMap.values.map((icon) {
+              final int iconIndex =
+                  gradientDirectionToIconSetMap.values.toList().indexOf(icon);
+              final GradientDirection gradientDirection =
+                  gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
 
-            final bool isCircleRadialButton =
-                iconSetIndex == circleDirectionIconSetNumber &&
-                    iconIndex == circleDirectionIconNumberInSet;
+              final int firstIconIndex = 0;
 
-            return Row(
-              children: [
-                if (iconIndex != firstIconIndex) SizedBox(width: 8.0),
-                Visibility(
+              final bool isCircleRadialButton =
+                  iconSetIndex == circleDirectionIconSetNumber &&
+                      iconIndex == circleDirectionIconNumberInSet;
+
+              return Row(
+                children: [
+                  if (iconIndex != firstIconIndex)
+                    SizedBox(width: AppDimensions.compactButtonMargin),
+                  Visibility(
                     child: DirectionButton(
                         icon: icon,
                         gradientDirection: gradientDirection,
@@ -77,13 +90,14 @@ class DirectionWidget extends StatelessWidget {
                         : true,
                     maintainSize: true,
                     maintainAnimation: true,
-                    maintainState:true,
-                    ),
-              ],
-            );
-          }).toList()),
-        ],
-      );
-    }).toList());
+                    maintainState: true,
+                  ),
+                ],
+              );
+            }).toList()),
+          ],
+        );
+      }).toList()
+    ]);
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
+import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 
 class DirectionButton extends StatelessWidget {
   final IconData icon;
@@ -19,22 +20,18 @@ class DirectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final Color greyColor = AppColors.grey;
-    return TextButton(
-      child: Icon(
-        icon,
-        size: 12.0,
-      ),
-      onPressed: () {
-        onGradientDirectionChanged(gradientDirection);
-      },
-      style: TextButton.styleFrom(
-          backgroundColor: isSelected ? greyColor : Colors.white,
-          primary: Colors.black,
-          textStyle: TextStyle(fontWeight: FontWeight.bold),
-          side: BorderSide(
-            color: greyColor,
-          )),
-    );
+    return CompactButton(
+        child: Icon(
+          icon,
+          size: 12.0,
+        ),
+        onPressed: () {
+          onGradientDirectionChanged(gradientDirection);
+        },
+        foregroundColor: Colors.black,
+        backgroundColor: isSelected ? greyColor : Colors.white,
+        borderSide: BorderSide(
+          color: greyColor,
+        ));
   }
 }
-
