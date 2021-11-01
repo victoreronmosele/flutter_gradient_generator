@@ -10,20 +10,12 @@ class LinearStyleGradient extends AbstractGradient {
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
   String get _widgetStringTemplate =>
-      '''class PreviewScreen extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
+      '''LinearGradient(
           colors: ${getColorList()},
           begin: $_beginAlignment,
           end: $_endAlignment,
-        ),
-      ),
-    );
-  }
-}''';
+        )
+      ''';
 
   Alignment get _beginAlignment {
     Alignment alignment;
