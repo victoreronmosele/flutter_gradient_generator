@@ -48,5 +48,5 @@ Project Link: [https://github.com/victoreronmosele/flutter_gradient_generator](h
 
 
 ## License
-Distributed under the GPL 3.0 License. See LICENSE.txt for more information.
+Distributed under the GPL 3.0 License. See [LICENSE.txt](LICENSE.txt) for more information.
 
