@@ -45,6 +45,7 @@ Project Link: [https://github.com/victoreronmosele/flutter_gradient_generator](h
 ## Acknowledgments
 
 * [CSS Gradient Generator](https://www.css-gradient.com/) for the visual design inspiration.
+* [Cyclop](https://github.com/rxlabz/cyclop) for the color picker
 
 
 ## License
