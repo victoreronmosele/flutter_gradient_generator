@@ -7,6 +7,7 @@ import 'package:flutter_gradient_generator/models/gradient_factory.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:flutter_gradient_generator/ui/screens/generator_screen.dart';
 import 'package:flutter_gradient_generator/ui/screens/preview_screen.dart';
+import 'package:collection/collection.dart';
 
 void main() {
   runApp(MyApp());
@@ -73,15 +74,32 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
+  void onColorListChanged(List<Color> newColorList) {
+    if (!ListEquality().equals(gradient!.getColorList(), newColorList)) {
+
+      final AbstractGradient newGradient = GradientFactory().getGradient(
+        gradientStyle: gradient!.getGradientStyle(),
+        colorList: newColorList,
+        gradientDirection: gradient!.getGradientDirection(),
+      );
+
+      setState(() {
+        gradient = newGradient;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
           GeneratorScreen(
-              gradient: gradient!,
-              onGradientStyleChanged: onGradientStyleChanged,
-              onGradientDirectionChanged: onGradientDirectionChanged),
+            gradient: gradient!,
+            onGradientStyleChanged: onGradientStyleChanged,
+            onGradientDirectionChanged: onGradientDirectionChanged,
+            onColorListChanged: onColorListChanged,
+          ),
           Flexible(child: PreviewScreen(gradient: gradient!)),
         ],
       ),

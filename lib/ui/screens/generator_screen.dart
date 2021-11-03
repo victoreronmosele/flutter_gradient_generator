@@ -12,12 +12,14 @@ class GeneratorScreen extends StatelessWidget {
   final AbstractGradient gradient;
   final void Function(GradientStyle) onGradientStyleChanged;
   final void Function(GradientDirection) onGradientDirectionChanged;
+  final void Function(List<Color>) onColorListChanged;
 
   const GeneratorScreen(
       {Key? key,
       required this.gradient,
       required this.onGradientStyleChanged,
-      required this.onGradientDirectionChanged})
+      required this.onGradientDirectionChanged,
+      required this.onColorListChanged})
       : super(key: key);
 
   @override
@@ -46,7 +48,8 @@ class GeneratorScreen extends StatelessWidget {
                 selectedGradientDirection: gradient.getGradientDirection(),
                 onGradientDirectionChanged: onGradientDirectionChanged),
             SizedBox(height: 24),
-            ColorSelectionWidget(colorList: colorList),
+            ColorSelectionWidget(
+                colorList: colorList, onColorListChanged: onColorListChanged),
             SizedBox(height: 48),
             GetGradientButton(onTap: () async {
               await Clipboard.setData(new ClipboardData(text: _generatedCode));
@@ -57,4 +60,3 @@ class GeneratorScreen extends StatelessWidget {
     );
   }
 }
-
