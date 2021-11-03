@@ -29,50 +29,49 @@ class ColorSelectionWidget extends StatelessWidget {
         ),
         SizedBox(height: 16),
         Row(
-          children: [
-            ...colorList.map(
-              (color) {
-                final int index = colorList.indexOf(color);
-                final int lastIndex = colorList.length - 1;
+          children: List.generate(
+            colorList.length,
+            (index) {
+              final Color color = colorList.elementAt(index);
+              final int lastIndex = colorList.length - 1;
 
-                return Row(
-                  children: [
-                    if (index != 0)
-                      SizedBox(width: AppDimensions.compactButtonPadding),
+              return Row(
+                children: [
+                  if (index != 0)
+                    SizedBox(width: AppDimensions.compactButtonPadding),
+                  CompactButton(
+                    child: SizedBox.shrink(),
+                    onPressed: () async {
+                      final Color selectedColor = colorPicker.selectColor();
+
+                      /// Creates a copy of the `colorList` so modifying the new list does not modify colorList
+                      final List<Color> newColorList = List.from(colorList);
+                      newColorList[index] = selectedColor;
+
+                      onColorListChanged(newColorList);
+                    },
+                    backgroundColor: color,
+                    foregroundColor: Colors.black,
+                    borderSide: BorderSide(
+                      color: AppColors.grey,
+                    ),
+                  ),
+                  if (index == lastIndex)
+                    SizedBox(width: AppDimensions.compactButtonPadding),
+                  if (index == lastIndex)
                     CompactButton(
-                      child: SizedBox.shrink(),
-                      onPressed: () async {
-                        final Color selectedColor = colorPicker.selectColor();
-
-                        /// Creates a copy of the `colorList` so modifying the new list does not modify colorList
-                        final List<Color> newColorList = List.from(colorList);
-                        newColorList[index] = selectedColor;
-
-                        onColorListChanged(newColorList);
-                      },
-                      backgroundColor: color,
+                      child: Text('Random'),
+                      onPressed: () async {},
+                      backgroundColor: Colors.transparent,
                       foregroundColor: Colors.black,
                       borderSide: BorderSide(
                         color: AppColors.grey,
                       ),
                     ),
-                    if (index == lastIndex)
-                      SizedBox(width: AppDimensions.compactButtonPadding),
-                    if (index == lastIndex)
-                      CompactButton(
-                        child: Text('Random'),
-                        onPressed: () async {},
-                        backgroundColor: Colors.transparent,
-                        foregroundColor: Colors.black,
-                        borderSide: BorderSide(
-                          color: AppColors.grey,
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ),
-          ],
+                ],
+              );
+            },
+          ),
         ),
       ],
     );
