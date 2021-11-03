@@ -29,7 +29,8 @@ class CompactButton extends StatelessWidget {
             MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.bold)),
         side: MaterialStateProperty.all(borderSide),
         fixedSize: MaterialStateProperty.all((Size(
-            AppDimensions.compactButtonWidth, AppDimensions.compactButtonHeight))),
+            AppDimensions.compactButtonWidth,
+            AppDimensions.compactButtonHeight))),
       ),
     );
   }

@@ -1,3 +1,4 @@
+import 'package:cyclop/cyclop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
@@ -39,21 +40,23 @@ class ColorSelectionWidget extends StatelessWidget {
                 children: [
                   if (index != 0)
                     SizedBox(width: AppDimensions.compactButtonPadding),
-                  CompactButton(
-                    child: SizedBox.shrink(),
-                    onPressed: () async {
-                      final Color selectedColor = colorPicker.selectColor();
-
+                  ColorButton(
+                    color: color,
+                    onColorChanged: (selectedColor) {
                       /// Creates a copy of the `colorList` so modifying the new list does not modify colorList
                       final List<Color> newColorList = List.from(colorList);
                       newColorList[index] = selectedColor;
 
                       onColorListChanged(newColorList);
                     },
-                    backgroundColor: color,
-                    foregroundColor: Colors.black,
-                    borderSide: BorderSide(
-                      color: AppColors.grey,
+                    child: CompactButton(
+                      child: SizedBox.shrink(),
+                      onPressed: () {},
+                      backgroundColor: color,
+                      foregroundColor: Colors.black,
+                      borderSide: BorderSide(
+                        color: AppColors.grey,
+                      ),
                     ),
                   ),
                   if (index == lastIndex)
