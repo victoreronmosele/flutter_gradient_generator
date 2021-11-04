@@ -10,8 +10,10 @@ import 'package:flutter_gradient_generator/ui/screens/preview_screen.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
+import 'package:url_strategy/url_strategy.dart';
 
 void main() {
+  setPathUrlStrategy();
   runApp(MyApp());
 }
 
