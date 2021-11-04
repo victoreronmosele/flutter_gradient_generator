@@ -8,6 +8,8 @@ import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:flutter_gradient_generator/ui/screens/generator_screen.dart';
 import 'package:flutter_gradient_generator/ui/screens/preview_screen.dart';
 import 'package:collection/collection.dart';
+import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
+import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 
 void main() {
   runApp(MyApp());
@@ -19,26 +21,29 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: AppStrings.appTitle,
       debugShowCheckedModeBanner: false,
-      home: MyHomePage(),
+      home: HomeScreen(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({
+class HomeScreen extends StatefulWidget {
+  HomeScreen({
     Key? key,
   }) : super(key: key);
 
   @override
-  _MyHomePageState createState() => _MyHomePageState();
+  _HomeScreenState createState() => _HomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  final AbstractGradient defaultGradient = LinearStyleGradient(
-      colorList: [Color(0xffFD2B0B), Color(0xff7199EB)],
+class _HomeScreenState extends State<HomeScreen> {
+  final AbstractRandomColorGenerator randomColorGenerator =
+      RandomColorGenerator();
+
+  late final AbstractGradient defaultGradient = LinearStyleGradient(
+      colorList: randomColorGenerator.getTwoRandomColors(),
       gradientDirection: GradientDirection.topLeft);
 
-  AbstractGradient? gradient;
+  late AbstractGradient gradient = defaultGradient;
 
   @override
   void initState() {
@@ -47,11 +52,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onGradientStyleChanged(GradientStyle newGradientStyle) {
-    if (gradient!.getGradientStyle() != newGradientStyle) {
+    if (gradient.getGradientStyle() != newGradientStyle) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: newGradientStyle,
-        colorList: gradient!.getColorList(),
-        gradientDirection: gradient!.getGradientDirection(),
+        colorList: gradient.getColorList(),
+        gradientDirection: gradient.getGradientDirection(),
       );
 
       setState(() {
@@ -61,10 +66,10 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onGradientDirectionChanged(GradientDirection newGradientDirection) {
-    if (gradient!.getGradientDirection() != newGradientDirection) {
+    if (gradient.getGradientDirection() != newGradientDirection) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
-        gradientStyle: gradient!.getGradientStyle(),
-        colorList: gradient!.getColorList(),
+        gradientStyle: gradient.getGradientStyle(),
+        colorList: gradient.getColorList(),
         gradientDirection: newGradientDirection,
       );
 
@@ -75,12 +80,11 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   void onColorListChanged(List<Color> newColorList) {
-    if (!ListEquality().equals(gradient!.getColorList(), newColorList)) {
-
+    if (!ListEquality().equals(gradient.getColorList(), newColorList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
-        gradientStyle: gradient!.getGradientStyle(),
+        gradientStyle: gradient.getGradientStyle(),
         colorList: newColorList,
-        gradientDirection: gradient!.getGradientDirection(),
+        gradientDirection: gradient.getGradientDirection(),
       );
 
       setState(() {
@@ -91,16 +95,17 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Row(
         children: [
           GeneratorScreen(
-            gradient: gradient!,
+            gradient: gradient,
             onGradientStyleChanged: onGradientStyleChanged,
             onGradientDirectionChanged: onGradientDirectionChanged,
             onColorListChanged: onColorListChanged,
           ),
-          Flexible(child: PreviewScreen(gradient: gradient!)),
+          Flexible(child: PreviewScreen(gradient: gradient)),
         ],
       ),
     );
