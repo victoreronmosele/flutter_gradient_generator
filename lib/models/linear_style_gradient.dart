@@ -9,15 +9,15 @@ class LinearStyleGradient extends AbstractGradient {
       required GradientDirection gradientDirection})
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
-  String get _widgetStringTemplate =>
-      '''LinearGradient(
+  String get _widgetStringTemplate => '''LinearGradient(
           colors: ${getColorList()},
-          begin: $_beginAlignment,
-          end: $_endAlignment,
+          begin: $beginAlignment,
+          end: $endAlignment,
         )
       ''';
 
-  Alignment get _beginAlignment {
+  @visibleForTesting
+  Alignment get beginAlignment {
     Alignment alignment;
     switch (getGradientDirection()) {
       case GradientDirection.topLeft:
@@ -52,7 +52,8 @@ class LinearStyleGradient extends AbstractGradient {
     return alignment;
   }
 
-  Alignment get _endAlignment {
+  @visibleForTesting
+  Alignment get endAlignment {
     Alignment alignment;
 
     switch (getGradientDirection()) {
@@ -100,8 +101,6 @@ class LinearStyleGradient extends AbstractGradient {
   @override
   Gradient toFlutterGradient() {
     return LinearGradient(
-        colors: getColorList(),
-        begin: _beginAlignment,
-        end: _endAlignment);
+        colors: getColorList(), begin: beginAlignment, end: endAlignment);
   }
 }
