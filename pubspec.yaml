@@ -29,10 +29,12 @@ dependencies:
       url: git://github.com/victoreronmosele/cyclop.git
       ref: feat/update-color-button-with-child
   collection: ^1.15.0
+  
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
