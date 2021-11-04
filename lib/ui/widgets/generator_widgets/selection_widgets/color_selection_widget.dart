@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
-import 'package:flutter_gradient_generator/ui/util/abstract_color_picker.dart';
-import 'package:flutter_gradient_generator/ui/util/cyclop_color_picker.dart';
+import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
+import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_picker.dart';
+import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
+import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 
 class ColorSelectionWidget extends StatelessWidget {
@@ -14,6 +16,8 @@ class ColorSelectionWidget extends StatelessWidget {
   final void Function(List<Color>) onColorListChanged;
 
   final AbstractColorPicker colorPicker = const CyclopColorPicker();
+  final AbstractRandomColorGenerator randomColorGenerator =
+      const RandomColorGenerator();
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +63,12 @@ class ColorSelectionWidget extends StatelessWidget {
                   if (index == lastIndex)
                     CompactButton(
                       child: Text('Random'),
-                      onPressed: () async {},
+                      onPressed: () {
+                        final List<Color> twoRandomColors =
+                            randomColorGenerator.getTwoRandomColors();
+
+                        onColorListChanged(twoRandomColors);
+                      },
                       backgroundColor: Colors.transparent,
                       foregroundColor: Colors.black,
                       borderSide: BorderSide(
