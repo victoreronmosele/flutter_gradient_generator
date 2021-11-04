@@ -33,7 +33,7 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 
 - [x] Linear gradient
 - [x] Radial gradient
-- [ ] Color picker
+- [x] Color picker
 - [ ] Dark mode
 
 ## Contact
