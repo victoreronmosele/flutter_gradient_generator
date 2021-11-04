@@ -33,7 +33,7 @@ void main() {
 
     test('.beginAlignment returns the right Alignment enum', () {
       final Map<GradientDirection, Alignment>
-          beginGradientDirectionToAlignmentMap = {
+          gradientDirectionToBeginAlignmentMap = {
         GradientDirection.topLeft: Alignment.topLeft,
         GradientDirection.topCenter: Alignment.topCenter,
         GradientDirection.topRight: Alignment.topRight,
@@ -45,7 +45,7 @@ void main() {
         GradientDirection.bottomRight: Alignment.bottomRight,
       };
 
-      beginGradientDirectionToAlignmentMap
+      gradientDirectionToBeginAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
             colorList: colorList, gradientDirection: gradientDirection);
@@ -60,7 +60,7 @@ void main() {
 
     test('.endAlignment returns the right Alignment enum', () {
       final Map<GradientDirection, Alignment>
-          beginGradientDirectionToAlignmentMap = {
+          gradientDirectionToEndAlignmentMap = {
         GradientDirection.topLeft: Alignment.bottomRight,
         GradientDirection.topCenter: Alignment.bottomCenter,
         GradientDirection.topRight: Alignment.bottomLeft,
@@ -72,7 +72,7 @@ void main() {
         GradientDirection.bottomRight: Alignment.topLeft,
       };
 
-      beginGradientDirectionToAlignmentMap
+      gradientDirectionToEndAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
             colorList: colorList, gradientDirection: gradientDirection);

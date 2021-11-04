@@ -14,12 +14,13 @@ class RadialStyleGradient extends AbstractGradient {
   String get _widgetStringTemplate =>
       '''RadialGradient(
           colors: ${getColorList()},
-          center: $_centerAlignment,
+          center: $centerAlignment,
           radius: $_radialGradientRadius,
         )
         ''';
-
-  Alignment get _centerAlignment {
+        
+  @visibleForTesting
+  Alignment get centerAlignment {
     Alignment alignment;
 
     switch (getGradientDirection()) {
@@ -69,7 +70,7 @@ class RadialStyleGradient extends AbstractGradient {
   Gradient toFlutterGradient() {
     return RadialGradient(
       colors: getColorList(),
-      center: _centerAlignment,
+      center: centerAlignment,
       radius: _radialGradientRadius,
     );
   }
