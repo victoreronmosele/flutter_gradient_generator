@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
+import 'package:quiver/core.dart';
 
+// ignore: must_be_immutable
 class RadialStyleGradient extends AbstractGradient {
   RadialStyleGradient(
       {required List<Color> colorList,
@@ -11,15 +13,15 @@ class RadialStyleGradient extends AbstractGradient {
 
   final double _radialGradientRadius = 0.8;
 
-  String get _widgetStringTemplate =>
-      '''RadialGradient(
+  String get _widgetStringTemplate => '''RadialGradient(
           colors: ${getColorList()},
-          center: $_centerAlignment,
+          center: $centerAlignment,
           radius: $_radialGradientRadius,
         )
         ''';
 
-  Alignment get _centerAlignment {
+  @visibleForTesting
+  Alignment get centerAlignment {
     Alignment alignment;
 
     switch (getGradientDirection()) {
@@ -69,8 +71,21 @@ class RadialStyleGradient extends AbstractGradient {
   Gradient toFlutterGradient() {
     return RadialGradient(
       colors: getColorList(),
-      center: _centerAlignment,
+      center: centerAlignment,
       radius: _radialGradientRadius,
     );
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RadialStyleGradient &&
+          runtimeType == other.runtimeType &&
+          toWidgetString() == other.toWidgetString() &&
+          getGradientStyle() == other.getGradientStyle() &&
+          toFlutterGradient() == other.toFlutterGradient();
+
+  @override
+  int get hashCode => hash3(toWidgetString().hashCode,
+      getGradientStyle().hashCode, toFlutterGradient().hashCode);
 }

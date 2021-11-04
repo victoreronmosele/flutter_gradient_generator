@@ -30,10 +30,12 @@ dependencies:
       ref: feat/update-color-button-with-child
   collection: ^1.15.0
   url_strategy: ^0.2.0
+  quiver: ^3.0.1+1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test:
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

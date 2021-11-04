@@ -2,22 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
+import 'package:quiver/core.dart';
 
+// ignore: must_be_immutable
 class LinearStyleGradient extends AbstractGradient {
   LinearStyleGradient(
       {required List<Color> colorList,
       required GradientDirection gradientDirection})
       : super(colorList: colorList, gradientDirection: gradientDirection);
 
-  String get _widgetStringTemplate =>
-      '''LinearGradient(
+  String get _widgetStringTemplate => '''LinearGradient(
           colors: ${getColorList()},
-          begin: $_beginAlignment,
-          end: $_endAlignment,
+          begin: $beginAlignment,
+          end: $endAlignment,
         )
       ''';
 
-  Alignment get _beginAlignment {
+  @visibleForTesting
+  Alignment get beginAlignment {
     Alignment alignment;
     switch (getGradientDirection()) {
       case GradientDirection.topLeft:
@@ -52,7 +54,8 @@ class LinearStyleGradient extends AbstractGradient {
     return alignment;
   }
 
-  Alignment get _endAlignment {
+  @visibleForTesting
+  Alignment get endAlignment {
     Alignment alignment;
 
     switch (getGradientDirection()) {
@@ -100,8 +103,19 @@ class LinearStyleGradient extends AbstractGradient {
   @override
   Gradient toFlutterGradient() {
     return LinearGradient(
-        colors: getColorList(),
-        begin: _beginAlignment,
-        end: _endAlignment);
+        colors: getColorList(), begin: beginAlignment, end: endAlignment);
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is LinearStyleGradient &&
+          runtimeType == other.runtimeType &&
+          toWidgetString() == other.toWidgetString() &&
+          getGradientStyle() == other.getGradientStyle() &&
+          toFlutterGradient() == other.toFlutterGradient();
+
+  @override
+  int get hashCode => hash3(toWidgetString().hashCode,
+      getGradientStyle().hashCode, toFlutterGradient().hashCode);
 }
