@@ -1,8 +1,9 @@
 class AppDimensions {
   static const double generatorScreenWidth = 320;
-  static const double generatorScreenPadding = 32;
+  static const double generatorScreenHorizontalPadding = 32;
+  static const double generatorScreenVerticalPadding = 32;
   static const double generatorScreenContentWidth =
-      generatorScreenWidth - (2 * generatorScreenPadding);
+      generatorScreenWidth - (2 * generatorScreenHorizontalPadding);
   static const double numberOfCompactButtonPerRow = 3;
   static const double compactButtonMargin = 12.0;
   static const double compactButtonWidth =
