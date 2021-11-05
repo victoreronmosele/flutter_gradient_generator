@@ -29,7 +29,7 @@ class DirectionButton extends StatelessWidget {
           onGradientDirectionChanged(gradientDirection);
         },
         foregroundColor: Colors.black,
-        backgroundColor: isSelected ? greyColor : Colors.white,
+        backgroundColor: isSelected ? greyColor : Colors.transparent,
         borderSide: BorderSide(
           color: greyColor,
         ));
