@@ -52,7 +52,8 @@ class GeneratorScreen extends StatelessWidget {
                 colorList: colorList, onColorListChanged: onColorListChanged),
             SizedBox(height: 48),
             GetGradientButton(onTap: () async {
-              await Clipboard.setData(new ClipboardData(text: _generatedCode));
+              showAboutDialog(context: context);
+              // await Clipboard.setData(new ClipboardData(text: _generatedCode));
             }),
           ],
         ),
