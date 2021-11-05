@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
@@ -23,6 +25,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: AppStrings.appTitle,
       debugShowCheckedModeBanner: false,
+      theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
       home: HomeScreen(),
     );
   }
@@ -97,7 +100,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       body: Row(
         children: [

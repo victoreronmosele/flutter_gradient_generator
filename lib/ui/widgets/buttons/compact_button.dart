@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_fonts.dart';
 
 class CompactButton extends StatelessWidget {
   const CompactButton(
@@ -25,8 +26,9 @@ class CompactButton extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(backgroundColor),
         foregroundColor: MaterialStateProperty.all(foregroundColor),
-        textStyle:
-            MaterialStateProperty.all(TextStyle(fontWeight: FontWeight.bold)),
+        textStyle: MaterialStateProperty.all(TextStyle(
+            fontWeight: FontWeight.bold,
+            fontFamily: AppFonts.getFontFamily(context))),
         side: MaterialStateProperty.all(borderSide),
         fixedSize: MaterialStateProperty.all((Size(
             AppDimensions.compactButtonWidth,
