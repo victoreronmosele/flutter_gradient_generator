@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_picker.dart';
 import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
@@ -25,7 +26,7 @@ class ColorSelectionWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Colors',
+          AppStrings.colors,
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
@@ -62,7 +63,7 @@ class ColorSelectionWidget extends StatelessWidget {
                     SizedBox(width: AppDimensions.compactButtonPadding),
                   if (index == lastIndex)
                     CompactButton(
-                      child: Text('Random'),
+                      child: Text(AppStrings.random),
                       onPressed: () {
                         final List<Color> twoRandomColors =
                             randomColorGenerator.getTwoRandomColors();

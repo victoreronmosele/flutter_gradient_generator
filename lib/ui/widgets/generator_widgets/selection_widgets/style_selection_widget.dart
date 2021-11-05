@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 
@@ -35,7 +36,7 @@ class StyleSelectionWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Style',
+          AppStrings.style,
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
@@ -45,7 +46,9 @@ class StyleSelectionWidget extends StatelessWidget {
         Row(
           children: [
             CompactButton(
-              child: Text('Linear'),
+              child: Text(
+                AppStrings.linear,
+              ),
               onPressed: () {
                 onGradientStyleChanged(GradientStyle.linear);
               },
@@ -57,7 +60,7 @@ class StyleSelectionWidget extends StatelessWidget {
               width: AppDimensions.compactButtonMargin,
             ),
             CompactButton(
-              child: Text('Radial'),
+              child: Text(AppStrings.radial),
               onPressed: () {
                 onGradientStyleChanged(GradientStyle.radial);
               },

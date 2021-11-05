@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
@@ -40,12 +41,9 @@ class DirectionSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-
-      children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Text(
-        'Direction',
+        AppStrings.direction,
         style: TextStyle(
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
