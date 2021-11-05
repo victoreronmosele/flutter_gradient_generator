@@ -1,4 +1,7 @@
 # Flutter Gradient Generator
+
+fluttergradientgenerator.com
+
 Flutter Gradient Generator is a web app that generates linear and radial gradients for Flutter widgets.
 
 <img src="./screenshots/screenshot.png" alt="Screenshot of the Flutter Gradient Generator web app" width="80%"/>
@@ -6,7 +9,7 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 
 ## Usage
 
-1. Visit [the web app](https://flutter-gradient-generator.web.app/).
+1. Visit the [web app](https://fluttergradientgenerator.com/).
 
 2. Choose the gradient style. The options are:
    - linear
