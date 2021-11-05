@@ -32,12 +32,15 @@ class GeneratorScreen extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.all(AppDimensions.generatorScreenPadding),
+        padding: const EdgeInsets.symmetric(
+          horizontal: AppDimensions.generatorScreenHorizontalPadding,
+          vertical: AppDimensions.generatorScreenVerticalPadding,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             AppTitleWidget(),
-            SizedBox(height: 48),
+            SizedBox(height: 40),
             StyleSelectionWidget(
               gradientStyle: gradientStyle,
               onGradientStyleChanged: onGradientStyleChanged,
@@ -52,9 +55,9 @@ class GeneratorScreen extends StatelessWidget {
                 colorList: colorList, onColorListChanged: onColorListChanged),
             SizedBox(height: 48),
             GetGradientButton(onTap: () async {
-              showAboutDialog(context: context);
-              // await Clipboard.setData(new ClipboardData(text: _generatedCode));
+              await Clipboard.setData(new ClipboardData(text: _generatedCode));
             }),
+            SizedBox(height: 100),
           ],
         ),
       ),

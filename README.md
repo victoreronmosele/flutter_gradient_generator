@@ -1,6 +1,6 @@
 # Flutter Gradient Generator
 
-fluttergradientgenerator.com
+[fluttergradientgenerator.com](https://fluttergradientgenerator.com)
 
 Flutter Gradient Generator is a web app that generates linear and radial gradients for Flutter widgets.
 
