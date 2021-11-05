@@ -23,7 +23,7 @@ class StyleSelectionWidget extends StatelessWidget {
         gradientStyle == GradientStyle.radial;
 
     final Color selectedStyleButtonColor = AppColors.grey;
-    final Color unselectedStyleButtonColor = AppColors.white;
+    final Color unselectedStyleButtonColor = Colors.transparent;
 
     final Color linearStyleButtonColor = isLinearGradientStyleSelected
         ? selectedStyleButtonColor

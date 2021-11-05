@@ -37,13 +37,16 @@ class ColorSelectionWidget extends StatelessWidget {
           children: List.generate(
             colorList.length,
             (index) {
+                            final int firstIconIndex = 0;
+
+
               final Color color = colorList.elementAt(index);
               final int lastIndex = colorList.length - 1;
 
               return Row(
                 children: [
-                  if (index != 0)
-                    SizedBox(width: AppDimensions.compactButtonPadding),
+                  if (index != firstIconIndex)
+                    SizedBox(width: AppDimensions.compactButtonMargin),
                   CompactButton(
                     child: SizedBox.shrink(),
                     onPressed: () {
@@ -60,7 +63,7 @@ class ColorSelectionWidget extends StatelessWidget {
                     ),
                   ),
                   if (index == lastIndex)
-                    SizedBox(width: AppDimensions.compactButtonPadding),
+                    SizedBox(width: AppDimensions.compactButtonMargin),
                   if (index == lastIndex)
                     CompactButton(
                       child: Text(AppStrings.random),
