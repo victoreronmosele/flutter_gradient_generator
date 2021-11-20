@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
 import 'dart:math';
