@@ -1,4 +1,4 @@
-import 'package:flutter/foundation.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
@@ -15,8 +15,11 @@ import 'package:flutter_gradient_generator/ui/util/random_color_generator/random
 import 'package:flutter_gradient_generator/ui/widgets/footer/footer_widget.dart';
 import 'package:url_strategy/url_strategy.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
+  await Firebase.initializeApp();
+
   runApp(MyApp());
 }
 

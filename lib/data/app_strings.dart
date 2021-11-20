@@ -15,4 +15,5 @@ class AppStrings {
   static const githubUrl =
       'https://github.com/victoreronmosele/flutter_gradient_generator';
   static const personalWebsiteUrl = 'http://victoreronmosele.com/';
+  static const gradientGeneratedFirebaseAnalyticsKey = 'gradientGenerated';
 }

@@ -1,6 +1,8 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -56,6 +58,9 @@ class GeneratorScreen extends StatelessWidget {
             SizedBox(height: 48),
             GetGradientButton(onTap: () async {
               await Clipboard.setData(new ClipboardData(text: _generatedCode));
+              await FirebaseAnalytics().logEvent(
+                  name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
+                  parameters: gradient.toJson());
             }),
             SizedBox(height: 100),
           ],
