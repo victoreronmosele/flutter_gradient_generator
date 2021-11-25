@@ -42,23 +42,23 @@ class DirectionSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      Text(
+      const Text(
         AppStrings.direction,
         style: TextStyle(
           fontSize: 16.0,
           fontWeight: FontWeight.bold,
         ),
       ),
-      SizedBox(height: 16),
+      const SizedBox(height: 16),
       ...iconSetList.map(
           (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
         final int iconSetIndex =
             iconSetList.indexOf(gradientDirectionToIconSetMap);
-        final int firstIconSetIndex = 0;
+        const int firstIconSetIndex = 0;
 
         return Column(
           children: [
-            if (iconSetIndex != firstIconSetIndex) SizedBox(height: 8.0),
+            if (iconSetIndex != firstIconSetIndex) const SizedBox(height: 8.0),
             Row(
                 children: gradientDirectionToIconSetMap.values.map((icon) {
               final int iconIndex =
@@ -66,7 +66,7 @@ class DirectionSelectionWidget extends StatelessWidget {
               final GradientDirection gradientDirection =
                   gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
 
-              final int firstIconIndex = 0;
+              const int firstIconIndex = 0;
 
               final bool isCircleRadialButton =
                   iconSetIndex == circleDirectionIconSetNumber &&
@@ -75,7 +75,7 @@ class DirectionSelectionWidget extends StatelessWidget {
               return Row(
                 children: [
                   if (iconIndex != firstIconIndex)
-                    SizedBox(width: AppDimensions.compactButtonMargin),
+                    const SizedBox(width: AppDimensions.compactButtonMargin),
                   Visibility(
                     child: DirectionButton(
                         icon: icon,

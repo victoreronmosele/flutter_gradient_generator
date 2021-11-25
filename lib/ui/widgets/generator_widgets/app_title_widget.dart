@@ -11,11 +11,10 @@ class AppTitleWidget extends StatelessWidget {
     return Text(
       AppStrings.appTitleNewLine.toUpperCase(),
       textAlign: TextAlign.left,
-      style: TextStyle(
+      style: const TextStyle(
         fontSize: 24.0,
         fontWeight: FontWeight.bold,
       ),
     );
   }
 }
-

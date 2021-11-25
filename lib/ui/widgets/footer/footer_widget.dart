@@ -55,20 +55,22 @@ class _FooterWidgetState extends State<FooterWidget> {
                 children: [
                   TextSpan(
                     text: '${AppStrings.built} ',
-                    style: TextStyle(decoration: TextDecoration.underline),
+                    style:
+                        const TextStyle(decoration: TextDecoration.underline),
                     recognizer: _builtTapRecognizer,
                   ),
-                  TextSpan(
+                  const TextSpan(
                     text: AppStrings.by,
                   ),
                   TextSpan(
                     text: ' ${AppStrings.victorEronmosele}',
-                    style: TextStyle(decoration: TextDecoration.underline),
+                    style:
+                        const TextStyle(decoration: TextDecoration.underline),
                     recognizer: _nameTapGestureRecognizer,
                   ),
                 ],
               ),
-              style: TextStyle(fontWeight: FontWeight.bold),
+              style: const TextStyle(fontWeight: FontWeight.bold),
             )
           ],
         ),

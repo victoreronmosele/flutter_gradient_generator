@@ -20,23 +20,25 @@ void main() async {
   setPathUrlStrategy();
   await Firebase.initializeApp();
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
+  const MyApp({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: AppStrings.appTitle,
       debugShowCheckedModeBanner: false,
       theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }
 
 class HomeScreen extends StatefulWidget {
-  HomeScreen({
+  const HomeScreen({
     Key? key,
   }) : super(key: key);
 
@@ -46,7 +48,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final AbstractRandomColorGenerator randomColorGenerator =
-      RandomColorGenerator();
+      const RandomColorGenerator();
 
   late final AbstractGradient defaultGradient = LinearStyleGradient(
       colorList: randomColorGenerator.getTwoRandomColors(),
@@ -89,7 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void onColorListChanged(List<Color> newColorList) {
-    if (!ListEquality().equals(gradient.getColorList(), newColorList)) {
+    if (!const ListEquality().equals(gradient.getColorList(), newColorList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: gradient.getGradientStyle(),
         colorList: newColorList,
@@ -117,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 onGradientDirectionChanged: onGradientDirectionChanged,
                 onColorListChanged: onColorListChanged,
               ),
-              FooterWidget()
+              const FooterWidget()
             ],
           ),
           Flexible(child: PreviewScreen(gradient: gradient)),

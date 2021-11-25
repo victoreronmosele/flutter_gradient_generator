@@ -9,12 +9,12 @@ void main() {
     late final List<Color> colorList;
     late final RadialStyleGradient radialStyleGradient;
 
-    final radialGradientRadius = 0.8;
+    const radialGradientRadius = 0.8;
 
     setUpAll(() {
       colorList = [
-        Color(0xFF921E1E),
-        Color(0xFF0A951F),
+        const Color(0xFF921E1E),
+        const Color(0xFF0A951F),
       ];
       radialStyleGradient = RadialStyleGradient(
           colorList: colorList, gradientDirection: GradientDirection.topLeft);
@@ -63,7 +63,7 @@ void main() {
     test('.getGradientStyle() returns GradientStyle.radial', () {
       final GradientStyle actualGradientStyle =
           radialStyleGradient.getGradientStyle();
-      final GradientStyle expectedGradientStyle = GradientStyle.radial;
+      const GradientStyle expectedGradientStyle = GradientStyle.radial;
 
       expect(actualGradientStyle, expectedGradientStyle);
     });
