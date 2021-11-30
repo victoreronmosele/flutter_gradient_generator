@@ -19,10 +19,10 @@ abstract class AbstractGradient {
         _gradientDirection = gradientDirection;
 
   ///Holds the list of colors in the gradient
-  List<Color> _colorList;
+  final List<Color> _colorList;
 
   ///Holds the direction of the gradient
-  GradientDirection _gradientDirection;
+  final GradientDirection _gradientDirection;
 
   /// Returns the list of Colors in the gradient
   List<Color> getColorList() => _colorList;

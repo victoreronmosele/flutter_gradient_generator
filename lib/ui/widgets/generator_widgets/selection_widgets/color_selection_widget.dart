@@ -25,20 +25,19 @@ class ColorSelectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           AppStrings.colors,
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: List.generate(
             colorList.length,
             (index) {
-                            final int firstIconIndex = 0;
-
+              const int firstIconIndex = 0;
 
               final Color color = colorList.elementAt(index);
               final int lastIndex = colorList.length - 1;
@@ -46,9 +45,9 @@ class ColorSelectionWidget extends StatelessWidget {
               return Row(
                 children: [
                   if (index != firstIconIndex)
-                    SizedBox(width: AppDimensions.compactButtonMargin),
+                    const SizedBox(width: AppDimensions.compactButtonMargin),
                   CompactButton(
-                    child: SizedBox.shrink(),
+                    child: const SizedBox.shrink(),
                     onPressed: () {
                       _selectColor(
                         context: context,
@@ -63,10 +62,10 @@ class ColorSelectionWidget extends StatelessWidget {
                     ),
                   ),
                   if (index == lastIndex)
-                    SizedBox(width: AppDimensions.compactButtonMargin),
+                    const SizedBox(width: AppDimensions.compactButtonMargin),
                   if (index == lastIndex)
                     CompactButton(
-                      child: Text(AppStrings.random),
+                      child: const Text(AppStrings.random),
                       onPressed: () {
                         final List<Color> twoRandomColors =
                             randomColorGenerator.getTwoRandomColors();

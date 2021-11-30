@@ -41,28 +41,28 @@ class GeneratorScreen extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            AppTitleWidget(),
-            SizedBox(height: 40),
+            const AppTitleWidget(),
+            const SizedBox(height: 40),
             StyleSelectionWidget(
               gradientStyle: gradientStyle,
               onGradientStyleChanged: onGradientStyleChanged,
             ),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             DirectionSelectionWidget(
                 gradientStyle: gradient.getGradientStyle(),
                 selectedGradientDirection: gradient.getGradientDirection(),
                 onGradientDirectionChanged: onGradientDirectionChanged),
-            SizedBox(height: 24),
+            const SizedBox(height: 24),
             ColorSelectionWidget(
                 colorList: colorList, onColorListChanged: onColorListChanged),
-            SizedBox(height: 48),
+            const SizedBox(height: 48),
             GetGradientButton(onTap: () async {
-              await Clipboard.setData(new ClipboardData(text: _generatedCode));
+              await Clipboard.setData(ClipboardData(text: _generatedCode));
               await FirebaseAnalytics().logEvent(
                   name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
                   parameters: gradient.toJson());
             }),
-            SizedBox(height: 100),
+            const SizedBox(height: 100),
           ],
         ),
       ),

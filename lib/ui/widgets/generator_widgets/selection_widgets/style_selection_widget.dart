@@ -35,18 +35,18 @@ class StyleSelectionWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           AppStrings.style,
           style: TextStyle(
             fontSize: 16.0,
             fontWeight: FontWeight.bold,
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
         Row(
           children: [
             CompactButton(
-              child: Text(
+              child: const Text(
                 AppStrings.linear,
               ),
               onPressed: () {
@@ -56,11 +56,11 @@ class StyleSelectionWidget extends StatelessWidget {
               backgroundColor: linearStyleButtonColor,
               borderSide: BorderSide(color: selectedStyleButtonColor),
             ),
-            SizedBox(
+            const SizedBox(
               width: AppDimensions.compactButtonMargin,
             ),
             CompactButton(
-              child: Text(AppStrings.radial),
+              child: const Text(AppStrings.radial),
               onPressed: () {
                 onGradientStyleChanged(GradientStyle.radial);
               },

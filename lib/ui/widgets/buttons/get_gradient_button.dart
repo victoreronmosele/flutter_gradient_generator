@@ -58,7 +58,7 @@ class _GetGradientButtonState extends State<GetGradientButton> {
           _showCopiedText = true;
         });
 
-        await Future.delayed(Duration(seconds: 2));
+        await Future.delayed(const Duration(seconds: 2));
 
         setState(() {
           _showCopiedText = false;
@@ -71,8 +71,8 @@ class _GetGradientButtonState extends State<GetGradientButton> {
             fontWeight: FontWeight.bold,
             fontFamily: AppFonts.getFontFamily(context))),
         padding: MaterialStateProperty.all(
-            EdgeInsets.all(AppDimensions.widebuttonPadding)),
-        fixedSize: MaterialStateProperty.all((Size(
+            const EdgeInsets.all(AppDimensions.widebuttonPadding)),
+        fixedSize: MaterialStateProperty.all((const Size(
             AppDimensions.wideButtonWidth, AppDimensions.wideButtonHeight))),
       ),
     );

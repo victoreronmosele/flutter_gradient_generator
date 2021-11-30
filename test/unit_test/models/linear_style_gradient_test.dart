@@ -11,8 +11,8 @@ void main() {
 
     setUpAll(() {
       colorList = [
-        Color(0xFF921E1E),
-        Color(0xFF0A951F),
+        const Color(0xFF921E1E),
+        const Color(0xFF0A951F),
       ];
       linearStyleGradient = LinearStyleGradient(
           colorList: colorList, gradientDirection: GradientDirection.topLeft);
@@ -87,7 +87,7 @@ void main() {
     test('.getGradientStyle() returns GradientStyle.linear', () {
       final GradientStyle actualGradientStyle =
           linearStyleGradient.getGradientStyle();
-      final GradientStyle expectedGradientStyle = GradientStyle.linear;
+      const GradientStyle expectedGradientStyle = GradientStyle.linear;
 
       expect(actualGradientStyle, expectedGradientStyle);
     });

@@ -12,10 +12,10 @@ void main() {
       'GradientFactory returns the right AbstractGradient object given a GradientStyle',
       () {
     final List<Color> colorList = [
-      Color(0xFF921E1E),
-      Color(0xFF0A951F),
+      const Color(0xFF921E1E),
+      const Color(0xFF0A951F),
     ];
-    final GradientDirection gradientDirection = GradientDirection.topLeft;
+    const GradientDirection gradientDirection = GradientDirection.topLeft;
 
     final Map<GradientStyle, AbstractGradient>
         gradientStyleToAbstractGradientMap = {
@@ -33,7 +33,7 @@ void main() {
               colorList: colorList,
               gradientDirection: gradientDirection);
       final AbstractGradient expectedAbstractGradient = abstractGradient;
-      
+
       expect(actualAbstractGradient, expectedAbstractGradient);
     });
   });
