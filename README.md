@@ -32,6 +32,23 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 
 5. Click on "Get Gradient Code" and the code will be copied to your clipboard.
 
+## Running
+1. Clone the repository
+
+   ```bash
+   git clone https://github.com/victoreronmosele/flutter_gradient_generator.git
+   ```
+
+2. Cd into the folder
+   ```bash
+   cd flutter_gradient_generator
+   ```
+3. Run the app
+   ```bash
+   flutter run 
+   ```
+
+
 ## Roadmap
 
 - [x] Linear gradient
