@@ -26,7 +26,7 @@ class GeneratorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String _generatedCode = gradient.toWidgetString();
+    final String generatedCode = gradient.toWidgetString();
 
     final List<Color> colorList = gradient.getColorList();
 
@@ -57,8 +57,8 @@ class GeneratorScreen extends StatelessWidget {
                 colorList: colorList, onColorListChanged: onColorListChanged),
             const SizedBox(height: 48),
             GetGradientButton(onTap: () async {
-              await Clipboard.setData(ClipboardData(text: _generatedCode));
-              await FirebaseAnalytics().logEvent(
+              await Clipboard.setData(ClipboardData(text: generatedCode));
+              await FirebaseAnalytics.instance.logEvent(
                   name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
                   parameters: gradient.toJson());
             }),

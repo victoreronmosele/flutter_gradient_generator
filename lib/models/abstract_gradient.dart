@@ -38,9 +38,9 @@ abstract class AbstractGradient {
   /// Returns a [Gradient] from Flutter's painting library
   Gradient toFlutterGradient();
 
-  Map<String, dynamic> toJson() {
+  Map<String, String> toJson() {
     return {
-      'colorList': _colorList.map((e) => e.toString()).toList(),
+      'colorList': _colorList.map((e) => e.toString()).toList().toString(),
       'gradientStyle': getGradientStyle().toString(),
       'gradientDirection': getGradientDirection().toString(),
       'generatedCode': toWidgetString(),

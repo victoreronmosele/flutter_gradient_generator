@@ -50,7 +50,6 @@ class _GetGradientButtonState extends State<GetGradientButton> {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: Text(_buttonText),
       onPressed: () async {
         await widget.onTap();
 
@@ -75,6 +74,7 @@ class _GetGradientButtonState extends State<GetGradientButton> {
         fixedSize: MaterialStateProperty.all((const Size(
             AppDimensions.wideButtonWidth, AppDimensions.wideButtonHeight))),
       ),
+      child: Text(_buttonText),
     );
   }
 }

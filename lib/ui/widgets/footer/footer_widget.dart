@@ -21,13 +21,11 @@ class _FooterWidgetState extends State<FooterWidget> {
   void initState() {
     super.initState();
     _builtTapRecognizer.onTap = () {
-      launch(AppStrings.githubUrl);
+      launchUrl(Uri.parse(AppStrings.githubUrl));
     };
 
     _nameTapGestureRecognizer.onTap = () {
-      launch(
-        AppStrings.personalWebsiteUrl,
-      );
+      launchUrl(Uri.parse(AppStrings.personalWebsiteUrl));
     };
   }
 
