@@ -77,18 +77,18 @@ class DirectionSelectionWidget extends StatelessWidget {
                   if (iconIndex != firstIconIndex)
                     const SizedBox(width: AppDimensions.compactButtonMargin),
                   Visibility(
-                    child: DirectionButton(
-                        icon: icon,
-                        gradientDirection: gradientDirection,
-                        isSelected:
-                            gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged: onGradientDirectionChanged),
                     visible: isCircleRadialButton
                         ? gradientStyle == GradientStyle.radial
                         : true,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
+                    child: DirectionButton(
+                        icon: icon,
+                        gradientDirection: gradientDirection,
+                        isSelected:
+                            gradientDirection == selectedGradientDirection,
+                        onGradientDirectionChanged: onGradientDirectionChanged),
                   ),
                 ],
               );

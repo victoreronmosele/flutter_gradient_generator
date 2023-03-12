@@ -47,7 +47,6 @@ class ColorSelectionWidget extends StatelessWidget {
                   if (index != firstIconIndex)
                     const SizedBox(width: AppDimensions.compactButtonMargin),
                   CompactButton(
-                    child: const SizedBox.shrink(),
                     onPressed: () {
                       _selectColor(
                         context: context,
@@ -60,12 +59,12 @@ class ColorSelectionWidget extends StatelessWidget {
                     borderSide: BorderSide(
                       color: AppColors.grey,
                     ),
+                    child: const SizedBox.shrink(),
                   ),
                   if (index == lastIndex)
                     const SizedBox(width: AppDimensions.compactButtonMargin),
                   if (index == lastIndex)
                     CompactButton(
-                      child: const Text(AppStrings.random),
                       onPressed: () {
                         final List<Color> twoRandomColors =
                             randomColorGenerator.getTwoRandomColors();
@@ -77,6 +76,7 @@ class ColorSelectionWidget extends StatelessWidget {
                       borderSide: BorderSide(
                         color: AppColors.grey,
                       ),
+                      child: const Text(AppStrings.random),
                     ),
                 ],
               );

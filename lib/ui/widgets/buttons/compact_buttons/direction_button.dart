@@ -21,10 +21,6 @@ class DirectionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final Color greyColor = AppColors.grey;
     return CompactButton(
-        child: Icon(
-          icon,
-          size: 12.0,
-        ),
         onPressed: () {
           onGradientDirectionChanged(gradientDirection);
         },
@@ -32,6 +28,10 @@ class DirectionButton extends StatelessWidget {
         backgroundColor: isSelected ? greyColor : Colors.transparent,
         borderSide: BorderSide(
           color: greyColor,
+        ),
+        child: Icon(
+          icon,
+          size: 12.0,
         ));
   }
 }

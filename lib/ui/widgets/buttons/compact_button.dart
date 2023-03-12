@@ -21,7 +21,6 @@ class CompactButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextButton(
-      child: child,
       onPressed: onPressed,
       style: ButtonStyle(
         backgroundColor: MaterialStateProperty.all(backgroundColor),
@@ -34,6 +33,7 @@ class CompactButton extends StatelessWidget {
             AppDimensions.compactButtonWidth,
             AppDimensions.compactButtonHeight))),
       ),
+      child: child,
     );
   }
 }

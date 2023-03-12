@@ -23,7 +23,7 @@ class StyleSelectionWidget extends StatelessWidget {
         gradientStyle == GradientStyle.radial;
 
     final Color selectedStyleButtonColor = AppColors.grey;
-    final Color unselectedStyleButtonColor = Colors.transparent;
+    const Color unselectedStyleButtonColor = Colors.transparent;
 
     final Color linearStyleButtonColor = isLinearGradientStyleSelected
         ? selectedStyleButtonColor
@@ -46,27 +46,27 @@ class StyleSelectionWidget extends StatelessWidget {
         Row(
           children: [
             CompactButton(
-              child: const Text(
-                AppStrings.linear,
-              ),
               onPressed: () {
                 onGradientStyleChanged(GradientStyle.linear);
               },
               foregroundColor: Colors.black,
               backgroundColor: linearStyleButtonColor,
               borderSide: BorderSide(color: selectedStyleButtonColor),
+              child: const Text(
+                AppStrings.linear,
+              ),
             ),
             const SizedBox(
               width: AppDimensions.compactButtonMargin,
             ),
             CompactButton(
-              child: const Text(AppStrings.radial),
               onPressed: () {
                 onGradientStyleChanged(GradientStyle.radial);
               },
               foregroundColor: Colors.black,
               backgroundColor: radialStyleButtonColor,
               borderSide: BorderSide(color: selectedStyleButtonColor),
+              child: const Text(AppStrings.radial),
             ),
           ],
         ),
