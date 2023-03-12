@@ -4,6 +4,7 @@ import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/firebase_options.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/models/gradient_factory.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
@@ -18,7 +19,9 @@ import 'package:url_strategy/url_strategy.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   runApp(const MyApp());
 }
@@ -43,10 +46,10 @@ class HomeScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  _HomeScreenState createState() => _HomeScreenState();
+  HomeScreenState createState() => HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class HomeScreenState extends State<HomeScreen> {
   final AbstractRandomColorGenerator randomColorGenerator =
       const RandomColorGenerator();
 
