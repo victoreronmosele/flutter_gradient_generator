@@ -1,4 +1,5 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
@@ -15,13 +16,15 @@ class GeneratorScreen extends StatelessWidget {
   final void Function(GradientStyle) onGradientStyleChanged;
   final void Function(GradientDirection) onGradientDirectionChanged;
   final void Function(List<Color>) onColorListChanged;
+  final void Function(List<int>) onStopListChanged;
 
   const GeneratorScreen(
       {Key? key,
       required this.gradient,
       required this.onGradientStyleChanged,
       required this.onGradientDirectionChanged,
-      required this.onColorListChanged})
+      required this.onColorListChanged,
+      required this.onStopListChanged})
       : super(key: key);
 
   @override
@@ -29,6 +32,7 @@ class GeneratorScreen extends StatelessWidget {
     final String generatedCode = gradient.toWidgetString();
 
     final List<Color> colorList = gradient.getColorList();
+    final List<int> stopList = gradient.getStopList();
 
     final gradientStyle = gradient.getGradientStyle();
 
@@ -53,14 +57,22 @@ class GeneratorScreen extends StatelessWidget {
                 selectedGradientDirection: gradient.getGradientDirection(),
                 onGradientDirectionChanged: onGradientDirectionChanged),
             const SizedBox(height: 24),
-            ColorSelectionWidget(
-                colorList: colorList, onColorListChanged: onColorListChanged),
+            ColorAndStopSelectionWidget(
+              colorList: colorList,
+              stopList: stopList,
+              onColorListChanged: onColorListChanged,
+              onStopListChanged: onStopListChanged,
+            ),
             const SizedBox(height: 48),
             GetGradientButton(onTap: () async {
               await Clipboard.setData(ClipboardData(text: generatedCode));
-              await FirebaseAnalytics.instance.logEvent(
-                  name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
-                  parameters: gradient.toJson());
+
+              /// Log event to Firebase Analytics if not in debug mode
+              if (!kDebugMode) {
+                await FirebaseAnalytics.instance.logEvent(
+                    name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
+                    parameters: gradient.toJson());
+              }
             }),
             const SizedBox(height: 100),
           ],

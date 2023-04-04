@@ -8,11 +8,17 @@ import 'package:quiver/core.dart';
 class LinearStyleGradient extends AbstractGradient {
   LinearStyleGradient(
       {required List<Color> colorList,
+      required List<int> stopList,
       required GradientDirection gradientDirection})
-      : super(colorList: colorList, gradientDirection: gradientDirection);
+      : super(
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: gradientDirection,
+        );
 
   String get _widgetStringTemplate => '''LinearGradient(
           colors: ${getColorList()},
+          stops: ${getStopListForFlutterCode()},
           begin: $beginAlignment,
           end: $endAlignment,
         )
@@ -103,7 +109,11 @@ class LinearStyleGradient extends AbstractGradient {
   @override
   Gradient toFlutterGradient() {
     return LinearGradient(
-        colors: getColorList(), begin: beginAlignment, end: endAlignment);
+      colors: getColorList(),
+      begin: beginAlignment,
+      end: endAlignment,
+      stops: getStopListForFlutterCode(),
+    );
   }
 
   @override

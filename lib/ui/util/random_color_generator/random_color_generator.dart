@@ -7,7 +7,8 @@ class RandomColorGenerator implements AbstractRandomColorGenerator {
 
   @override
   List<Color> getTwoRandomColors() {
-    const List<Color> colorList = Colors.primaries;
+    final List<Color> colorList =
+        Colors.primaries.map((color) => color.shade500).toList();
     final int colorListLength = colorList.length;
 
     final Random random = Random();
