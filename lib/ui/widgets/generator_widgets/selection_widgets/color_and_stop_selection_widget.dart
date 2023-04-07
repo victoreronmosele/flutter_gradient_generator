@@ -220,19 +220,20 @@ class _StopTextBoxState extends State<StopTextBox> {
     super.initState();
     _controller.text = widget.stop.toString();
 
-    /// Reset the text field tap count when the text field loses focus.
     _focusNode.addListener(() {
+      /// Run when the text field loses focus.
       if (!_focusNode.hasFocus) {
+        /// Reset the text field tap count.
         textFieldTapCount = 0;
 
-        /// Reset the stop to the previous stop if the text field is empty.
-        /// 
+        /// Submit the stop value.
+        ///
         /// This was added to capture when another text field is tapped because
         /// the [onTapOutside] callback is not called when another text field is
         /// tapped.
-        if (_controller.text.isEmpty) {
-          resetStopToPreviousStop();
-        }
+        final text = _controller.text;
+
+        onStopSubmitted(text);
       }
     });
   }
