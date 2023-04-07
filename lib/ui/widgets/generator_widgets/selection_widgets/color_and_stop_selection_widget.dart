@@ -199,6 +199,9 @@ class _StopTextBoxState extends State<StopTextBox> {
 
   final minumuInteger = 0;
 
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
   int get maximumIntegerLength => maximumInteger.toString().length;
 
   List<TextInputFormatter> get inputFormatters => [
@@ -207,19 +210,29 @@ class _StopTextBoxState extends State<StopTextBox> {
         LengthLimitingTextInputFormatter(maximumIntegerLength),
       ];
 
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
+  /// Holds the number of times the user has tapped the text field in a row.
+  ///
+  /// This does not include taps outside of the text field.
+  int textFieldTapCount = 0;
 
   @override
   void initState() {
     super.initState();
     _controller.text = widget.stop.toString();
+
+    /// Reset the text field tap count when the text field loses focus.
+    _focusNode.addListener(() {
+      if (!_focusNode.hasFocus) {
+        textFieldTapCount = 0;
+      }
+    });
   }
 
   @override
   void dispose() {
     _controller.dispose();
     _focusNode.dispose();
+    textFieldTapCount = 0;
     super.dispose();
   }
 
@@ -228,7 +241,7 @@ class _StopTextBoxState extends State<StopTextBox> {
     return OutlinedTextField(
       inputFormatters: inputFormatters,
       onSubmitted: onStopSubmitted,
-      onTap: adjustTextSelectionBasedOnCursorPosition,
+      onTap: onTextFieldTap,
       onTapOutside: onTapOutside,
       controller: _controller,
       focusNode: _focusNode,
@@ -272,21 +285,26 @@ class _StopTextBoxState extends State<StopTextBox> {
     }
   }
 
-  /// Selects the entire text if the cursor is not at the end.
-  void adjustTextSelectionBasedOnCursorPosition() {
-    final cursorPosition = _controller.selection;
+  /// Called when the user taps on the text field.
+  void onTextFieldTap() {
+    /// Select the entire text in the text field the first time the user taps
+    /// the text field.
+    if (textFieldTapCount == 0) {
+      selectEntireText();
+    }
+
+    /// Increment the number of times the user has tapped the text field.
+    textFieldTapCount++;
+  }
+
+  /// Selects the entire text in the text field.
+  void selectEntireText() {
     final textLength = _controller.text.length;
 
-    final isCursorAtEnd = cursorPosition.baseOffset == textLength;
-
-    if (!isCursorAtEnd) {
-      /// Select the entire text if the cursor is not at the end
-      /// This is to make it easier to replace the entire text
-      _controller.selection = TextSelection(
-        baseOffset: 0,
-        extentOffset: textLength,
-      );
-    }
+    _controller.selection = TextSelection(
+      baseOffset: 0,
+      extentOffset: textLength,
+    );
   }
 }
 
