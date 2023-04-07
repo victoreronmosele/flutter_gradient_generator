@@ -206,7 +206,7 @@ class StopTextBox extends StatelessWidget {
     return OutlinedTextField(
       text: stop.toString(),
       inputFormatters: inputFormatters,
-      onChanged: (value) {
+      onSubmitted: (value) {
         final int? stop = int.tryParse(value);
 
         if (stop != null) {
@@ -224,14 +224,14 @@ class OutlinedTextField extends StatefulWidget {
     super.key,
     required this.text,
     required this.inputFormatters,
-    required this.onChanged,
+    required this.onSubmitted,
     this.keyboardType,
   });
 
   final String text;
   final List<TextInputFormatter> inputFormatters;
   final TextInputType? keyboardType;
-  final ValueChanged<String> onChanged;
+  final ValueChanged<String> onSubmitted;
 
   @override
   State<OutlinedTextField> createState() => _OutlinedTextFieldState();
@@ -265,7 +265,7 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
         ),
         keyboardType: widget.keyboardType,
         textAlign: TextAlign.center,
-        onChanged: widget.onChanged,
+        onSubmitted: widget.onSubmitted,
         controller: _controller,
       ),
     );
