@@ -224,6 +224,15 @@ class _StopTextBoxState extends State<StopTextBox> {
     _focusNode.addListener(() {
       if (!_focusNode.hasFocus) {
         textFieldTapCount = 0;
+
+        /// Reset the stop to the previous stop if the text field is empty.
+        /// 
+        /// This was added to capture when another text field is tapped because
+        /// the [onTapOutside] callback is not called when another text field is
+        /// tapped.
+        if (_controller.text.isEmpty) {
+          resetStopToPreviousStop();
+        }
       }
     });
   }
@@ -274,15 +283,35 @@ class _StopTextBoxState extends State<StopTextBox> {
 
   /// Called when the user has submitted the stop text in the text field.
   void onStopSubmitted(String? value) {
-    if (value == null) {
+    /// Reset the stop to the previous stop if the value is null or empty.
+    if (value == null || value.isEmpty) {
+      resetStopToPreviousStop();
+
       return;
     }
 
     final int? stop = int.tryParse(value);
 
-    if (stop != null) {
-      widget.onStopChanged(stop);
+    /// Reset the stop to the previous stop if the stop is null.
+    if (stop == null) {
+      resetStopToPreviousStop();
+
+      return;
     }
+
+    /// Update the stop value.
+    widget.onStopChanged(stop);
+
+    return;
+  }
+
+  /// Resets the stop value to the previous stop value
+  void resetStopToPreviousStop() {
+    final previousStop = widget.stop;
+
+    _controller.text = previousStop.toString();
+
+    widget.onStopChanged(previousStop);
   }
 
   /// Called when the user taps on the text field.
