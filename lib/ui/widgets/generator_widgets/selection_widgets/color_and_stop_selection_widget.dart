@@ -208,6 +208,7 @@ class _StopTextBoxState extends State<StopTextBox> {
       ];
 
   final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -218,6 +219,7 @@ class _StopTextBoxState extends State<StopTextBox> {
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -225,17 +227,49 @@ class _StopTextBoxState extends State<StopTextBox> {
   Widget build(BuildContext context) {
     return OutlinedTextField(
       inputFormatters: inputFormatters,
-      onSubmitted: (value) {
-        final int? stop = int.tryParse(value);
-
-        if (stop != null) {
-          widget.onStopChanged(stop);
-        }
-      },
+      onSubmitted: onStopSubmitted,
       onTap: adjustTextSelectionBasedOnCursorPosition,
+      onTapOutside: onTapOutside,
       controller: _controller,
+      focusNode: _focusNode,
       keyboardType: TextInputType.number,
     );
+  }
+
+  /// Called when the user taps outside of the text field.
+  ///
+  /// This helps to submit the stop value when the user taps outside of the
+  /// text field.
+  void onTapOutside(PointerDownEvent _) {
+    /// Check if the text field is focused.
+    final textFieldIsFocused = _focusNode.hasFocus;
+
+    /// We want to submit the stop value if the text field is focused.
+    /// No need to submit the stop value if the text field is not focused.
+    if (textFieldIsFocused) {
+      /// Unfocus the text field since the user tapped outside of it and
+      /// the stop will be submitted.
+      _focusNode.unfocus();
+
+      /// Get the stop value from the text field.
+      final text = _controller.text;
+
+      /// Submit the stop value.
+      onStopSubmitted(text);
+    }
+  }
+
+  /// Called when the user has submitted the stop text in the text field.
+  void onStopSubmitted(String? value) {
+    if (value == null) {
+      return;
+    }
+
+    final int? stop = int.tryParse(value);
+
+    if (stop != null) {
+      widget.onStopChanged(stop);
+    }
   }
 
   /// Selects the entire text if the cursor is not at the end.
@@ -264,14 +298,18 @@ class OutlinedTextField extends StatelessWidget {
     required this.onSubmitted,
     required this.onTap,
     required this.controller,
+    required this.focusNode,
+    required this.onTapOutside,
     this.keyboardType,
   });
 
   final List<TextInputFormatter> inputFormatters;
-  final TextInputType? keyboardType;
-  final ValueChanged<String> onSubmitted;
+  final ValueChanged<String?> onSubmitted;
   final void Function() onTap;
-  final TextEditingController? controller;
+  final TextEditingController controller;
+  final FocusNode focusNode;
+  final void Function(PointerDownEvent) onTapOutside;
+  final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
@@ -279,24 +317,26 @@ class OutlinedTextField extends StatelessWidget {
       width: AppDimensions.compactButtonWidth,
       height: AppDimensions.compactButtonHeight,
       child: TextField(
-        inputFormatters: inputFormatters,
-        decoration: const InputDecoration(
-          border: OutlineInputBorder(),
-          contentPadding: EdgeInsets.zero,
-        ),
-        keyboardType: keyboardType,
-        textAlign: TextAlign.center,
-        onSubmitted: onSubmitted,
-        controller: controller,
-        onTap: onTap,
-      ),
+          inputFormatters: inputFormatters,
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            contentPadding: EdgeInsets.zero,
+          ),
+          keyboardType: keyboardType,
+          textAlign: TextAlign.center,
+          onSubmitted: onSubmitted,
+          controller: controller,
+          focusNode: focusNode,
+          onTap: onTap,
+          onTapOutside: onTapOutside),
     );
   }
 }
 
 /// A [TextInputFormatter] that limits the input to a minimum and maximum integer.
-/// If the input is greater than the maximum integer, the maximum integer is returned.
-/// If the input is less than the minimum integer, the minimum integer is returned.
+///
+/// If the input is greater than [maximumInteger], [maximumInteger],  is returned.
+/// If the input is less than [minimumInteger], [minimumInteger] is returned.
 class MinimumMaximumIntegerInputFormatter extends TextInputFormatter {
   MinimumMaximumIntegerInputFormatter({
     required this.maximumInteger,
@@ -314,6 +354,7 @@ class MinimumMaximumIntegerInputFormatter extends TextInputFormatter {
   @override
   TextEditingValue formatEditUpdate(
       TextEditingValue oldValue, TextEditingValue newValue) {
+    /// Gets the length of the new text.
     final newTextLength = newValue.text.length;
 
     if (newTextLength > _maximumIntegerLength) {
