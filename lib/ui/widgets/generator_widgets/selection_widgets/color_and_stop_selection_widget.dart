@@ -180,7 +180,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
 
 /// A [TextField] that holds the stop value for a color on the Gradient. It only
 /// allows integers between [maximumInteger] and [minimumInteger].
-class StopTextBox extends StatelessWidget {
+class StopTextBox extends StatefulWidget {
   const StopTextBox({
     super.key,
     required this.stop,
@@ -190,7 +190,13 @@ class StopTextBox extends StatelessWidget {
   final int stop;
   final void Function(int) onStopChanged;
 
+  @override
+  State<StopTextBox> createState() => _StopTextBoxState();
+}
+
+class _StopTextBoxState extends State<StopTextBox> {
   final maximumInteger = 100;
+
   final minumuInteger = 0;
 
   int get maximumIntegerLength => maximumInteger.toString().length;
@@ -201,49 +207,12 @@ class StopTextBox extends StatelessWidget {
         LengthLimitingTextInputFormatter(maximumIntegerLength),
       ];
 
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedTextField(
-      text: stop.toString(),
-      inputFormatters: inputFormatters,
-      onSubmitted: (value) {
-        final int? stop = int.tryParse(value);
-
-        if (stop != null) {
-          onStopChanged(stop);
-        }
-      },
-      keyboardType: TextInputType.number,
-    );
-  }
-}
-
-/// A [TextField] with an [OutlineInputBorder].
-class OutlinedTextField extends StatefulWidget {
-  const OutlinedTextField({
-    super.key,
-    required this.text,
-    required this.inputFormatters,
-    required this.onSubmitted,
-    this.keyboardType,
-  });
-
-  final String text;
-  final List<TextInputFormatter> inputFormatters;
-  final TextInputType? keyboardType;
-  final ValueChanged<String> onSubmitted;
-
-  @override
-  State<OutlinedTextField> createState() => _OutlinedTextFieldState();
-}
-
-class _OutlinedTextFieldState extends State<OutlinedTextField> {
   final TextEditingController _controller = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    _controller.text = widget.text;
+    _controller.text = widget.stop.toString();
   }
 
   @override
@@ -254,19 +223,72 @@ class _OutlinedTextFieldState extends State<OutlinedTextField> {
 
   @override
   Widget build(BuildContext context) {
+    return OutlinedTextField(
+      inputFormatters: inputFormatters,
+      onSubmitted: (value) {
+        final int? stop = int.tryParse(value);
+
+        if (stop != null) {
+          widget.onStopChanged(stop);
+        }
+      },
+      onTap: adjustTextSelectionBasedOnCursorPosition,
+      controller: _controller,
+      keyboardType: TextInputType.number,
+    );
+  }
+
+  /// Selects the entire text if the cursor is not at the end.
+  void adjustTextSelectionBasedOnCursorPosition() {
+    final cursorPosition = _controller.selection;
+    final textLength = _controller.text.length;
+
+    final isCursorAtEnd = cursorPosition.baseOffset == textLength;
+
+    if (!isCursorAtEnd) {
+      /// Select the entire text if the cursor is not at the end
+      /// This is to make it easier to replace the entire text
+      _controller.selection = TextSelection(
+        baseOffset: 0,
+        extentOffset: textLength,
+      );
+    }
+  }
+}
+
+/// A [TextField] with an [OutlineInputBorder].
+class OutlinedTextField extends StatelessWidget {
+  const OutlinedTextField({
+    super.key,
+    required this.inputFormatters,
+    required this.onSubmitted,
+    required this.onTap,
+    required this.controller,
+    this.keyboardType,
+  });
+
+  final List<TextInputFormatter> inputFormatters;
+  final TextInputType? keyboardType;
+  final ValueChanged<String> onSubmitted;
+  final void Function() onTap;
+  final TextEditingController? controller;
+
+  @override
+  Widget build(BuildContext context) {
     return SizedBox(
       width: AppDimensions.compactButtonWidth,
       height: AppDimensions.compactButtonHeight,
       child: TextField(
-        inputFormatters: widget.inputFormatters,
+        inputFormatters: inputFormatters,
         decoration: const InputDecoration(
           border: OutlineInputBorder(),
           contentPadding: EdgeInsets.zero,
         ),
-        keyboardType: widget.keyboardType,
+        keyboardType: keyboardType,
         textAlign: TextAlign.center,
-        onSubmitted: widget.onSubmitted,
-        controller: _controller,
+        onSubmitted: onSubmitted,
+        controller: controller,
+        onTap: onTap,
       ),
     );
   }
