@@ -8,13 +8,19 @@ import 'package:quiver/core.dart';
 class RadialStyleGradient extends AbstractGradient {
   RadialStyleGradient(
       {required List<Color> colorList,
+      required List<int> stopList,
       required GradientDirection gradientDirection})
-      : super(colorList: colorList, gradientDirection: gradientDirection);
+      : super(
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: gradientDirection,
+        );
 
   final double _radialGradientRadius = 0.8;
 
   String get _widgetStringTemplate => '''RadialGradient(
           colors: ${getColorList()},
+          stops: ${getStopListForFlutterCode()},
           center: $centerAlignment,
           radius: $_radialGradientRadius,
         )
@@ -73,6 +79,7 @@ class RadialStyleGradient extends AbstractGradient {
       colors: getColorList(),
       center: centerAlignment,
       radius: _radialGradientRadius,
+      stops: getStopListForFlutterCode(),
     );
   }
 

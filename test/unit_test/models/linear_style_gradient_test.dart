@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group('LinearStyleGradient', () {
     late final List<Color> colorList;
+    late final List<int> stopList;
     late final LinearStyleGradient linearStyleGradient;
 
     setUpAll(() {
@@ -14,14 +15,20 @@ void main() {
         const Color(0xFF921E1E),
         const Color(0xFF0A951F),
       ];
+
+      stopList = [0, 100];
+
       linearStyleGradient = LinearStyleGradient(
-          colorList: colorList, gradientDirection: GradientDirection.topLeft);
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: GradientDirection.topLeft);
     });
 
     test('.toWidgetString() returns the correct widget string', () {
       final actualWidgetString = linearStyleGradient.toWidgetString();
       final expectedWidgetString = '''LinearGradient(
           colors: $colorList,
+          stops: ${stopList.map((stop) => stop / 100).toList()},
           begin: ${Alignment.topLeft},
           end: ${Alignment.bottomRight},
         )
@@ -48,7 +55,9 @@ void main() {
       gradientDirectionToBeginAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
-            colorList: colorList, gradientDirection: gradientDirection);
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
 
         final Alignment actualAlignment =
             testLinearStyleGradient.beginAlignment;
@@ -75,7 +84,9 @@ void main() {
       gradientDirectionToEndAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
-            colorList: colorList, gradientDirection: gradientDirection);
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
 
         final Alignment actualAlignment = testLinearStyleGradient.endAlignment;
         final Alignment expectedAlignment = alignment;
@@ -97,7 +108,8 @@ void main() {
       final Gradient expectedGradient = LinearGradient(
           colors: colorList,
           begin: Alignment.topLeft,
-          end: Alignment.bottomRight);
+          end: Alignment.bottomRight,
+          stops: stopList.map((stop) => stop / 100).toList());
 
       expect(actualGradient, expectedGradient);
     });

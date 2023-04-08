@@ -9,17 +9,22 @@ class GradientFactory {
   AbstractGradient getGradient(
       {required GradientStyle gradientStyle,
       required List<Color> colorList,
+      required List<int> stopList,
       required GradientDirection gradientDirection}) {
     AbstractGradient gradient;
 
     switch (gradientStyle) {
       case GradientStyle.linear:
         gradient = LinearStyleGradient(
-            colorList: colorList, gradientDirection: gradientDirection);
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
         break;
       case GradientStyle.radial:
         gradient = RadialStyleGradient(
-            colorList: colorList, gradientDirection: gradientDirection);
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
         break;
     }
 

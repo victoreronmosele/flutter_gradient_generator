@@ -7,6 +7,7 @@ import 'package:test/test.dart';
 void main() {
   group('RadialStyleGradient', () {
     late final List<Color> colorList;
+    late final List<int> stopList;
     late final RadialStyleGradient radialStyleGradient;
 
     const radialGradientRadius = 0.8;
@@ -16,14 +17,20 @@ void main() {
         const Color(0xFF921E1E),
         const Color(0xFF0A951F),
       ];
+
+      stopList = [0, 100];
+
       radialStyleGradient = RadialStyleGradient(
-          colorList: colorList, gradientDirection: GradientDirection.topLeft);
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: GradientDirection.topLeft);
     });
 
     test('.toWidgetString() returns the correct widget string', () {
       final actualWidgetString = radialStyleGradient.toWidgetString();
       final expectedWidgetString = '''RadialGradient(
           colors: $colorList,
+          stops: ${stopList.map((stop) => stop / 100).toList()},
           center: ${Alignment.topLeft},
           radius: $radialGradientRadius,
         )
@@ -50,7 +57,9 @@ void main() {
       gradientDirectionToCenterAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final RadialStyleGradient testRadialStyleGradient = RadialStyleGradient(
-            colorList: colorList, gradientDirection: gradientDirection);
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
 
         final Alignment actualAlignment =
             testRadialStyleGradient.centerAlignment;
@@ -71,9 +80,11 @@ void main() {
     test('.toFlutterGradient() returns the right RadialGradient object', () {
       final Gradient actualGradient = radialStyleGradient.toFlutterGradient();
       final Gradient expectedGradient = RadialGradient(
-          colors: colorList,
-          center: Alignment.topLeft,
-          radius: radialGradientRadius);
+        colors: colorList,
+        center: Alignment.topLeft,
+        radius: radialGradientRadius,
+        stops: stopList.map((stop) => stop / 100).toList(),
+      );
 
       expect(actualGradient, expectedGradient);
     });

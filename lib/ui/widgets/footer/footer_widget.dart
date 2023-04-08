@@ -40,6 +40,7 @@ class _FooterWidgetState extends State<FooterWidget> {
   Widget build(BuildContext context) {
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
+      width: AppDimensions.generatorScreenContentWidth,
       child: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: AppDimensions.generatorScreenHorizontalPadding,

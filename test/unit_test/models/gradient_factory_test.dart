@@ -15,14 +15,21 @@ void main() {
       const Color(0xFF921E1E),
       const Color(0xFF0A951F),
     ];
+
+    final List<int> stopList = [0, 100];
+
     const GradientDirection gradientDirection = GradientDirection.topLeft;
 
     final Map<GradientStyle, AbstractGradient>
         gradientStyleToAbstractGradientMap = {
       GradientStyle.linear: LinearStyleGradient(
-          colorList: colorList, gradientDirection: gradientDirection),
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: gradientDirection),
       GradientStyle.radial: RadialStyleGradient(
-          colorList: colorList, gradientDirection: gradientDirection)
+          colorList: colorList,
+          stopList: stopList,
+          gradientDirection: gradientDirection)
     };
 
     gradientStyleToAbstractGradientMap.forEach(
@@ -31,6 +38,7 @@ void main() {
           .getGradient(
               gradientStyle: gradientStyle,
               colorList: colorList,
+              stopList: stopList,
               gradientDirection: gradientDirection);
       final AbstractGradient expectedAbstractGradient = abstractGradient;
 

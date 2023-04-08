@@ -55,6 +55,7 @@ class HomeScreenState extends State<HomeScreen> {
 
   late final AbstractGradient defaultGradient = LinearStyleGradient(
       colorList: randomColorGenerator.getTwoRandomColors(),
+      stopList: const [0, 100],
       gradientDirection: GradientDirection.topLeft);
 
   late AbstractGradient gradient = defaultGradient;
@@ -70,6 +71,7 @@ class HomeScreenState extends State<HomeScreen> {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: newGradientStyle,
         colorList: gradient.getColorList(),
+        stopList: gradient.getStopList(),
         gradientDirection: gradient.getGradientDirection(),
       );
 
@@ -84,6 +86,7 @@ class HomeScreenState extends State<HomeScreen> {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: gradient.getGradientStyle(),
         colorList: gradient.getColorList(),
+        stopList: gradient.getStopList(),
         gradientDirection: newGradientDirection,
       );
 
@@ -98,7 +101,23 @@ class HomeScreenState extends State<HomeScreen> {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: gradient.getGradientStyle(),
         colorList: newColorList,
+        stopList: gradient.getStopList(),
         gradientDirection: gradient.getGradientDirection(),
+      );
+
+      setState(() {
+        gradient = newGradient;
+      });
+    }
+  }
+
+  void onStopListChanged(List<int> newStopList) {
+    if (!const ListEquality().equals(gradient.getStopList(), newStopList)) {
+      final AbstractGradient newGradient = GradientFactory().getGradient(
+        gradientStyle: gradient.getGradientStyle(),
+        colorList: gradient.getColorList(),
+        gradientDirection: gradient.getGradientDirection(),
+        stopList: newStopList,
       );
 
       setState(() {
@@ -121,6 +140,7 @@ class HomeScreenState extends State<HomeScreen> {
                 onGradientStyleChanged: onGradientStyleChanged,
                 onGradientDirectionChanged: onGradientDirectionChanged,
                 onColorListChanged: onColorListChanged,
+                onStopListChanged: onStopListChanged,
               ),
               const FooterWidget()
             ],
