@@ -28,6 +28,7 @@ void main() {
       final actualWidgetString = linearStyleGradient.toWidgetString();
       final expectedWidgetString = '''LinearGradient(
           colors: $colorList,
+          stops: ${stopList.map((stop) => stop / 100).toList()},
           begin: ${Alignment.topLeft},
           end: ${Alignment.bottomRight},
         )
@@ -107,7 +108,8 @@ void main() {
       final Gradient expectedGradient = LinearGradient(
           colors: colorList,
           begin: Alignment.topLeft,
-          end: Alignment.bottomRight);
+          end: Alignment.bottomRight,
+          stops: stopList.map((stop) => stop / 100).toList());
 
       expect(actualGradient, expectedGradient);
     });

@@ -30,6 +30,7 @@ void main() {
       final actualWidgetString = radialStyleGradient.toWidgetString();
       final expectedWidgetString = '''RadialGradient(
           colors: $colorList,
+          stops: ${stopList.map((stop) => stop / 100).toList()},
           center: ${Alignment.topLeft},
           radius: $radialGradientRadius,
         )
@@ -79,9 +80,11 @@ void main() {
     test('.toFlutterGradient() returns the right RadialGradient object', () {
       final Gradient actualGradient = radialStyleGradient.toFlutterGradient();
       final Gradient expectedGradient = RadialGradient(
-          colors: colorList,
-          center: Alignment.topLeft,
-          radius: radialGradientRadius);
+        colors: colorList,
+        center: Alignment.topLeft,
+        radius: radialGradientRadius,
+        stops: stopList.map((stop) => stop / 100).toList(),
+      );
 
       expect(actualGradient, expectedGradient);
     });
