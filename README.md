@@ -13,14 +13,15 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 
 2. Choose the gradient style. The options are:
    - linear
-   - radial.
+   - radial
+   - sweep
 
 3. Choose the gradient direction. The options are:
    - top-left
    - top-center
    - top-right
    - center-left
-   - center (only works for radial gradients)
+   - center (not applicable for linear gradient)
    - center-right
    - bottom-left
    - bottom-center
@@ -57,6 +58,7 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 
 - [x] Linear gradient
 - [x] Radial gradient
+- [x] Sweep gradient
 - [x] Color picker
 - [x] Color stops
 - [ ] Addition of more colors
