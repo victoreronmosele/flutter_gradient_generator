@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
-import 'package:flutter_gradient_generator/models/radial_style_gradient.dart';
+import 'package:flutter_gradient_generator/models/sweep_style_gradient.dart';
 import 'package:test/test.dart';
 
 void main() {
-  group('RadialStyleGradient', () {
+  group('SweepStyleGradient', () {
     late final List<Color> colorList;
     late final List<int> stopList;
-    late final RadialStyleGradient radialStyleGradient;
+    late final SweepStyleGradient sweepStyleGradient;
 
     setUpAll(() {
       colorList = [
@@ -18,15 +18,15 @@ void main() {
 
       stopList = [0, 100];
 
-      radialStyleGradient = RadialStyleGradient(
+      sweepStyleGradient = SweepStyleGradient(
           colorList: colorList,
           stopList: stopList,
           gradientDirection: GradientDirection.topLeft);
     });
 
     test('.toWidgetString() returns the correct widget string', () {
-      final actualWidgetString = radialStyleGradient.toWidgetString();
-      final expectedWidgetString = '''RadialGradient(
+      final actualWidgetString = sweepStyleGradient.toWidgetString();
+      final expectedWidgetString = '''SweepGradient(
           colors: $colorList,
           stops: ${stopList.map((stop) => stop / 100).toList()},
           center: ${Alignment.topLeft},
@@ -53,36 +53,37 @@ void main() {
 
       gradientDirectionToCenterAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
-        final RadialStyleGradient testRadialStyleGradient = RadialStyleGradient(
+        final SweepStyleGradient testSweepStyleGradient = SweepStyleGradient(
             colorList: colorList,
             stopList: stopList,
             gradientDirection: gradientDirection);
 
-        final Alignment actualAlignment =
-            testRadialStyleGradient.centerAlignment;
-        final Alignment expectedAlignment = alignment;
+        final Alignment actualCenterAlignment =
+            testSweepStyleGradient.centerAlignment;
+        final Alignment expectedCenterAlignment = alignment;
 
-        expect(actualAlignment, expectedAlignment);
+        expect(actualCenterAlignment, expectedCenterAlignment);
       });
     });
 
-    test('.getGradientStyle() returns GradientStyle.radial', () {
+    test('.getGradientStyle() returns GradientStyle.sweep', () {
       final GradientStyle actualGradientStyle =
-          radialStyleGradient.getGradientStyle();
-      const GradientStyle expectedGradientStyle = GradientStyle.radial;
+          sweepStyleGradient.getGradientStyle();
+      const GradientStyle expectedGradientStyle = GradientStyle.sweep;
 
       expect(actualGradientStyle, expectedGradientStyle);
     });
 
-    test('.toFlutterGradient() returns the right RadialGradient object', () {
-      final Gradient actualGradient = radialStyleGradient.toFlutterGradient();
-      final Gradient expectedGradient = RadialGradient(
+    test('.toFlutterGradient() returns the right SweepGradient object', () {
+      final Gradient actualSweepGradient =
+          sweepStyleGradient.toFlutterGradient();
+      final Gradient expectedSweepGradient = SweepGradient(
         colors: colorList,
         center: Alignment.topLeft,
         stops: stopList.map((stop) => stop / 100).toList(),
       );
 
-      expect(actualGradient, expectedGradient);
+      expect(actualSweepGradient, expectedSweepGradient);
     });
   });
 }

@@ -4,6 +4,7 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:flutter_gradient_generator/models/radial_style_gradient.dart';
+import 'package:flutter_gradient_generator/models/sweep_style_gradient.dart';
 
 class GradientFactory {
   AbstractGradient getGradient(
@@ -22,6 +23,13 @@ class GradientFactory {
         break;
       case GradientStyle.radial:
         gradient = RadialStyleGradient(
+            colorList: colorList,
+            stopList: stopList,
+            gradientDirection: gradientDirection);
+        break;
+
+      case GradientStyle.sweep:
+        gradient = SweepStyleGradient(
             colorList: colorList,
             stopList: stopList,
             gradientDirection: gradientDirection);
