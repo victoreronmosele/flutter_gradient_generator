@@ -5,8 +5,8 @@ import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:quiver/core.dart';
 
 // ignore: must_be_immutable
-class RadialStyleGradient extends AbstractGradient {
-  RadialStyleGradient(
+class SweepStyleGradient extends AbstractGradient {
+  SweepStyleGradient(
       {required List<Color> colorList,
       required List<int> stopList,
       required GradientDirection gradientDirection})
@@ -16,7 +16,7 @@ class RadialStyleGradient extends AbstractGradient {
           gradientDirection: gradientDirection,
         );
 
-  String get _widgetStringTemplate => '''RadialGradient(
+  String get _widgetStringTemplate => '''SweepGradient(
           colors: ${getColorList()},
           stops: ${getStopListForFlutterCode()},
           center: $centerAlignment,
@@ -67,12 +67,12 @@ class RadialStyleGradient extends AbstractGradient {
 
   @override
   GradientStyle getGradientStyle() {
-    return GradientStyle.radial;
+    return GradientStyle.sweep;
   }
 
   @override
   Gradient toFlutterGradient() {
-    return RadialGradient(
+    return SweepGradient(
       colors: getColorList(),
       center: centerAlignment,
       stops: getStopListForFlutterCode(),
@@ -82,7 +82,7 @@ class RadialStyleGradient extends AbstractGradient {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RadialStyleGradient &&
+      other is SweepStyleGradient &&
           runtimeType == other.runtimeType &&
           toWidgetString() == other.toWidgetString() &&
           getGradientStyle() == other.getGradientStyle() &&

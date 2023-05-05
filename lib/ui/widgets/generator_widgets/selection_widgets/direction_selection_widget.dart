@@ -18,8 +18,17 @@ class DirectionSelectionWidget extends StatelessWidget {
       required this.onGradientDirectionChanged})
       : super(key: key);
 
-  final int circleDirectionIconSetNumber = 1;
-  final int circleDirectionIconNumberInSet = 1;
+  /// The index of the center alignment icon set in the total icon set list,
+  /// [iconSetList]
+  final int centerGradientDirectionIndexInIconSetList = 1;
+
+  /// The index of the center alignment icon in the center alignment icon set,
+  /// [iconSetList].
+  ///
+  /// This refers to `GradientDirection.center` in the center alignment icon set
+  /// and it does not refer `GradientDirection.centerLeft` or `GradientDirection.centerRight`
+  ///
+  final int centerGradientDirectionIndexWithinCenterDirectionSet = 1;
 
   final List<Map<GradientDirection, IconData>> iconSetList = [
     {
@@ -68,18 +77,24 @@ class DirectionSelectionWidget extends StatelessWidget {
 
               const int firstIconIndex = 0;
 
-              final bool isCircleRadialButton =
-                  iconSetIndex == circleDirectionIconSetNumber &&
-                      iconIndex == circleDirectionIconNumberInSet;
+              final bool gradientStyleIsLinear =
+                  gradientStyle == GradientStyle.linear;
+
+              final bool thisIsTheMiddleCenterDirectionButton =
+                  iconSetIndex == centerGradientDirectionIndexInIconSetList &&
+                      iconIndex ==
+                          centerGradientDirectionIndexWithinCenterDirectionSet;
+
+              /// Circle radial button is not shown for linear gradients
+              final bool showDirection =
+                  !(gradientStyleIsLinear && thisIsTheMiddleCenterDirectionButton);
 
               return Row(
                 children: [
                   if (iconIndex != firstIconIndex)
                     const SizedBox(width: AppDimensions.compactButtonMargin),
                   Visibility(
-                    visible: isCircleRadialButton
-                        ? gradientStyle == GradientStyle.radial
-                        : true,
+                    visible: showDirection,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,

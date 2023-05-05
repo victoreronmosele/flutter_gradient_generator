@@ -17,20 +17,8 @@ class StyleSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bool isLinearGradientStyleSelected =
-        gradientStyle == GradientStyle.linear;
-    final bool isRadialGradientStyleSelected =
-        gradientStyle == GradientStyle.radial;
-
     final Color selectedStyleButtonColor = AppColors.grey;
     const Color unselectedStyleButtonColor = Colors.transparent;
-
-    final Color linearStyleButtonColor = isLinearGradientStyleSelected
-        ? selectedStyleButtonColor
-        : unselectedStyleButtonColor;
-    final Color radialStyleButtonColor = isRadialGradientStyleSelected
-        ? selectedStyleButtonColor
-        : unselectedStyleButtonColor;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -44,31 +32,35 @@ class StyleSelectionWidget extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         Row(
-          children: [
-            CompactButton(
-              onPressed: () {
-                onGradientStyleChanged(GradientStyle.linear);
-              },
-              foregroundColor: Colors.black,
-              backgroundColor: linearStyleButtonColor,
-              borderSide: BorderSide(color: selectedStyleButtonColor),
-              child: const Text(
-                AppStrings.linear,
-              ),
-            ),
-            const SizedBox(
-              width: AppDimensions.compactButtonMargin,
-            ),
-            CompactButton(
-              onPressed: () {
-                onGradientStyleChanged(GradientStyle.radial);
-              },
-              foregroundColor: Colors.black,
-              backgroundColor: radialStyleButtonColor,
-              borderSide: BorderSide(color: selectedStyleButtonColor),
-              child: const Text(AppStrings.radial),
-            ),
-          ],
+          children: GradientStyle.values.map(
+            (GradientStyle style) {
+              final Color buttonColor = style == gradientStyle
+                  ? selectedStyleButtonColor
+                  : unselectedStyleButtonColor;
+
+              final bool styleIsLast = style == GradientStyle.values.last;
+
+              return Row(
+                children: [
+                  CompactButton(
+                    onPressed: () {
+                      onGradientStyleChanged(style);
+                    },
+                    foregroundColor: Colors.black,
+                    backgroundColor: buttonColor,
+                    borderSide: BorderSide(color: selectedStyleButtonColor),
+                    child: Text(
+                      style.title,
+                    ),
+                  ),
+                  if (!styleIsLast)
+                    const SizedBox(
+                      width: AppDimensions.compactButtonMargin,
+                    ),
+                ],
+              );
+            },
+          ).toList(),
         ),
       ],
     );
