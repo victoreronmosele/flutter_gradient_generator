@@ -11,14 +11,14 @@ import 'package:flutter_gradient_generator/ui/widgets/buttons/get_gradient_butto
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/app_title_widget.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_widgets.dart';
 
-class GeneratorScreen extends StatelessWidget {
+class GeneratorSection extends StatelessWidget {
   final AbstractGradient gradient;
   final void Function(GradientStyle) onGradientStyleChanged;
   final void Function(GradientDirection) onGradientDirectionChanged;
   final void Function(List<Color>) onColorListChanged;
   final void Function(List<int>) onStopListChanged;
 
-  const GeneratorScreen(
+  const GeneratorSection(
       {Key? key,
       required this.gradient,
       required this.onGradientStyleChanged,

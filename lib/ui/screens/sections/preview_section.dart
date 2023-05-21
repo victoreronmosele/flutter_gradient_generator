@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 
-class PreviewScreen extends StatelessWidget {
+class PreviewSection extends StatelessWidget {
   final AbstractGradient gradient;
 
-  PreviewScreen({Key? key, required this.gradient}) : super(key: key);
+  PreviewSection({Key? key, required this.gradient}) : super(key: key);
 
   late final List<Color> colorList = gradient.getColorList();
 
