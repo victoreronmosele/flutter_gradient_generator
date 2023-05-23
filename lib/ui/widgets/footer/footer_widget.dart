@@ -42,7 +42,7 @@ class _FooterWidgetState extends State<FooterWidget> {
       color: Theme.of(context).scaffoldBackgroundColor,
       width: AppDimensions.generatorScreenContentWidth,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding:  EdgeInsets.symmetric(
           horizontal: AppDimensions.generatorScreenHorizontalPadding,
           vertical: AppDimensions.generatorScreenVerticalPadding / 2,
         ),

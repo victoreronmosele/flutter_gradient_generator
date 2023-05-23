@@ -18,13 +18,19 @@ class GeneratorSection extends StatelessWidget {
   final void Function(List<Color>) onColorListChanged;
   final void Function(List<int>) onStopListChanged;
 
+  final ({
+    Widget previewWidgetForPortrait,
+    bool isPortrait
+  }) portraitInformation;
+
   const GeneratorSection(
       {Key? key,
       required this.gradient,
       required this.onGradientStyleChanged,
       required this.onGradientDirectionChanged,
       required this.onColorListChanged,
-      required this.onStopListChanged})
+      required this.onStopListChanged,
+      required this.portraitInformation})
       : super(key: key);
 
   @override
@@ -36,16 +42,36 @@ class GeneratorSection extends StatelessWidget {
 
     final gradientStyle = gradient.getGradientStyle();
 
+    final isPortrait = portraitInformation.isPortrait;
+    final previewWidgetForPortrait =
+        portraitInformation.previewWidgetForPortrait;
+
     return SingleChildScrollView(
       child: Padding(
-        padding: const EdgeInsets.symmetric(
+        padding: EdgeInsets.symmetric(
           horizontal: AppDimensions.generatorScreenHorizontalPadding,
           vertical: AppDimensions.generatorScreenVerticalPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const AppTitleWidget(),
+            Flex(
+              /// This results in:
+              /// - a [Column] (veritical [Flex]]) for portrait mode
+              /// - a [Row] (horizontal [Flex]]) for landscape mode
+              direction: isPortrait ? Axis.vertical : Axis.horizontal,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                AppTitleWidget(
+                  forPortrait: isPortrait,
+                ),
+                if (isPortrait) ...[
+                  const SizedBox(height: 40),
+                  AspectRatio(
+                      aspectRatio: 16 / 9, child: previewWidgetForPortrait),
+                ],
+              ],
+            ),
             const SizedBox(height: 40),
             StyleSelectionWidget(
               gradientStyle: gradientStyle,

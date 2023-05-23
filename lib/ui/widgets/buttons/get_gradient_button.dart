@@ -71,7 +71,7 @@ class _GetGradientButtonState extends State<GetGradientButton> {
             fontFamily: AppFonts.getFontFamily(context))),
         padding: MaterialStateProperty.all(
             const EdgeInsets.all(AppDimensions.widebuttonPadding)),
-        fixedSize: MaterialStateProperty.all((const Size(
+        fixedSize: MaterialStateProperty.all(( Size(
             AppDimensions.wideButtonWidth, AppDimensions.wideButtonHeight))),
       ),
       child: Text(_buttonText),

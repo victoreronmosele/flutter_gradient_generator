@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/firebase_options.dart';
@@ -21,11 +22,30 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: AppStrings.appTitle,
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
-      home: const HomeScreen(),
-    );
+    return OrientationBuilder(builder: (context, orientation) {
+      bool shouldDisplayPortrait({required double width}) {
+        final orientationIsPotrait = orientation == Orientation.portrait;
+
+        final displayPortrait = orientationIsPotrait &&
+            (width < AppDimensions.portraitModeWidthLimit);
+
+        return displayPortrait;
+      }
+
+      final width = MediaQuery.of(context).size.width;
+
+      final displayPortrait = shouldDisplayPortrait(width: width);
+
+      if (displayPortrait) {
+        AppDimensions.generatorScreenWidth = width;
+      }
+
+      return MaterialApp(
+        title: AppStrings.appTitle,
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
+        home: const HomeScreen(),
+      );
+    });
   }
 }

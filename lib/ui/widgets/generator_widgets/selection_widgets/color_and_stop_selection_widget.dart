@@ -39,10 +39,10 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(
+            SizedBox(
               width: ((2 * AppDimensions.compactButtonWidth) +
                   AppDimensions.compactButtonMargin),
-              child: Text(
+              child: const Text(
                 AppStrings.colorsAndStops,
                 style: TextStyle(
                   fontSize: 16.0,
@@ -51,7 +51,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
               ),
             ),
             const SizedBox(width: AppDimensions.compactButtonMargin),
-            CompactButton(
+            CompactButton.text(
               onPressed: () {
                 final List<Color> twoRandomColors =
                     randomColorGenerator.getTwoRandomColors();
@@ -63,7 +63,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
               borderSide: BorderSide(
                 color: AppColors.grey,
               ),
-              child: const Text(AppStrings.random),
+              text: AppStrings.random,
             ),
           ],
         ),
@@ -105,7 +105,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          CompactButton(
+                          CompactButton.empty(
                             onPressed: () {
                               _selectColor(
                                 context: context,
@@ -118,7 +118,6 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                             borderSide: BorderSide(
                               color: AppColors.grey,
                             ),
-                            child: const SizedBox.shrink(),
                           ),
                         ],
                       ),

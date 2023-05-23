@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -100,25 +101,54 @@ class HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Row(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              GeneratorSection(
-                gradient: gradient,
-                onGradientStyleChanged: onGradientStyleChanged,
-                onGradientDirectionChanged: onGradientDirectionChanged,
-                onColorListChanged: onColorListChanged,
-                onStopListChanged: onStopListChanged,
+      body: OrientationBuilder(builder: (context, orientation) {
+        bool shouldDisplayPortrait() {
+          final orientationIsPotrait = orientation == Orientation.portrait;
+
+          final width = MediaQuery.of(context).size.width;
+
+          const portraitModeLimit = AppDimensions.portraitModeWidthLimit;
+
+          final displayPortrait =
+              orientationIsPotrait && (width < portraitModeLimit);
+
+          return displayPortrait;
+        }
+
+        final displayPortrait = shouldDisplayPortrait();
+
+        final previewSection = PreviewSection(
+            gradient: gradient, borderRadius: displayPortrait ? 16.0 : 0.0);
+
+        return Row(
+          crossAxisAlignment: displayPortrait
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              flex: displayPortrait ? 1 : 0,
+              child: Stack(
+                alignment: AlignmentDirectional.bottomCenter,
+                children: [
+                  GeneratorSection(
+                    gradient: gradient,
+                    onGradientStyleChanged: onGradientStyleChanged,
+                    onGradientDirectionChanged: onGradientDirectionChanged,
+                    onColorListChanged: onColorListChanged,
+                    onStopListChanged: onStopListChanged,
+                    portraitInformation: (
+                      previewWidgetForPortrait: previewSection,
+                      isPortrait: displayPortrait,
+                    ),
+                  ),
+                  const FooterWidget()
+                ],
               ),
-              const FooterWidget()
-            ],
-          ),
-          Flexible(child: PreviewSection(gradient: gradient)),
-        ],
-      ),
+            ),
+            if (!displayPortrait) Flexible(child: previewSection),
+          ],
+        );
+      }),
     );
   }
 }

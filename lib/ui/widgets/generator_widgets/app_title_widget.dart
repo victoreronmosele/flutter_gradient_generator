@@ -4,15 +4,21 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 class AppTitleWidget extends StatelessWidget {
   const AppTitleWidget({
     Key? key,
+    required this.forPortrait,
   }) : super(key: key);
+
+  final bool forPortrait;
 
   @override
   Widget build(BuildContext context) {
+    final titleToDisplay =
+        forPortrait ? AppStrings.appTitle : AppStrings.appTitleNewLine;
+
     return Text(
-      AppStrings.appTitleNewLine.toUpperCase(),
+      titleToDisplay.toUpperCase(),
       textAlign: TextAlign.left,
-      style: const TextStyle(
-        fontSize: 24.0,
+      style:  TextStyle(
+        fontSize: forPortrait ? 20.0 : 24.0,
         fontWeight: FontWeight.bold,
       ),
     );

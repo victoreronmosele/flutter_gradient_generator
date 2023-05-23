@@ -42,16 +42,14 @@ class StyleSelectionWidget extends StatelessWidget {
 
               return Row(
                 children: [
-                  CompactButton(
+                  CompactButton.text(
                     onPressed: () {
                       onGradientStyleChanged(style);
                     },
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColor,
                     borderSide: BorderSide(color: selectedStyleButtonColor),
-                    child: Text(
-                      style.title,
-                    ),
+                    text: style.title,
                   ),
                   if (!styleIsLast)
                     const SizedBox(

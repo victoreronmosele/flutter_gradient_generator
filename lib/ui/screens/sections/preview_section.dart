@@ -4,7 +4,11 @@ import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 class PreviewSection extends StatelessWidget {
   final AbstractGradient gradient;
 
-  PreviewSection({Key? key, required this.gradient}) : super(key: key);
+  /// The border radius of the preview section.
+  final double borderRadius;
+
+  PreviewSection({Key? key, required this.gradient, required this.borderRadius})
+      : super(key: key);
 
   late final List<Color> colorList = gradient.getColorList();
 
@@ -13,6 +17,7 @@ class PreviewSection extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: gradient.toFlutterGradient(),
+        borderRadius: BorderRadius.circular(borderRadius),
       ),
     );
   }
