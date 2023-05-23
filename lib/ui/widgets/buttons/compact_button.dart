@@ -7,6 +7,7 @@ class CompactButton extends StatelessWidget {
   final void Function() onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
+  final AppDimensions appDimensions;
   final BorderSide? borderSide;
 
   /// Creates a [CompactButton] with an icon.
@@ -16,6 +17,7 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
+    required this.appDimensions,
     this.borderSide,
   })  : child = Icon(
           icon,
@@ -30,6 +32,7 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
+    required this.appDimensions,
     this.borderSide,
   })  : child = Text(
           text,
@@ -44,6 +47,7 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
+    required this.appDimensions,
     this.borderSide,
   })  : child = const SizedBox(),
         super(key: key);
@@ -60,8 +64,8 @@ class CompactButton extends StatelessWidget {
             fontFamily: AppFonts.getFontFamily(context))),
         side: MaterialStateProperty.all(borderSide),
         fixedSize: MaterialStateProperty.all((Size(
-            AppDimensions.compactButtonWidth,
-            AppDimensions.compactButtonHeight))),
+            appDimensions.compactButtonWidth,
+            appDimensions.compactButtonHeight))),
       ),
       child: child,
     );

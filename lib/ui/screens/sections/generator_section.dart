@@ -17,21 +17,22 @@ class GeneratorSection extends StatelessWidget {
   final void Function(GradientDirection) onGradientDirectionChanged;
   final void Function(List<Color>) onColorListChanged;
   final void Function(List<int>) onStopListChanged;
-
   final ({
     Widget previewWidgetForPortrait,
     bool isPortrait
   }) portraitInformation;
+  final AppDimensions appDimensions;
 
-  const GeneratorSection(
-      {Key? key,
-      required this.gradient,
-      required this.onGradientStyleChanged,
-      required this.onGradientDirectionChanged,
-      required this.onColorListChanged,
-      required this.onStopListChanged,
-      required this.portraitInformation})
-      : super(key: key);
+  const GeneratorSection({
+    Key? key,
+    required this.gradient,
+    required this.onGradientStyleChanged,
+    required this.onGradientDirectionChanged,
+    required this.onColorListChanged,
+    required this.onStopListChanged,
+    required this.portraitInformation,
+    required this.appDimensions,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,8 +50,8 @@ class GeneratorSection extends StatelessWidget {
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: AppDimensions.generatorScreenHorizontalPadding,
-          vertical: AppDimensions.generatorScreenVerticalPadding,
+          horizontal: appDimensions.generatorScreenHorizontalPadding,
+          vertical: appDimensions.generatorScreenVerticalPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -76,30 +77,37 @@ class GeneratorSection extends StatelessWidget {
             StyleSelectionWidget(
               gradientStyle: gradientStyle,
               onGradientStyleChanged: onGradientStyleChanged,
+              appDimensions: appDimensions,
             ),
             const SizedBox(height: 24),
             DirectionSelectionWidget(
-                gradientStyle: gradient.getGradientStyle(),
-                selectedGradientDirection: gradient.getGradientDirection(),
-                onGradientDirectionChanged: onGradientDirectionChanged),
+              gradientStyle: gradient.getGradientStyle(),
+              selectedGradientDirection: gradient.getGradientDirection(),
+              onGradientDirectionChanged: onGradientDirectionChanged,
+              appDimensions: appDimensions,
+            ),
             const SizedBox(height: 24),
             ColorAndStopSelectionWidget(
               colorList: colorList,
               stopList: stopList,
               onColorListChanged: onColorListChanged,
               onStopListChanged: onStopListChanged,
+              appDimensions: appDimensions,
             ),
             const SizedBox(height: 48),
-            GetGradientButton(onTap: () async {
-              await Clipboard.setData(ClipboardData(text: generatedCode));
+            GetGradientButton(
+              onTap: () async {
+                await Clipboard.setData(ClipboardData(text: generatedCode));
 
-              /// Log event to Firebase Analytics if not in debug mode
-              if (!kDebugMode) {
-                await FirebaseAnalytics.instance.logEvent(
-                    name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
-                    parameters: gradient.toJson());
-              }
-            }),
+                /// Log event to Firebase Analytics if not in debug mode
+                if (!kDebugMode) {
+                  await FirebaseAnalytics.instance.logEvent(
+                      name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
+                      parameters: gradient.toJson());
+                }
+              },
+              appDimensions: appDimensions,
+            ),
             const SizedBox(height: 100),
           ],
         ),

@@ -23,28 +23,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
-      bool shouldDisplayPortrait({required double width}) {
-        final orientationIsPotrait = orientation == Orientation.portrait;
-
-        final displayPortrait = orientationIsPotrait &&
-            (width < AppDimensions.portraitModeWidthLimit);
-
-        return displayPortrait;
-      }
-
       final width = MediaQuery.of(context).size.width;
 
-      final displayPortrait = shouldDisplayPortrait(width: width);
-
-      if (displayPortrait) {
-        AppDimensions.generatorScreenWidth = width;
-      }
+      final appDimensions = AppDimensions(
+        orientation: orientation,
+        screenWidth: width,
+      );
 
       return MaterialApp(
         title: AppStrings.appTitle,
         debugShowCheckedModeBanner: false,
         theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
-        home: const HomeScreen(),
+        home: HomeScreen(
+          appDimensions: appDimensions,
+        ),
       );
     });
   }

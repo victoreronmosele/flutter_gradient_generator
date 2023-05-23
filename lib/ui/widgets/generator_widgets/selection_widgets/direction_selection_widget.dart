@@ -10,13 +10,15 @@ class DirectionSelectionWidget extends StatelessWidget {
   final GradientStyle gradientStyle;
   final GradientDirection selectedGradientDirection;
   final void Function(GradientDirection) onGradientDirectionChanged;
+  final AppDimensions appDimensions;
 
-  DirectionSelectionWidget(
-      {Key? key,
-      required this.gradientStyle,
-      required this.selectedGradientDirection,
-      required this.onGradientDirectionChanged})
-      : super(key: key);
+  DirectionSelectionWidget({
+    Key? key,
+    required this.gradientStyle,
+    required this.selectedGradientDirection,
+    required this.onGradientDirectionChanged,
+    required this.appDimensions,
+  }) : super(key: key);
 
   /// The index of the center alignment icon set in the total icon set list,
   /// [iconSetList]
@@ -86,13 +88,13 @@ class DirectionSelectionWidget extends StatelessWidget {
                           centerGradientDirectionIndexWithinCenterDirectionSet;
 
               /// Circle radial button is not shown for linear gradients
-              final bool showDirection =
-                  !(gradientStyleIsLinear && thisIsTheMiddleCenterDirectionButton);
+              final bool showDirection = !(gradientStyleIsLinear &&
+                  thisIsTheMiddleCenterDirectionButton);
 
               return Row(
                 children: [
                   if (iconIndex != firstIconIndex)
-                    const SizedBox(width: AppDimensions.compactButtonMargin),
+                    SizedBox(width: appDimensions.compactButtonMargin),
                   Visibility(
                     visible: showDirection,
                     maintainSize: true,
@@ -103,7 +105,8 @@ class DirectionSelectionWidget extends StatelessWidget {
                         gradientDirection: gradientDirection,
                         isSelected:
                             gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged: onGradientDirectionChanged),
+                        onGradientDirectionChanged: onGradientDirectionChanged,
+                        appDimensions: appDimensions),
                   ),
                 ],
               );

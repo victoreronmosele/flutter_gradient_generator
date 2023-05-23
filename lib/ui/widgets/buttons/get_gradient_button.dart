@@ -8,9 +8,11 @@ class GetGradientButton extends StatefulWidget {
   const GetGradientButton({
     Key? key,
     required this.onTap,
+    required this.appDimensions,
   }) : super(key: key);
 
   final Future<void> Function() onTap;
+  final AppDimensions appDimensions;
 
   @override
   State<GetGradientButton> createState() => _GetGradientButtonState();
@@ -70,9 +72,10 @@ class _GetGradientButtonState extends State<GetGradientButton> {
             fontWeight: FontWeight.bold,
             fontFamily: AppFonts.getFontFamily(context))),
         padding: MaterialStateProperty.all(
-            const EdgeInsets.all(AppDimensions.widebuttonPadding)),
-        fixedSize: MaterialStateProperty.all(( Size(
-            AppDimensions.wideButtonWidth, AppDimensions.wideButtonHeight))),
+            EdgeInsets.all(widget.appDimensions.widebuttonPadding)),
+        fixedSize: MaterialStateProperty.all((Size(
+            widget.appDimensions.wideButtonWidth,
+            widget.appDimensions.wideButtonHeight))),
       ),
       child: Text(_buttonText),
     );

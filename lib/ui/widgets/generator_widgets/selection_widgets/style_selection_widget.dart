@@ -10,10 +10,12 @@ class StyleSelectionWidget extends StatelessWidget {
     Key? key,
     required this.gradientStyle,
     required this.onGradientStyleChanged,
+    required this.appDimensions,
   }) : super(key: key);
 
   final GradientStyle gradientStyle;
   final void Function(GradientStyle p1) onGradientStyleChanged;
+  final AppDimensions appDimensions;
 
   @override
   Widget build(BuildContext context) {
@@ -50,10 +52,11 @@ class StyleSelectionWidget extends StatelessWidget {
                     backgroundColor: buttonColor,
                     borderSide: BorderSide(color: selectedStyleButtonColor),
                     text: style.title,
+                    appDimensions: appDimensions,
                   ),
                   if (!styleIsLast)
-                    const SizedBox(
-                      width: AppDimensions.compactButtonMargin,
+                     SizedBox(
+                      width: appDimensions.compactButtonMargin,
                     ),
                 ],
               );

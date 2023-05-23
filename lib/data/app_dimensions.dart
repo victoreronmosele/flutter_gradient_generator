@@ -1,28 +1,36 @@
+import 'package:flutter/material.dart';
+
 class AppDimensions {
-  static const double landscapeGeneratorScreenWidth = 320;
-  static const double portraitModeWidthLimit = 500;
-  static double _generatorScreenWidth = landscapeGeneratorScreenWidth;
-
-  static final double generatorScreenWidth = _generatorScreenWidth;
-
-  static set generatorScreenWidth(double value) {
-    _generatorScreenWidth = value;
+  AppDimensions({
+    required Orientation orientation,
+    required double screenWidth,
+  }) : displayPortrait = (orientation == Orientation.portrait) &&
+            (screenWidth < portraitModeMaxWidth) {
+    generatorScreenWidth =
+        displayPortrait ? screenWidth : landscapeGeneratorScreenWidth;
   }
 
-  static final double generatorScreenHorizontalPadding =
-      generatorScreenWidth / 10;
-  static final double generatorScreenVerticalPadding =
-      generatorScreenHorizontalPadding;
-  static final double generatorScreenContentWidth =
+  final bool displayPortrait;
+
+  static const double landscapeGeneratorScreenWidth = 320;
+
+  static const double portraitModeMaxWidth = 500;
+
+  double generatorScreenWidth = landscapeGeneratorScreenWidth;
+
+  double get generatorScreenHorizontalPadding => generatorScreenWidth / 10;
+  double get generatorScreenVerticalPadding => generatorScreenHorizontalPadding;
+  double get generatorScreenContentWidth =>
       generatorScreenWidth - (2 * generatorScreenHorizontalPadding);
-  static const double numberOfCompactButtonPerRow = 3;
-  static const double compactButtonMargin = 12.0;
-  static final double compactButtonWidth = (generatorScreenContentWidth -
+  double get numberOfCompactButtonPerRow => 3;
+  double get compactButtonMargin => 12.0;
+  double get compactButtonWidth =>
+      (generatorScreenContentWidth -
           ((numberOfCompactButtonPerRow - 1) * compactButtonMargin)) /
       numberOfCompactButtonPerRow;
-  static const double compactButtonHeight = 32;
-  static const double compactButtonPadding = 16;
-  static final double wideButtonWidth = generatorScreenContentWidth;
-  static const double wideButtonHeight = 48;
-  static const double widebuttonPadding = 24;
+  double get compactButtonHeight => 32;
+  double get compactButtonPadding => 16;
+  double get wideButtonWidth => generatorScreenContentWidth;
+  double get wideButtonHeight => 48;
+  double get widebuttonPadding => 24;
 }
