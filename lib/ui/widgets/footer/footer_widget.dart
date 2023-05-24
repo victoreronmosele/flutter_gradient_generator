@@ -38,13 +38,22 @@ class _FooterWidgetState extends State<FooterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final generatorScreenContentWidth =
+        appDimensions.generatorScreenContentWidth;
+    final generatorScreenHorizontalPadding =
+        appDimensions.generatorScreenHorizontalPadding;
+    final generatorScreenVerticalPadding =
+        appDimensions.generatorScreenVerticalPadding;
+
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      width: AppDimensions.generatorScreenContentWidth,
+      width: generatorScreenContentWidth,
       child: Padding(
-        padding: const EdgeInsets.symmetric(
-          horizontal: AppDimensions.generatorScreenHorizontalPadding,
-          vertical: AppDimensions.generatorScreenVerticalPadding / 2,
+        padding: EdgeInsets.symmetric(
+          horizontal: generatorScreenHorizontalPadding,
+          vertical: generatorScreenVerticalPadding / 2,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

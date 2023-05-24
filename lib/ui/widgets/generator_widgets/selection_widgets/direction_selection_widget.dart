@@ -11,12 +11,12 @@ class DirectionSelectionWidget extends StatelessWidget {
   final GradientDirection selectedGradientDirection;
   final void Function(GradientDirection) onGradientDirectionChanged;
 
-  DirectionSelectionWidget(
-      {Key? key,
-      required this.gradientStyle,
-      required this.selectedGradientDirection,
-      required this.onGradientDirectionChanged})
-      : super(key: key);
+  DirectionSelectionWidget({
+    Key? key,
+    required this.gradientStyle,
+    required this.selectedGradientDirection,
+    required this.onGradientDirectionChanged,
+  }) : super(key: key);
 
   /// The index of the center alignment icon set in the total icon set list,
   /// [iconSetList]
@@ -50,6 +50,10 @@ class DirectionSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonMargin = appDimensions.compactButtonMargin;
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text(
         AppStrings.direction,
@@ -86,24 +90,25 @@ class DirectionSelectionWidget extends StatelessWidget {
                           centerGradientDirectionIndexWithinCenterDirectionSet;
 
               /// Circle radial button is not shown for linear gradients
-              final bool showDirection =
-                  !(gradientStyleIsLinear && thisIsTheMiddleCenterDirectionButton);
+              final bool showDirection = !(gradientStyleIsLinear &&
+                  thisIsTheMiddleCenterDirectionButton);
 
               return Row(
                 children: [
                   if (iconIndex != firstIconIndex)
-                    const SizedBox(width: AppDimensions.compactButtonMargin),
+                    SizedBox(width: compactButtonMargin),
                   Visibility(
                     visible: showDirection,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
                     child: DirectionButton(
-                        icon: icon,
-                        gradientDirection: gradientDirection,
-                        isSelected:
-                            gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged: onGradientDirectionChanged),
+                      icon: icon,
+                      gradientDirection: gradientDirection,
+                      isSelected:
+                          gradientDirection == selectedGradientDirection,
+                      onGradientDirectionChanged: onGradientDirectionChanged,
+                    ),
                   ),
                 ],
               );

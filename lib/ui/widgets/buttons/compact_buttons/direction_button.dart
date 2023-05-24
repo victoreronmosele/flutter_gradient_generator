@@ -9,29 +9,28 @@ class DirectionButton extends StatelessWidget {
   final bool isSelected;
   final void Function(GradientDirection) onGradientDirectionChanged;
 
-  const DirectionButton(
-      {Key? key,
-      required this.icon,
-      required this.gradientDirection,
-      required this.isSelected,
-      required this.onGradientDirectionChanged})
-      : super(key: key);
+  const DirectionButton({
+    Key? key,
+    required this.icon,
+    required this.gradientDirection,
+    required this.isSelected,
+    required this.onGradientDirectionChanged,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final Color greyColor = AppColors.grey;
-    return CompactButton(
-        onPressed: () {
-          onGradientDirectionChanged(gradientDirection);
-        },
-        foregroundColor: Colors.black,
-        backgroundColor: isSelected ? greyColor : Colors.transparent,
-        borderSide: BorderSide(
-          color: greyColor,
-        ),
-        child: Icon(
-          icon,
-          size: 12.0,
-        ));
+
+    return CompactButton.icon(
+      onPressed: () {
+        onGradientDirectionChanged(gradientDirection);
+      },
+      foregroundColor: Colors.black,
+      backgroundColor: isSelected ? greyColor : Colors.transparent,
+      borderSide: BorderSide(
+        color: greyColor,
+      ),
+      icon: icon,
+    );
   }
 }

@@ -29,6 +29,11 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonMargin = appDimensions.compactButtonMargin;
+
     final colorsAndStopsLabelStyle = TextStyle(
       fontSize: 12.0,
       color: Colors.black.withOpacity(0.6),
@@ -39,10 +44,9 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            const SizedBox(
-              width: ((2 * AppDimensions.compactButtonWidth) +
-                  AppDimensions.compactButtonMargin),
-              child: Text(
+            SizedBox(
+              width: ((2 * compactButtonWidth) + compactButtonMargin),
+              child: const Text(
                 AppStrings.colorsAndStops,
                 style: TextStyle(
                   fontSize: 16.0,
@@ -50,8 +54,8 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(width: AppDimensions.compactButtonMargin),
-            CompactButton(
+            SizedBox(width: compactButtonMargin),
+            CompactButton.text(
               onPressed: () {
                 final List<Color> twoRandomColors =
                     randomColorGenerator.getTwoRandomColors();
@@ -63,7 +67,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
               borderSide: BorderSide(
                 color: AppColors.grey,
               ),
-              child: const Text(AppStrings.random),
+              text: AppStrings.random,
             ),
           ],
         ),
@@ -71,18 +75,18 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         Row(
           children: [
             SizedBox(
-              width: AppDimensions.compactButtonWidth,
+              width: compactButtonWidth,
               child: Text(
                 AppStrings.tapToEdit,
                 textAlign: TextAlign.left,
                 style: colorsAndStopsLabelStyle,
               ),
             ),
-            const SizedBox(
-              width: AppDimensions.compactButtonMargin,
+            SizedBox(
+              width: compactButtonMargin,
             ),
             SizedBox(
-              width: AppDimensions.compactButtonWidth,
+              width: compactButtonWidth,
               child: Text(
                 AppStrings.enterInPercentage,
                 textAlign: TextAlign.left,
@@ -105,7 +109,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                     children: [
                       Column(
                         children: [
-                          CompactButton(
+                          CompactButton.empty(
                             onPressed: () {
                               _selectColor(
                                 context: context,
@@ -118,12 +122,11 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                             borderSide: BorderSide(
                               color: AppColors.grey,
                             ),
-                            child: const SizedBox.shrink(),
                           ),
                         ],
                       ),
-                      const SizedBox(
-                        width: AppDimensions.compactButtonMargin,
+                      SizedBox(
+                        width: compactButtonMargin,
                       ),
                       Column(
                         children: [
@@ -357,13 +360,19 @@ class OutlinedTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final void Function(PointerDownEvent) onTapOutside;
+
   final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonHeight = appDimensions.compactButtonHeight;
+
     return SizedBox(
-      width: AppDimensions.compactButtonWidth,
-      height: AppDimensions.compactButtonHeight,
+      width: compactButtonWidth,
+      height: compactButtonHeight,
       child: TextField(
           inputFormatters: inputFormatters,
           decoration: const InputDecoration(

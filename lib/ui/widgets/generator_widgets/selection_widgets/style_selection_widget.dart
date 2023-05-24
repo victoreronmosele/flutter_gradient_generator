@@ -17,6 +17,10 @@ class StyleSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonMargin = appDimensions.compactButtonMargin;
+
     final Color selectedStyleButtonColor = AppColors.grey;
     const Color unselectedStyleButtonColor = Colors.transparent;
 
@@ -42,20 +46,18 @@ class StyleSelectionWidget extends StatelessWidget {
 
               return Row(
                 children: [
-                  CompactButton(
+                  CompactButton.text(
                     onPressed: () {
                       onGradientStyleChanged(style);
                     },
                     foregroundColor: Colors.black,
                     backgroundColor: buttonColor,
                     borderSide: BorderSide(color: selectedStyleButtonColor),
-                    child: Text(
-                      style.title,
-                    ),
+                    text: style.title,
                   ),
                   if (!styleIsLast)
-                    const SizedBox(
-                      width: AppDimensions.compactButtonMargin,
+                    SizedBox(
+                      width: compactButtonMargin,
                     ),
                 ],
               );
