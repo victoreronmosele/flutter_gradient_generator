@@ -2,7 +2,7 @@
 
 [fluttergradientgenerator.com](https://fluttergradientgenerator.com)
 
-Flutter Gradient Generator is a web app that generates linear and radial gradients for Flutter widgets.
+Flutter Gradient Generator is a web app that generates linear, radial and sweep gradients for Flutter widgets.
 
 <img src="./screenshots/screenshot.png" alt="Screenshot of the Flutter Gradient Generator web app" width="80%"/>
 
@@ -63,6 +63,7 @@ Flutter Gradient Generator is a web app that generates linear and radial gradien
 - [x] Color stops
 - [ ] Addition of more colors
 - [ ] Addition of more gradient styles
+- [ ] CSS to Flutter converter
 - [ ] Dark mode
 
 ## Contact
