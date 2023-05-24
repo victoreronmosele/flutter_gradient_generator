@@ -8,6 +8,7 @@ import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_p
 import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_container_wodget.dart';
 
 class ColorAndStopSelectionWidget extends StatelessWidget {
   const ColorAndStopSelectionWidget({
@@ -38,117 +39,110 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
       fontSize: 12.0,
       color: Colors.black.withOpacity(0.6),
     );
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            SizedBox(
-              width: ((2 * compactButtonWidth) + compactButtonMargin),
-              child: const Text(
-                AppStrings.colorsAndStops,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            SizedBox(width: compactButtonMargin),
-            CompactButton.text(
-              onPressed: () {
-                final List<Color> twoRandomColors =
-                    randomColorGenerator.getTwoRandomColors();
-
-                onColorListChanged(twoRandomColors);
-              },
-              backgroundColor: Colors.transparent,
-              foregroundColor: Colors.black,
-              borderSide: BorderSide(
-                color: AppColors.grey,
-              ),
-              text: AppStrings.random,
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: [
-            SizedBox(
-              width: compactButtonWidth,
-              child: Text(
-                AppStrings.tapToEdit,
-                textAlign: TextAlign.left,
-                style: colorsAndStopsLabelStyle,
-              ),
-            ),
-            SizedBox(
-              width: compactButtonMargin,
-            ),
-            SizedBox(
-              width: compactButtonWidth,
-              child: Text(
-                AppStrings.enterInPercentage,
-                textAlign: TextAlign.left,
-                style: colorsAndStopsLabelStyle,
-              ),
-            )
-          ],
-        ),
-        const SizedBox(height: 8),
-        Column(
-          children: List.generate(
-            colorList.length,
-            (index) {
-              final Color color = colorList.elementAt(index);
-              final int stop = stopList.elementAt(index);
-
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          CompactButton.empty(
-                            onPressed: () {
-                              _selectColor(
-                                context: context,
-                                color: color,
-                                index: index,
-                              );
-                            },
-                            backgroundColor: color,
-                            foregroundColor: Colors.black,
-                            borderSide: BorderSide(
-                              color: AppColors.grey,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        width: compactButtonMargin,
-                      ),
-                      Column(
-                        children: [
-                          StopTextBox(
-                            stop: stop,
-                            onStopChanged: (int newStop) {
-                              _changeStop(stop: newStop, index: index);
-                            },
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  const SizedBox(
-                    height: 8.0,
-                  ),
-                ],
-              );
-            },
+    return SelectionWidgetContainer(
+      titleWidgetInformation: (
+        mainTitle: const Text(
+          AppStrings.colorsAndStops,
+          style: TextStyle(
+            fontSize: 16.0,
+            fontWeight: FontWeight.bold,
           ),
         ),
-      ],
+        action: CompactButton.text(
+          onPressed: () {
+            final List<Color> twoRandomColors =
+                randomColorGenerator.getTwoRandomColors();
+
+            onColorListChanged(twoRandomColors);
+          },
+          backgroundColor: Colors.transparent,
+          foregroundColor: Colors.black,
+          borderSide: BorderSide(
+            color: AppColors.grey,
+          ),
+          text: AppStrings.random,
+        ),
+      ),
+      selectionWidget: Column(
+        children: [
+          Row(
+            children: [
+              SizedBox(
+                width: compactButtonWidth,
+                child: Text(
+                  AppStrings.tapToEdit,
+                  textAlign: TextAlign.left,
+                  style: colorsAndStopsLabelStyle,
+                ),
+              ),
+              SizedBox(
+                width: compactButtonMargin,
+              ),
+              SizedBox(
+                width: compactButtonWidth,
+                child: Text(
+                  AppStrings.enterInPercentage,
+                  textAlign: TextAlign.left,
+                  style: colorsAndStopsLabelStyle,
+                ),
+              )
+            ],
+          ),
+          const SizedBox(height: 8),
+          Column(
+            children: List.generate(
+              colorList.length,
+              (index) {
+                final Color color = colorList.elementAt(index);
+                final int stop = stopList.elementAt(index);
+
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Column(
+                          children: [
+                            CompactButton.empty(
+                              onPressed: () {
+                                _selectColor(
+                                  context: context,
+                                  color: color,
+                                  index: index,
+                                );
+                              },
+                              backgroundColor: color,
+                              foregroundColor: Colors.black,
+                              borderSide: BorderSide(
+                                color: AppColors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          width: compactButtonMargin,
+                        ),
+                        Column(
+                          children: [
+                            StopTextBox(
+                              stop: stop,
+                              onStopChanged: (int newStop) {
+                                _changeStop(stop: newStop, index: index);
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 8.0,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 
