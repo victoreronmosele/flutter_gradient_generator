@@ -21,7 +21,6 @@ class GeneratorSection extends StatelessWidget {
     Widget previewWidgetForPortrait,
     bool isPortrait
   }) portraitInformation;
-  final AppDimensions appDimensions;
 
   const GeneratorSection({
     Key? key,
@@ -31,7 +30,6 @@ class GeneratorSection extends StatelessWidget {
     required this.onColorListChanged,
     required this.onStopListChanged,
     required this.portraitInformation,
-    required this.appDimensions,
   }) : super(key: key);
 
   @override
@@ -47,11 +45,17 @@ class GeneratorSection extends StatelessWidget {
     final previewWidgetForPortrait =
         portraitInformation.previewWidgetForPortrait;
 
+    final AppDimensions appDimensions = AppDimensions.of(context);
+    final generatorScreenHorizontalPadding =
+        appDimensions.generatorScreenHorizontalPadding;
+    final generatorScreenVerticalPadding =
+        appDimensions.generatorScreenVerticalPadding;
+
     return SingleChildScrollView(
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: appDimensions.generatorScreenHorizontalPadding,
-          vertical: appDimensions.generatorScreenVerticalPadding,
+          horizontal: generatorScreenHorizontalPadding,
+          vertical: generatorScreenVerticalPadding,
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -77,14 +81,12 @@ class GeneratorSection extends StatelessWidget {
             StyleSelectionWidget(
               gradientStyle: gradientStyle,
               onGradientStyleChanged: onGradientStyleChanged,
-              appDimensions: appDimensions,
             ),
             const SizedBox(height: 24),
             DirectionSelectionWidget(
               gradientStyle: gradient.getGradientStyle(),
               selectedGradientDirection: gradient.getGradientDirection(),
               onGradientDirectionChanged: onGradientDirectionChanged,
-              appDimensions: appDimensions,
             ),
             const SizedBox(height: 24),
             ColorAndStopSelectionWidget(
@@ -92,7 +94,6 @@ class GeneratorSection extends StatelessWidget {
               stopList: stopList,
               onColorListChanged: onColorListChanged,
               onStopListChanged: onStopListChanged,
-              appDimensions: appDimensions,
             ),
             const SizedBox(height: 48),
             GetGradientButton(
@@ -106,7 +107,6 @@ class GeneratorSection extends StatelessWidget {
                       parameters: gradient.toJson());
                 }
               },
-              appDimensions: appDimensions,
             ),
             const SizedBox(height: 100),
           ],

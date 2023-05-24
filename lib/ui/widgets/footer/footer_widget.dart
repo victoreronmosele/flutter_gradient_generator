@@ -7,10 +7,7 @@ import 'package:url_launcher/url_launcher.dart';
 class FooterWidget extends StatefulWidget {
   const FooterWidget({
     Key? key,
-    required this.appDimensions,
   }) : super(key: key);
-
-  final AppDimensions appDimensions;
 
   @override
   State<FooterWidget> createState() => _FooterWidgetState();
@@ -41,13 +38,22 @@ class _FooterWidgetState extends State<FooterWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final generatorScreenContentWidth =
+        appDimensions.generatorScreenContentWidth;
+    final generatorScreenHorizontalPadding =
+        appDimensions.generatorScreenHorizontalPadding;
+    final generatorScreenVerticalPadding =
+        appDimensions.generatorScreenVerticalPadding;
+
     return Container(
       color: Theme.of(context).scaffoldBackgroundColor,
-      width: widget.appDimensions.generatorScreenContentWidth,
+      width: generatorScreenContentWidth,
       child: Padding(
         padding: EdgeInsets.symmetric(
-          horizontal: widget.appDimensions.generatorScreenHorizontalPadding,
-          vertical: widget.appDimensions.generatorScreenVerticalPadding / 2,
+          horizontal: generatorScreenHorizontalPadding,
+          vertical: generatorScreenVerticalPadding / 2,
         ),
         child: Column(
           mainAxisSize: MainAxisSize.min,

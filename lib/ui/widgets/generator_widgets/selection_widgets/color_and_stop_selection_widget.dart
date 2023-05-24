@@ -16,14 +16,12 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
     required this.stopList,
     required this.onColorListChanged,
     required this.onStopListChanged,
-    required this.appDimensions,
   }) : super(key: key);
 
   final List<Color> colorList;
   final List<int> stopList;
   final void Function(List<Color>) onColorListChanged;
   final void Function(List<int>) onStopListChanged;
-  final AppDimensions appDimensions;
 
   final AbstractColorPicker colorPicker = const CyclopColorPicker();
   final AbstractRandomColorGenerator randomColorGenerator =
@@ -31,6 +29,11 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonMargin = appDimensions.compactButtonMargin;
+
     final colorsAndStopsLabelStyle = TextStyle(
       fontSize: 12.0,
       color: Colors.black.withOpacity(0.6),
@@ -42,8 +45,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             SizedBox(
-              width: ((2 * appDimensions.compactButtonWidth) +
-                  appDimensions.compactButtonMargin),
+              width: ((2 * compactButtonWidth) + compactButtonMargin),
               child: const Text(
                 AppStrings.colorsAndStops,
                 style: TextStyle(
@@ -52,7 +54,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(width: appDimensions.compactButtonMargin),
+            SizedBox(width: compactButtonMargin),
             CompactButton.text(
               onPressed: () {
                 final List<Color> twoRandomColors =
@@ -66,7 +68,6 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                 color: AppColors.grey,
               ),
               text: AppStrings.random,
-              appDimensions: appDimensions,
             ),
           ],
         ),
@@ -74,7 +75,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         Row(
           children: [
             SizedBox(
-              width: appDimensions.compactButtonWidth,
+              width: compactButtonWidth,
               child: Text(
                 AppStrings.tapToEdit,
                 textAlign: TextAlign.left,
@@ -82,10 +83,10 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
               ),
             ),
             SizedBox(
-              width: appDimensions.compactButtonMargin,
+              width: compactButtonMargin,
             ),
             SizedBox(
-              width: appDimensions.compactButtonWidth,
+              width: compactButtonWidth,
               child: Text(
                 AppStrings.enterInPercentage,
                 textAlign: TextAlign.left,
@@ -121,12 +122,11 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                             borderSide: BorderSide(
                               color: AppColors.grey,
                             ),
-                            appDimensions: appDimensions,
                           ),
                         ],
                       ),
                       SizedBox(
-                        width: appDimensions.compactButtonMargin,
+                        width: compactButtonMargin,
                       ),
                       Column(
                         children: [
@@ -135,7 +135,6 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                             onStopChanged: (int newStop) {
                               _changeStop(stop: newStop, index: index);
                             },
-                            appDimensions: appDimensions,
                           ),
                         ],
                       ),
@@ -189,12 +188,10 @@ class StopTextBox extends StatefulWidget {
     super.key,
     required this.stop,
     required this.onStopChanged,
-    required this.appDimensions,
   });
 
   final int stop;
   final void Function(int) onStopChanged;
-  final AppDimensions appDimensions;
 
   @override
   State<StopTextBox> createState() => _StopTextBoxState();
@@ -262,7 +259,6 @@ class _StopTextBoxState extends State<StopTextBox> {
       controller: _controller,
       focusNode: _focusNode,
       keyboardType: TextInputType.number,
-      appDimensions: widget.appDimensions,
     );
   }
 
@@ -355,7 +351,6 @@ class OutlinedTextField extends StatelessWidget {
     required this.controller,
     required this.focusNode,
     required this.onTapOutside,
-    required this.appDimensions,
     this.keyboardType,
   });
 
@@ -365,15 +360,19 @@ class OutlinedTextField extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
   final void Function(PointerDownEvent) onTapOutside;
-  final AppDimensions appDimensions;
 
   final TextInputType? keyboardType;
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonHeight = appDimensions.compactButtonHeight;
+
     return SizedBox(
-      width: appDimensions.compactButtonWidth,
-      height: appDimensions.compactButtonHeight,
+      width: compactButtonWidth,
+      height: compactButtonHeight,
       child: TextField(
           inputFormatters: inputFormatters,
           decoration: const InputDecoration(

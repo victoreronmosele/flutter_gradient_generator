@@ -17,7 +17,7 @@ class AppTitleWidget extends StatelessWidget {
     return Text(
       titleToDisplay.toUpperCase(),
       textAlign: TextAlign.left,
-      style:  TextStyle(
+      style: TextStyle(
         fontSize: forPortrait ? 20.0 : 24.0,
         fontWeight: FontWeight.bold,
       ),

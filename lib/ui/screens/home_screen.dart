@@ -15,10 +15,7 @@ import 'package:flutter_gradient_generator/ui/widgets/footer/footer_widget.dart'
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
     Key? key,
-    required this.appDimensions,
   }) : super(key: key);
-
-  final AppDimensions appDimensions;
 
   @override
   HomeScreenState createState() => HomeScreenState();
@@ -103,18 +100,21 @@ class HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isPortrait = widget.appDimensions.displayPortrait;
+    final appDimensions = AppDimensions.of(context);
+
+    final displayPortrait = appDimensions.shouldDisplayPortraitUI;
 
     final previewSection = PreviewSection(
-        gradient: gradient, borderRadius: isPortrait ? 16.0 : 0.0);
+        gradient: gradient, borderRadius: displayPortrait ? 16.0 : 0.0);
 
     return Scaffold(
       body: Row(
-        crossAxisAlignment:
-            isPortrait ? CrossAxisAlignment.center : CrossAxisAlignment.stretch,
+        crossAxisAlignment: displayPortrait
+            ? CrossAxisAlignment.center
+            : CrossAxisAlignment.stretch,
         children: [
           Flexible(
-            flex: isPortrait ? 1 : 0,
+            flex: displayPortrait ? 1 : 0,
             child: Stack(
               alignment: AlignmentDirectional.bottomCenter,
               children: [
@@ -126,17 +126,14 @@ class HomeScreenState extends State<HomeScreen> {
                   onStopListChanged: onStopListChanged,
                   portraitInformation: (
                     previewWidgetForPortrait: previewSection,
-                    isPortrait: isPortrait,
+                    isPortrait: displayPortrait,
                   ),
-                  appDimensions: widget.appDimensions,
                 ),
-                FooterWidget(
-                  appDimensions: widget.appDimensions,
-                )
+                const FooterWidget()
               ],
             ),
           ),
-          if (!isPortrait) Flexible(child: previewSection),
+          if (!displayPortrait) Flexible(child: previewSection),
         ],
       ),
     );

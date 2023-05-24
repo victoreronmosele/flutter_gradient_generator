@@ -1,22 +1,38 @@
 import 'package:flutter/material.dart';
 
-class AppDimensions {
+/// Holds the dimensions of the app.
+///
+/// It is an [InheritedWidget] so that it can be accessed from anywhere in the
+/// widget tree using:
+/// ```dart
+///  AppDimensions.of(context)
+/// ```
+///
+/// For example, to get the width of a wide button, you can use:
+/// ```dart
+/// AppDimensions.of(context).wideButtonWidth
+/// ```
+// ignore: must_be_immutable
+class AppDimensions extends InheritedWidget {
   AppDimensions({
+    super.key,
+    required super.child,
     required Orientation orientation,
     required double screenWidth,
-  }) : displayPortrait = (orientation == Orientation.portrait) &&
-            (screenWidth < portraitModeMaxWidth) {
+  }) : shouldDisplayPortraitUI = (orientation == Orientation.portrait) &&
+            (screenWidth < _portraitModeMaxWidth) {
     generatorScreenWidth =
-        displayPortrait ? screenWidth : landscapeGeneratorScreenWidth;
+        shouldDisplayPortraitUI ? screenWidth : _landscapeGeneratorScreenWidth;
   }
 
-  final bool displayPortrait;
+  /// Whether the app should display the portrait UI.
+  final bool shouldDisplayPortraitUI;
 
-  static const double landscapeGeneratorScreenWidth = 320;
+  static const double _landscapeGeneratorScreenWidth = 320;
 
-  static const double portraitModeMaxWidth = 500;
+  static const double _portraitModeMaxWidth = 500;
 
-  double generatorScreenWidth = landscapeGeneratorScreenWidth;
+  double generatorScreenWidth = _landscapeGeneratorScreenWidth;
 
   double get generatorScreenHorizontalPadding => generatorScreenWidth / 10;
   double get generatorScreenVerticalPadding => generatorScreenHorizontalPadding;
@@ -33,4 +49,22 @@ class AppDimensions {
   double get wideButtonWidth => generatorScreenContentWidth;
   double get wideButtonHeight => 48;
   double get widebuttonPadding => 24;
+
+  @override
+  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
+    return oldWidget is! AppDimensions ||
+        oldWidget.shouldDisplayPortraitUI != shouldDisplayPortraitUI ||
+        oldWidget.generatorScreenWidth != generatorScreenWidth;
+  }
+
+  static AppDimensions? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<AppDimensions>();
+  }
+
+  static AppDimensions of(BuildContext context) {
+    final AppDimensions? result = maybeOf(context);
+    assert(result != null,
+        'No AppDimensions found in context. Ensure to wrap the widget tree with [AppDimensions]');
+    return result!;
+  }
 }

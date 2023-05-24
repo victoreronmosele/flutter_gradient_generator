@@ -10,14 +10,12 @@ class DirectionSelectionWidget extends StatelessWidget {
   final GradientStyle gradientStyle;
   final GradientDirection selectedGradientDirection;
   final void Function(GradientDirection) onGradientDirectionChanged;
-  final AppDimensions appDimensions;
 
   DirectionSelectionWidget({
     Key? key,
     required this.gradientStyle,
     required this.selectedGradientDirection,
     required this.onGradientDirectionChanged,
-    required this.appDimensions,
   }) : super(key: key);
 
   /// The index of the center alignment icon set in the total icon set list,
@@ -52,6 +50,10 @@ class DirectionSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final compactButtonMargin = appDimensions.compactButtonMargin;
+
     return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
       const Text(
         AppStrings.direction,
@@ -94,19 +96,19 @@ class DirectionSelectionWidget extends StatelessWidget {
               return Row(
                 children: [
                   if (iconIndex != firstIconIndex)
-                    SizedBox(width: appDimensions.compactButtonMargin),
+                    SizedBox(width: compactButtonMargin),
                   Visibility(
                     visible: showDirection,
                     maintainSize: true,
                     maintainAnimation: true,
                     maintainState: true,
                     child: DirectionButton(
-                        icon: icon,
-                        gradientDirection: gradientDirection,
-                        isSelected:
-                            gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged: onGradientDirectionChanged,
-                        appDimensions: appDimensions),
+                      icon: icon,
+                      gradientDirection: gradientDirection,
+                      isSelected:
+                          gradientDirection == selectedGradientDirection,
+                      onGradientDirectionChanged: onGradientDirectionChanged,
+                    ),
                   ),
                 ],
               );

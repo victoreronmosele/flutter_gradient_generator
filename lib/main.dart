@@ -25,17 +25,14 @@ class MyApp extends StatelessWidget {
     return OrientationBuilder(builder: (context, orientation) {
       final width = MediaQuery.of(context).size.width;
 
-      final appDimensions = AppDimensions(
+      return AppDimensions(
         orientation: orientation,
         screenWidth: width,
-      );
-
-      return MaterialApp(
-        title: AppStrings.appTitle,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
-        home: HomeScreen(
-          appDimensions: appDimensions,
+        child: MaterialApp(
+          title: AppStrings.appTitle,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
+          home: const HomeScreen(),
         ),
       );
     });

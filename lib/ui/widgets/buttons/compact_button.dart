@@ -7,7 +7,6 @@ class CompactButton extends StatelessWidget {
   final void Function() onPressed;
   final Color backgroundColor;
   final Color foregroundColor;
-  final AppDimensions appDimensions;
   final BorderSide? borderSide;
 
   /// Creates a [CompactButton] with an icon.
@@ -17,7 +16,6 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
-    required this.appDimensions,
     this.borderSide,
   })  : child = Icon(
           icon,
@@ -32,7 +30,6 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
-    required this.appDimensions,
     this.borderSide,
   })  : child = Text(
           text,
@@ -47,13 +44,16 @@ class CompactButton extends StatelessWidget {
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
-    required this.appDimensions,
     this.borderSide,
   })  : child = const SizedBox(),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonHeight = appDimensions.compactButtonHeight;
+
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
@@ -63,9 +63,8 @@ class CompactButton extends StatelessWidget {
             fontWeight: FontWeight.bold,
             fontFamily: AppFonts.getFontFamily(context))),
         side: MaterialStateProperty.all(borderSide),
-        fixedSize: MaterialStateProperty.all((Size(
-            appDimensions.compactButtonWidth,
-            appDimensions.compactButtonHeight))),
+        fixedSize: MaterialStateProperty.all(
+            (Size(compactButtonWidth, compactButtonHeight))),
       ),
       child: child,
     );

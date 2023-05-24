@@ -8,11 +8,9 @@ class GetGradientButton extends StatefulWidget {
   const GetGradientButton({
     Key? key,
     required this.onTap,
-    required this.appDimensions,
   }) : super(key: key);
 
   final Future<void> Function() onTap;
-  final AppDimensions appDimensions;
 
   @override
   State<GetGradientButton> createState() => _GetGradientButtonState();
@@ -51,6 +49,12 @@ class _GetGradientButtonState extends State<GetGradientButton> {
 
   @override
   Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+
+    final double wideButtonPadding = appDimensions.widebuttonPadding;
+    final double wideButtonWidth = appDimensions.wideButtonWidth;
+    final double wideButtonHeight = appDimensions.wideButtonHeight;
+
     return TextButton(
       onPressed: () async {
         await widget.onTap();
@@ -71,11 +75,9 @@ class _GetGradientButtonState extends State<GetGradientButton> {
         textStyle: MaterialStateProperty.all(TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: AppFonts.getFontFamily(context))),
-        padding: MaterialStateProperty.all(
-            EdgeInsets.all(widget.appDimensions.widebuttonPadding)),
-        fixedSize: MaterialStateProperty.all((Size(
-            widget.appDimensions.wideButtonWidth,
-            widget.appDimensions.wideButtonHeight))),
+        padding: MaterialStateProperty.all(EdgeInsets.all(wideButtonPadding)),
+        fixedSize: MaterialStateProperty.all(
+            (Size(wideButtonWidth, wideButtonHeight))),
       ),
       child: Text(_buttonText),
     );
