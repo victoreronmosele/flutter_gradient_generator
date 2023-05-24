@@ -51,9 +51,8 @@ class AppDimensions extends InheritedWidget {
   double get widebuttonPadding => 24;
 
   @override
-  bool updateShouldNotify(covariant InheritedWidget oldWidget) {
-    return oldWidget is! AppDimensions ||
-        oldWidget.shouldDisplayPortraitUI != shouldDisplayPortraitUI ||
+  bool updateShouldNotify(covariant AppDimensions oldWidget) {
+    return oldWidget.shouldDisplayPortraitUI != shouldDisplayPortraitUI ||
         oldWidget.generatorScreenWidth != generatorScreenWidth;
   }
 
