@@ -8,7 +8,7 @@ import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_p
 import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_container_wodget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 
 class ColorAndStopSelectionWidget extends StatelessWidget {
   const ColorAndStopSelectionWidget({
@@ -41,14 +41,8 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
     );
     return SelectionWidgetContainer(
       titleWidgetInformation: (
-        mainTitle: const Text(
-          AppStrings.colorsAndStops,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        action: CompactButton.text(
+        mainTitle: AppStrings.colorsAndStops,
+        trailingActionWidget: CompactButton.text(
           onPressed: () {
             final List<Color> twoRandomColors =
                 randomColorGenerator.getTwoRandomColors();

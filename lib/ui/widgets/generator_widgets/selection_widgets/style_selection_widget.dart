@@ -4,7 +4,7 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_container_wodget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 
 class StyleSelectionWidget extends StatelessWidget {
   const StyleSelectionWidget({
@@ -27,14 +27,8 @@ class StyleSelectionWidget extends StatelessWidget {
 
     return SelectionWidgetContainer(
       titleWidgetInformation: (
-        mainTitle: const Text(
-          AppStrings.style,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        action: const SizedBox.shrink()
+        mainTitle: AppStrings.style,
+        trailingActionWidget: const SizedBox.shrink()
       ),
       selectionWidget: Row(
         children: GradientStyle.values.map(

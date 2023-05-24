@@ -4,7 +4,7 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_container_wodget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class DirectionSelectionWidget extends StatelessWidget {
@@ -57,14 +57,8 @@ class DirectionSelectionWidget extends StatelessWidget {
 
     return SelectionWidgetContainer(
       titleWidgetInformation: (
-        mainTitle: const Text(
-          AppStrings.direction,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        action: const SizedBox.shrink(),
+        mainTitle: AppStrings.direction,
+        trailingActionWidget: const SizedBox.shrink(),
       ),
       selectionWidget: Column(
         children: iconSetList.map(

@@ -49,6 +49,9 @@ class AppDimensions extends InheritedWidget {
   double get wideButtonWidth => generatorScreenContentWidth;
   double get wideButtonHeight => 48;
   double get widebuttonPadding => 24;
+  double get expansionIconSize => 20;
+  double get selectionContainerMainTitleWidth => (generatorScreenContentWidth -
+      (compactButtonWidth + (2 * compactButtonMargin) + expansionIconSize));
 
   @override
   bool updateShouldNotify(covariant AppDimensions oldWidget) {
