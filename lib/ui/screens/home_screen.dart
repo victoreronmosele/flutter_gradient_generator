@@ -116,17 +116,20 @@ class HomeScreenState extends State<HomeScreen> {
           Flexible(
             flex: displayPortrait ? 1 : 0,
             child: Stack(
-              alignment: AlignmentDirectional.bottomCenter,
+              alignment: Alignment.bottomCenter,
               children: [
-                GeneratorSection(
-                  gradient: gradient,
-                  onGradientStyleChanged: onGradientStyleChanged,
-                  onGradientDirectionChanged: onGradientDirectionChanged,
-                  onColorListChanged: onColorListChanged,
-                  onStopListChanged: onStopListChanged,
-                  portraitInformation: (
-                    previewWidgetForPortrait: previewSection,
-                    isPortrait: displayPortrait,
+                Align(
+                  alignment: Alignment.topCenter,
+                  child: GeneratorSection(
+                    gradient: gradient,
+                    onGradientStyleChanged: onGradientStyleChanged,
+                    onGradientDirectionChanged: onGradientDirectionChanged,
+                    onColorListChanged: onColorListChanged,
+                    onStopListChanged: onStopListChanged,
+                    portraitInformation: (
+                      previewWidgetForPortrait: previewSection,
+                      isPortrait: displayPortrait,
+                    ),
                   ),
                 ),
                 const FooterWidget()

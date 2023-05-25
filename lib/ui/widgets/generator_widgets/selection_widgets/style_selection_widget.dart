@@ -4,6 +4,7 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 
 class StyleSelectionWidget extends StatelessWidget {
   const StyleSelectionWidget({
@@ -24,47 +25,40 @@ class StyleSelectionWidget extends StatelessWidget {
     final Color selectedStyleButtonColor = AppColors.grey;
     const Color unselectedStyleButtonColor = Colors.transparent;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        const Text(
-          AppStrings.style,
-          style: TextStyle(
-            fontSize: 16.0,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Row(
-          children: GradientStyle.values.map(
-            (GradientStyle style) {
-              final Color buttonColor = style == gradientStyle
-                  ? selectedStyleButtonColor
-                  : unselectedStyleButtonColor;
+    return SelectionWidgetContainer(
+      titleWidgetInformation: (
+        mainTitle: AppStrings.style,
+        trailingActionWidget: const SizedBox.shrink()
+      ),
+      selectionWidget: Row(
+        children: GradientStyle.values.map(
+          (GradientStyle style) {
+            final Color buttonColor = style == gradientStyle
+                ? selectedStyleButtonColor
+                : unselectedStyleButtonColor;
 
-              final bool styleIsLast = style == GradientStyle.values.last;
+            final bool styleIsLast = style == GradientStyle.values.last;
 
-              return Row(
-                children: [
-                  CompactButton.text(
-                    onPressed: () {
-                      onGradientStyleChanged(style);
-                    },
-                    foregroundColor: Colors.black,
-                    backgroundColor: buttonColor,
-                    borderSide: BorderSide(color: selectedStyleButtonColor),
-                    text: style.title,
+            return Row(
+              children: [
+                CompactButton.text(
+                  onPressed: () {
+                    onGradientStyleChanged(style);
+                  },
+                  foregroundColor: Colors.black,
+                  backgroundColor: buttonColor,
+                  borderSide: BorderSide(color: selectedStyleButtonColor),
+                  text: style.title,
+                ),
+                if (!styleIsLast)
+                  SizedBox(
+                    width: compactButtonMargin,
                   ),
-                  if (!styleIsLast)
-                    SizedBox(
-                      width: compactButtonMargin,
-                    ),
-                ],
-              );
-            },
-          ).toList(),
-        ),
-      ],
+              ],
+            );
+          },
+        ).toList(),
+      ),
     );
   }
 }

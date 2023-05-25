@@ -4,6 +4,7 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class DirectionSelectionWidget extends StatelessWidget {
@@ -54,68 +55,67 @@ class DirectionSelectionWidget extends StatelessWidget {
 
     final compactButtonMargin = appDimensions.compactButtonMargin;
 
-    return Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-      const Text(
-        AppStrings.direction,
-        style: TextStyle(
-          fontSize: 16.0,
-          fontWeight: FontWeight.bold,
-        ),
+    return SelectionWidgetContainer(
+      titleWidgetInformation: (
+        mainTitle: AppStrings.direction,
+        trailingActionWidget: const SizedBox.shrink(),
       ),
-      const SizedBox(height: 16),
-      ...iconSetList.map(
-          (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
-        final int iconSetIndex =
-            iconSetList.indexOf(gradientDirectionToIconSetMap);
-        const int firstIconSetIndex = 0;
+      selectionWidget: Column(
+        children: iconSetList.map(
+            (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
+          final int iconSetIndex =
+              iconSetList.indexOf(gradientDirectionToIconSetMap);
+          const int firstIconSetIndex = 0;
 
-        return Column(
-          children: [
-            if (iconSetIndex != firstIconSetIndex) const SizedBox(height: 8.0),
-            Row(
-                children: gradientDirectionToIconSetMap.values.map((icon) {
-              final int iconIndex =
-                  gradientDirectionToIconSetMap.values.toList().indexOf(icon);
-              final GradientDirection gradientDirection =
-                  gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
+          return Column(
+            children: [
+              if (iconSetIndex != firstIconSetIndex)
+                const SizedBox(height: 8.0),
+              Row(
+                  children: gradientDirectionToIconSetMap.values.map((icon) {
+                final int iconIndex =
+                    gradientDirectionToIconSetMap.values.toList().indexOf(icon);
+                final GradientDirection gradientDirection =
+                    gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
 
-              const int firstIconIndex = 0;
+                const int firstIconIndex = 0;
 
-              final bool gradientStyleIsLinear =
-                  gradientStyle == GradientStyle.linear;
+                final bool gradientStyleIsLinear =
+                    gradientStyle == GradientStyle.linear;
 
-              final bool thisIsTheMiddleCenterDirectionButton =
-                  iconSetIndex == centerGradientDirectionIndexInIconSetList &&
-                      iconIndex ==
-                          centerGradientDirectionIndexWithinCenterDirectionSet;
+                final bool thisIsTheMiddleCenterDirectionButton =
+                    iconSetIndex == centerGradientDirectionIndexInIconSetList &&
+                        iconIndex ==
+                            centerGradientDirectionIndexWithinCenterDirectionSet;
 
-              /// Circle radial button is not shown for linear gradients
-              final bool showDirection = !(gradientStyleIsLinear &&
-                  thisIsTheMiddleCenterDirectionButton);
+                /// Circle radial button is not shown for linear gradients
+                final bool showDirection = !(gradientStyleIsLinear &&
+                    thisIsTheMiddleCenterDirectionButton);
 
-              return Row(
-                children: [
-                  if (iconIndex != firstIconIndex)
-                    SizedBox(width: compactButtonMargin),
-                  Visibility(
-                    visible: showDirection,
-                    maintainSize: true,
-                    maintainAnimation: true,
-                    maintainState: true,
-                    child: DirectionButton(
-                      icon: icon,
-                      gradientDirection: gradientDirection,
-                      isSelected:
-                          gradientDirection == selectedGradientDirection,
-                      onGradientDirectionChanged: onGradientDirectionChanged,
+                return Row(
+                  children: [
+                    if (iconIndex != firstIconIndex)
+                      SizedBox(width: compactButtonMargin),
+                    Visibility(
+                      visible: showDirection,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
+                      child: DirectionButton(
+                        icon: icon,
+                        gradientDirection: gradientDirection,
+                        isSelected:
+                            gradientDirection == selectedGradientDirection,
+                        onGradientDirectionChanged: onGradientDirectionChanged,
+                      ),
                     ),
-                  ),
-                ],
-              );
-            }).toList()),
-          ],
-        );
-      }).toList()
-    ]);
+                  ],
+                );
+              }).toList()),
+            ],
+          );
+        }).toList(),
+      ),
+    );
   }
 }
