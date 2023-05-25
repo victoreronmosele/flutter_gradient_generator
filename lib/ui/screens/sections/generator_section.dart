@@ -82,7 +82,13 @@ class GeneratorSection extends StatelessWidget {
               gradientStyle: gradientStyle,
               onGradientStyleChanged: onGradientStyleChanged,
             ),
-            const SizedBox(height: 24),
+
+            /// Ideally the spacing should be 24 but the [ColorAndStopSelectionWidget]
+            /// has an action button that gives it an extra height.
+            ///
+            /// So the height is adjusted to 32 to match the spacing between
+            /// [DirectionSelectionWidget] and [ColorAndStopSelectionWidget]
+            const SizedBox(height: 32),
             DirectionSelectionWidget(
               gradientStyle: gradient.getGradientStyle(),
               selectedGradientDirection: gradient.getGradientDirection(),
