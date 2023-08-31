@@ -23,7 +23,8 @@ class ColorAndStopSelectionWidget extends StatefulWidget {
   }) : super(key: key);
 
   final List<ColorAndStop> colorAndStopList;
-  final void Function(List<ColorAndStop>) onColorAndStopListChanged;
+  final void Function(List<ColorAndStop>, {required int index})
+      onColorAndStopListChanged;
   final void Function(ColorAndStop) onNewColorAndStopAdded;
   final int currentSelectedColorIndex;
 
@@ -79,7 +80,7 @@ class _ColorAndStopSelectionWidgetState
             final twoRandomColorsAndStops =
                 randomColorGenerator.getTwoRandomColorsAndStops();
 
-            widget.onColorAndStopListChanged(twoRandomColorsAndStops);
+            widget.onColorAndStopListChanged(twoRandomColorsAndStops, index: 0);
           },
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
@@ -193,8 +194,6 @@ class _ColorAndStopSelectionWidgetState
                 final (:startColorAndStop, :endColorAndStop) =
                     _getColorAndStopsForNewColorAddition();
 
-                print('generated color: $startColorAndStop, $endColorAndStop');
-
                 _addColor(
                   startColorAndStop: startColorAndStop,
                   endColorAndStop: endColorAndStop,
@@ -286,7 +285,8 @@ class _ColorAndStopSelectionWidgetState
               List.from(widget.colorAndStopList);
           newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
 
-          widget.onColorAndStopListChanged(newColorAndStopList);
+          widget.onColorAndStopListChanged(newColorAndStopList,
+              index: currentColorAndStopIndex);
         });
   }
 
@@ -308,7 +308,8 @@ class _ColorAndStopSelectionWidgetState
         List.from(widget.colorAndStopList);
     newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
 
-    widget.onColorAndStopListChanged(newColorAndStopList);
+    widget.onColorAndStopListChanged(newColorAndStopList,
+        index: currentColorAndStopIndex);
   }
 }
 

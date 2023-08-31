@@ -70,7 +70,8 @@ class HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList) {
+  void onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList,
+      {required int index}) {
     if (!const ListEquality<ColorAndStop>()
         .equals(gradient.getColorAndStopList(), newColorAndStopList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
@@ -81,7 +82,7 @@ class HomeScreenState extends State<HomeScreen> {
 
       setState(() {
         gradient = newGradient;
-        currentSelectedColorIndex = 0;
+        currentSelectedColorIndex = index;
       });
     }
   }
@@ -92,18 +93,15 @@ class HomeScreenState extends State<HomeScreen> {
 
     colorAndStopListCopy.add(newColorAndStop);
 
-    final newColorAndStopList = colorAndStopListCopy;
+    colorAndStopListCopy.sort((a, b) => a.stop.compareTo(b.stop));
 
-    onColorAndStopListChanged(newColorAndStopList);
-
-    final updatedColorAndStopList = gradient.getColorAndStopList();
+    final updatedColorAndStopList = colorAndStopListCopy;
 
     final newColorAndStopIndex =
-        updatedColorAndStopList.indexOf(newColorAndStop);
+        updatedColorAndStopList.lastIndexOf(newColorAndStop);
 
-    setState(() {
-      currentSelectedColorIndex = newColorAndStopIndex;
-    });
+    onColorAndStopListChanged(updatedColorAndStopList,
+        index: newColorAndStopIndex);
   }
 
   @override

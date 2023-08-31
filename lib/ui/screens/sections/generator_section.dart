@@ -16,7 +16,8 @@ class GeneratorSection extends StatelessWidget {
   final AbstractGradient gradient;
   final void Function(GradientStyle) onGradientStyleChanged;
   final void Function(GradientDirection) onGradientDirectionChanged;
-  final void Function(List<ColorAndStop>) onColorAndStopListChanged;
+  final void Function(List<ColorAndStop>, {required int index})
+      onColorAndStopListChanged;
   final void Function(ColorAndStop) onNewColorAndStopAdded;
 
   final ({
