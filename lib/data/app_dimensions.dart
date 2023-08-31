@@ -32,12 +32,24 @@ class AppDimensions extends InheritedWidget {
 
   static const double _portraitModeMaxWidth = 500;
 
+  /// The width of the generator screen including the padding.
+  ///
+  /// For the width of the actual content (without the padding), use
+  /// [generatorScreenContentWidth].
   double generatorScreenWidth = _landscapeGeneratorScreenWidth;
 
   double get generatorScreenHorizontalPadding => generatorScreenWidth / 10;
   double get generatorScreenVerticalPadding => generatorScreenHorizontalPadding;
+
+  /// The width of the generator screen content.
+  ///
+  /// This is the width of the generator screen excluding the padding.
+  ///
+  /// For the width of the entire generator screen (including the padding), use
+  /// [generatorScreenWidth].
   double get generatorScreenContentWidth =>
       generatorScreenWidth - (2 * generatorScreenHorizontalPadding);
+
   double get numberOfCompactButtonPerRow => 3;
   double get compactButtonMargin => 12.0;
   double get compactButtonWidth =>
