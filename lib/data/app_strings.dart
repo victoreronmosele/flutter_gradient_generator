@@ -16,6 +16,7 @@ class AppStrings {
   static const String tapToEdit = 'Tap to edit';
   static const String enterInPercentage = 'Enter in %';
   static const String sweep = 'Sweep';
+  static const String addColor = 'Add Color';
 
   /// URLs
   static const githubUrl =

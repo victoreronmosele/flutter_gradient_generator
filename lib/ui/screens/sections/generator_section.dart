@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -15,29 +16,32 @@ class GeneratorSection extends StatelessWidget {
   final AbstractGradient gradient;
   final void Function(GradientStyle) onGradientStyleChanged;
   final void Function(GradientDirection) onGradientDirectionChanged;
-  final void Function(List<Color>) onColorListChanged;
-  final void Function(List<int>) onStopListChanged;
+  final void Function(List<ColorAndStop>) onColorAndStopListChanged;
+  final void Function(ColorAndStop) onNewColorAndStopAdded;
+
   final ({
     Widget previewWidgetForPortrait,
     bool isPortrait
   }) portraitInformation;
+
+  final int currentSelectedColorIndex;
 
   const GeneratorSection({
     Key? key,
     required this.gradient,
     required this.onGradientStyleChanged,
     required this.onGradientDirectionChanged,
-    required this.onColorListChanged,
-    required this.onStopListChanged,
+    required this.onColorAndStopListChanged,
     required this.portraitInformation,
+    required this.currentSelectedColorIndex,
+    required this.onNewColorAndStopAdded,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final String generatedCode = gradient.toWidgetString();
 
-    final List<Color> colorList = gradient.getColorList();
-    final List<int> stopList = gradient.getStopList();
+    final List<ColorAndStop> colorAndStopList = gradient.getColorAndStopList();
 
     final gradientStyle = gradient.getGradientStyle();
 
@@ -96,10 +100,10 @@ class GeneratorSection extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ColorAndStopSelectionWidget(
-              colorList: colorList,
-              stopList: stopList,
-              onColorListChanged: onColorListChanged,
-              onStopListChanged: onStopListChanged,
+              colorAndStopList: colorAndStopList,
+              onColorAndStopListChanged: onColorAndStopListChanged,
+              currentSelectedColorIndex: currentSelectedColorIndex,
+              onNewColorAndStopAdded: onNewColorAndStopAdded,
             ),
             const SizedBox(height: 48),
             GetGradientButton(

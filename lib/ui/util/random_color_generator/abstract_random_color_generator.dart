@@ -1,5 +1,5 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 
-abstract class AbstractRandomColorGenerator {
-  List<Color> getTwoRandomColors();
+abstract interface class AbstractRandomColorGenerator {
+  List<ColorAndStop> getTwoRandomColorsAndStops();
 }

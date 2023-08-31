@@ -3,30 +3,59 @@ import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
+import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator_interface.dart';
+import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
-import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_picker.dart';
+import 'package:flutter_gradient_generator/ui/util/color_picker/color_picker_interface.dart';
 import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 
-class ColorAndStopSelectionWidget extends StatelessWidget {
+class ColorAndStopSelectionWidget extends StatefulWidget {
   const ColorAndStopSelectionWidget({
     Key? key,
-    required this.colorList,
-    required this.stopList,
-    required this.onColorListChanged,
-    required this.onStopListChanged,
+    required this.colorAndStopList,
+    required this.onColorAndStopListChanged,
+    required this.onNewColorAndStopAdded,
+    required this.currentSelectedColorIndex,
   }) : super(key: key);
 
-  final List<Color> colorList;
-  final List<int> stopList;
-  final void Function(List<Color>) onColorListChanged;
-  final void Function(List<int>) onStopListChanged;
+  final List<ColorAndStop> colorAndStopList;
+  final void Function(List<ColorAndStop>) onColorAndStopListChanged;
+  final void Function(ColorAndStop) onNewColorAndStopAdded;
+  final int currentSelectedColorIndex;
 
-  final AbstractColorPicker colorPicker = const CyclopColorPicker();
+  @override
+  State<ColorAndStopSelectionWidget> createState() =>
+      _ColorAndStopSelectionWidgetState();
+}
+
+class _ColorAndStopSelectionWidgetState
+    extends State<ColorAndStopSelectionWidget> {
+  final ColorPickerInterface colorPicker = const CyclopColorPicker();
+
   final AbstractRandomColorGenerator randomColorGenerator =
       const RandomColorGenerator();
+
+  final NewColorGeneratorInterface newColorGenerator = NewColorGenerator();
+
+  late int currentSelectedColorIndex;
+
+  @override
+  void initState() {
+    super.initState();
+
+    currentSelectedColorIndex = widget.currentSelectedColorIndex;
+  }
+
+  @override
+  void didUpdateWidget(covariant ColorAndStopSelectionWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    currentSelectedColorIndex = widget.currentSelectedColorIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,6 +63,9 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
 
     final compactButtonWidth = appDimensions.compactButtonWidth;
     final compactButtonMargin = appDimensions.compactButtonMargin;
+
+    final generatorScreenContentWidth =
+        appDimensions.generatorScreenContentWidth;
 
     final colorsAndStopsLabelStyle = TextStyle(
       fontSize: 12.0,
@@ -44,10 +76,10 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         mainTitle: AppStrings.colorsAndStops,
         trailingActionWidget: CompactButton.text(
           onPressed: () {
-            final List<Color> twoRandomColors =
-                randomColorGenerator.getTwoRandomColors();
+            final twoRandomColorsAndStops =
+                randomColorGenerator.getTwoRandomColorsAndStops();
 
-            onColorListChanged(twoRandomColors);
+            widget.onColorAndStopListChanged(twoRandomColorsAndStops);
           },
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
@@ -58,6 +90,7 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
         ),
       ),
       selectionWidget: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
@@ -82,26 +115,32 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
               )
             ],
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 6),
           Column(
             children: List.generate(
-              colorList.length,
+              widget.colorAndStopList.length,
               (index) {
-                final Color color = colorList.elementAt(index);
-                final int stop = stopList.elementAt(index);
+                final (:color, :stop) =
+                    widget.colorAndStopList.elementAt(index);
 
                 return Column(
                   children: [
-                    Row(
-                      children: [
-                        Column(
+                    Container(
+                      color: index == currentSelectedColorIndex
+                          ? color.withOpacity(0.1)
+                          : null,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 2.0),
+                        child: Row(
                           children: [
                             CompactButton.empty(
                               onPressed: () {
+                                _setSelectedColorIndex(
+                                    newlySelectedIndex: index);
+
                                 _selectColor(
                                   context: context,
-                                  color: color,
-                                  index: index,
+                                  currentColorAndStopIndex: index,
                                 );
                               },
                               backgroundColor: color,
@@ -110,29 +149,60 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
                                 color: AppColors.grey,
                               ),
                             ),
-                          ],
-                        ),
-                        SizedBox(
-                          width: compactButtonMargin,
-                        ),
-                        Column(
-                          children: [
+                            SizedBox(
+                              width: compactButtonMargin,
+                            ),
                             StopTextBox(
+                              key: UniqueKey(),
                               stop: stop,
                               onStopChanged: (int newStop) {
-                                _changeStop(stop: newStop, index: index);
+                                _changeStop(
+                                    newStop: newStop,
+                                    currentColorAndStopIndex: index);
                               },
+                              onTap: () {
+                                _setSelectedColorIndex(
+                                    newlySelectedIndex: index);
+                              },
+                            ),
+                            SizedBox(
+                              width: compactButtonMargin,
+                            ),
+                            SizedBox(
+                              width: compactButtonWidth,
                             ),
                           ],
                         ),
-                      ],
+                      ),
                     ),
                     const SizedBox(
-                      height: 8.0,
+                      height: 6.0,
                     ),
                   ],
                 );
               },
+            ),
+          ),
+          const SizedBox(
+            height: 8.0,
+          ),
+          SizedBox(
+            width: generatorScreenContentWidth,
+            child: CompactButton.text(
+              onPressed: () {
+                final (:startColorAndStop, :endColorAndStop) =
+                    _getColorAndStopsForNewColorAddition();
+
+                print('generated color: $startColorAndStop, $endColorAndStop');
+
+                _addColor(
+                  startColorAndStop: startColorAndStop,
+                  endColorAndStop: endColorAndStop,
+                );
+              },
+              backgroundColor: AppColors.grey,
+              foregroundColor: Colors.black,
+              text: AppStrings.addColor,
             ),
           ),
         ],
@@ -140,32 +210,105 @@ class ColorAndStopSelectionWidget extends StatelessWidget {
     );
   }
 
+  void _setSelectedColorIndex({required int newlySelectedIndex}) {
+    if (newlySelectedIndex != currentSelectedColorIndex) {
+      setState(() {
+        currentSelectedColorIndex = newlySelectedIndex;
+      });
+    }
+  }
+
+  ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
+      _getColorAndStopsForNewColorAddition() {
+    final colorAndStopList = widget.colorAndStopList;
+
+    ColorAndStop? startColorAndStop;
+    ColorAndStop? endColorAndStop;
+
+    const firstIndex = 0;
+    final lastIndex = colorAndStopList.length - 1;
+
+    if (currentSelectedColorIndex == firstIndex) {
+      const secondIndex = firstIndex + 1;
+
+      startColorAndStop = colorAndStopList.elementAtOrNull(firstIndex);
+      endColorAndStop = colorAndStopList.elementAtOrNull(secondIndex);
+    } else if (currentSelectedColorIndex == lastIndex) {
+      startColorAndStop =
+          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
+      endColorAndStop = null;
+    } else {
+      final nextIndex = currentSelectedColorIndex + 1;
+
+      startColorAndStop =
+          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
+      endColorAndStop = colorAndStopList.elementAtOrNull(nextIndex);
+    }
+
+    return (
+      startColorAndStop: startColorAndStop,
+      endColorAndStop: endColorAndStop
+    );
+  }
+
+  void _addColor({
+    required ColorAndStop? startColorAndStop,
+    required ColorAndStop? endColorAndStop,
+  }) {
+    final newColorAndStop = newColorGenerator.generateNewColorAndStopBetween(
+        startColorAndStop: startColorAndStop, endColorAndStop: endColorAndStop);
+
+    if (newColorAndStop == null) {
+      return;
+    }
+
+    widget.onNewColorAndStopAdded(newColorAndStop);
+  }
+
   void _selectColor({
     required BuildContext context,
-    required Color color,
-    required int index,
+    required int currentColorAndStopIndex,
   }) {
+    final (:color, :stop) =
+        widget.colorAndStopList.elementAt(currentColorAndStopIndex);
+
     colorPicker.selectColor(
         context: context,
         currentColor: color,
         onColorSelected: (selectedColor) {
-          /// Creates a copy of the `colorList` so modifying the new list does not modify colorList
-          final List<Color> newColorList = List.from(colorList);
-          newColorList[index] = selectedColor;
+          final newColorAndStop = (
+            color: selectedColor,
+            stop: stop,
+          );
 
-          onColorListChanged(newColorList);
+          /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
+          final List<ColorAndStop> newColorAndStopList =
+              List.from(widget.colorAndStopList);
+          newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
+
+          widget.onColorAndStopListChanged(newColorAndStopList);
         });
   }
 
   void _changeStop({
-    required int stop,
-    required int index,
+    required int newStop,
+    required int currentColorAndStopIndex,
   }) {
-    /// Creates a copy of the `stopList` so modifying the new list does not modify stopList
-    final List<int> newStopList = List.from(stopList);
-    newStopList[index] = stop;
+    // ignore: unused_local_variable
+    final (:color, :stop) =
+        widget.colorAndStopList.elementAt(currentColorAndStopIndex);
 
-    onStopListChanged(newStopList);
+    final newColorAndStop = (
+      color: color,
+      stop: newStop,
+    );
+
+    /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
+    final List<ColorAndStop> newColorAndStopList =
+        List.from(widget.colorAndStopList);
+    newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
+
+    widget.onColorAndStopListChanged(newColorAndStopList);
   }
 }
 
@@ -176,10 +319,12 @@ class StopTextBox extends StatefulWidget {
     super.key,
     required this.stop,
     required this.onStopChanged,
+    required this.onTap,
   });
 
   final int stop;
   final void Function(int) onStopChanged;
+  final void Function() onTap;
 
   @override
   State<StopTextBox> createState() => _StopTextBoxState();
@@ -242,7 +387,10 @@ class _StopTextBoxState extends State<StopTextBox> {
     return OutlinedTextField(
       inputFormatters: inputFormatters,
       onSubmitted: onStopSubmitted,
-      onTap: onTextFieldTap,
+      onTap: () {
+        widget.onTap();
+        onTextFieldTap();
+      },
       onTapOutside: onTapOutside,
       controller: _controller,
       focusNode: _focusNode,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -7,12 +8,10 @@ import 'package:quiver/core.dart';
 // ignore: must_be_immutable
 class SweepStyleGradient extends AbstractGradient {
   SweepStyleGradient(
-      {required List<Color> colorList,
-      required List<int> stopList,
+      {required List<ColorAndStop> colorAndStopList,
       required GradientDirection gradientDirection})
       : super(
-          colorList: colorList,
-          stopList: stopList,
+          colorAndStopList: colorAndStopList,
           gradientDirection: gradientDirection,
         );
 

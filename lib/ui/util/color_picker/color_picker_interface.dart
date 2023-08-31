@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-abstract class AbstractColorPicker {
+abstract interface class ColorPickerInterface {
   void selectColor(
       {required BuildContext context,
       required Color currentColor,

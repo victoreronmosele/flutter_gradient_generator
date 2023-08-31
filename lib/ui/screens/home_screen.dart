@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -26,11 +27,14 @@ class HomeScreenState extends State<HomeScreen> {
       const RandomColorGenerator();
 
   late final AbstractGradient defaultGradient = LinearStyleGradient(
-      colorList: randomColorGenerator.getTwoRandomColors(),
-      stopList: const [0, 100],
+      colorAndStopList: randomColorGenerator.getTwoRandomColorsAndStops(),
       gradientDirection: GradientDirection.topLeft);
 
   late AbstractGradient gradient = defaultGradient;
+
+  /// The index of the currently selected color in the color list being
+  /// showned on the [GeneratorSection]
+  int currentSelectedColorIndex = 0;
 
   @override
   void initState() {
@@ -42,8 +46,7 @@ class HomeScreenState extends State<HomeScreen> {
     if (gradient.getGradientStyle() != newGradientStyle) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: newGradientStyle,
-        colorList: gradient.getColorList(),
-        stopList: gradient.getStopList(),
+        colorAndStopList: gradient.getColorAndStopList(),
         gradientDirection: gradient.getGradientDirection(),
       );
 
@@ -57,8 +60,7 @@ class HomeScreenState extends State<HomeScreen> {
     if (gradient.getGradientDirection() != newGradientDirection) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: gradient.getGradientStyle(),
-        colorList: gradient.getColorList(),
-        stopList: gradient.getStopList(),
+        colorAndStopList: gradient.getColorAndStopList(),
         gradientDirection: newGradientDirection,
       );
 
@@ -68,34 +70,40 @@ class HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  void onColorListChanged(List<Color> newColorList) {
-    if (!const ListEquality().equals(gradient.getColorList(), newColorList)) {
+  void onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList) {
+    if (!const ListEquality<ColorAndStop>()
+        .equals(gradient.getColorAndStopList(), newColorAndStopList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: gradient.getGradientStyle(),
-        colorList: newColorList,
-        stopList: gradient.getStopList(),
+        colorAndStopList: newColorAndStopList,
         gradientDirection: gradient.getGradientDirection(),
       );
 
       setState(() {
         gradient = newGradient;
+        currentSelectedColorIndex = 0;
       });
     }
   }
 
-  void onStopListChanged(List<int> newStopList) {
-    if (!const ListEquality().equals(gradient.getStopList(), newStopList)) {
-      final AbstractGradient newGradient = GradientFactory().getGradient(
-        gradientStyle: gradient.getGradientStyle(),
-        colorList: gradient.getColorList(),
-        gradientDirection: gradient.getGradientDirection(),
-        stopList: newStopList,
-      );
+  void onNewColorAndStopAdded(ColorAndStop newColorAndStop) {
+    final List<ColorAndStop> colorAndStopListCopy =
+        List<ColorAndStop>.from(gradient.getColorAndStopList());
 
-      setState(() {
-        gradient = newGradient;
-      });
-    }
+    colorAndStopListCopy.add(newColorAndStop);
+
+    final newColorAndStopList = colorAndStopListCopy;
+
+    onColorAndStopListChanged(newColorAndStopList);
+
+    final updatedColorAndStopList = gradient.getColorAndStopList();
+
+    final newColorAndStopIndex =
+        updatedColorAndStopList.indexOf(newColorAndStop);
+
+    setState(() {
+      currentSelectedColorIndex = newColorAndStopIndex;
+    });
   }
 
   @override
@@ -124,12 +132,13 @@ class HomeScreenState extends State<HomeScreen> {
                     gradient: gradient,
                     onGradientStyleChanged: onGradientStyleChanged,
                     onGradientDirectionChanged: onGradientDirectionChanged,
-                    onColorListChanged: onColorListChanged,
-                    onStopListChanged: onStopListChanged,
+                    onColorAndStopListChanged: onColorAndStopListChanged,
+                    onNewColorAndStopAdded: onNewColorAndStopAdded,
                     portraitInformation: (
                       previewWidgetForPortrait: previewSection,
                       isPortrait: displayPortrait,
                     ),
+                    currentSelectedColorIndex: currentSelectedColorIndex,
                   ),
                 ),
                 const FooterWidget()
