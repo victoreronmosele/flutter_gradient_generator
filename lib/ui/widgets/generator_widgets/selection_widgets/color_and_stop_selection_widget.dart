@@ -87,8 +87,10 @@ class _ColorAndStopSelectionWidgetState
         mainTitle: AppStrings.colorsAndStops,
         trailingActionWidget: CompactButton.text(
           onPressed: () {
-            final twoRandomColorsAndStops =
-                randomColorGenerator.getTwoRandomColorsAndStops();
+            final twoRandomColorsAndStops = randomColorGenerator
+                .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
+                    currentGradientColorAndStopListLength:
+                        widget.colorAndStopList.length);
 
             widget.onColorAndStopListChanged(twoRandomColorsAndStops, index: 0);
           },

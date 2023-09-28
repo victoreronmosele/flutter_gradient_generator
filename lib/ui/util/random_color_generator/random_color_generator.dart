@@ -7,26 +7,37 @@ class RandomColorGenerator implements AbstractRandomColorGenerator {
   const RandomColorGenerator();
 
   @override
-  List<ColorAndStop> getTwoRandomColorsAndStops() {
+  List<ColorAndStop>
+      getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
+          {required int currentGradientColorAndStopListLength}) {
     final List<Color> colorList =
         Colors.primaries.map((color) => color.shade500).toList();
+
     final int colorListLength = colorList.length;
+
+    /// This represents the interval at which each color's stop position
+    /// is calculated in the gradient.
+    ///
+    /// The '~/'' operator is used to discard the fractional part of the
+    /// result of the division.
+    final stopInterval = 100 ~/ currentGradientColorAndStopListLength;
 
     final Random random = Random();
 
-    final int firstIndex = random.nextInt(colorListLength);
-    final int secondIndex = random.nextInt(colorListLength);
+    final List<ColorAndStop> randomColorsAndStops = [];
 
-    final Color firstRandomColor = colorList.elementAt(firstIndex);
-    final Color secondRandomColor = colorList.elementAt(secondIndex);
+    for (int i = 0; i < currentGradientColorAndStopListLength; i++) {
+      final int randomIndex = random.nextInt(colorListLength);
 
-    const int firstStop = 0;
-    const int secondStop = 50;
+      final Color randomColor = colorList.elementAt(randomIndex);
 
-    final List<ColorAndStop> randomColorsAndStops = [
-      (color: firstRandomColor, stop: firstStop),
-      (color: secondRandomColor, stop: secondStop),
-    ];
+      /// The stop position of the color in the gradient.
+      final int stop = i * stopInterval;
+
+      randomColorsAndStops.add(
+        (color: randomColor, stop: stop),
+      );
+    }
 
     return randomColorsAndStops;
   }

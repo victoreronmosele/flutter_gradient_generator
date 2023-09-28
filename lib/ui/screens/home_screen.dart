@@ -31,7 +31,11 @@ class HomeScreenState extends State<HomeScreen> {
   final focusNode = FocusNode();
 
   late final AbstractGradient defaultGradient = LinearStyleGradient(
-      colorAndStopList: randomColorGenerator.getTwoRandomColorsAndStops(),
+      colorAndStopList: randomColorGenerator
+          .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
+        currentGradientColorAndStopListLength:
+            ColorAndStopUtil().initialNumberOfColorAndStops,
+      ),
       gradientDirection: GradientDirection.topLeft);
 
   late AbstractGradient gradient = defaultGradient;
