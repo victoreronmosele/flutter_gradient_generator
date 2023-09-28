@@ -188,8 +188,11 @@ class HomeScreenState extends State<HomeScreen> {
 
     final updatedColorAndStopList = colorAndStopListCopy;
 
-    final newSelectedColorIndex =
-        currentSelectedColorIndex - 1 < 0 ? 0 : currentSelectedColorIndex - 1;
+    final indexBeforeCurrentSelectedColorIndex = currentSelectedColorIndex - 1;
+
+    final newSelectedColorIndex = indexBeforeCurrentSelectedColorIndex < 0
+        ? 0
+        : indexBeforeCurrentSelectedColorIndex;
 
     onColorAndStopListChanged(updatedColorAndStopList,
         index: newSelectedColorIndex);

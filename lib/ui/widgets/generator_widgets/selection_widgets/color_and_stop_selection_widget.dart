@@ -61,7 +61,6 @@ class _ColorAndStopSelectionWidgetState
   @override
   void didUpdateWidget(covariant ColorAndStopSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
-
     currentSelectedColorIndex = widget.currentSelectedColorIndex;
   }
 
@@ -92,7 +91,8 @@ class _ColorAndStopSelectionWidgetState
                     currentGradientColorAndStopListLength:
                         widget.colorAndStopList.length);
 
-            widget.onColorAndStopListChanged(twoRandomColorsAndStops, index: 0);
+            widget.onColorAndStopListChanged(twoRandomColorsAndStops,
+                index: currentSelectedColorIndex);
           },
           backgroundColor: Colors.transparent,
           foregroundColor: Colors.black,
