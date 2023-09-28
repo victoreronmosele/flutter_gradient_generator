@@ -9,18 +9,13 @@ class RandomColorGenerator implements AbstractRandomColorGenerator {
   @override
   List<ColorAndStop>
       getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
-          {required int currentGradientColorAndStopListLength}) {
+          {required List<Stop> currentStopList}) {
     final List<Color> colorList =
         Colors.primaries.map((color) => color.shade500).toList();
 
     final int colorListLength = colorList.length;
 
-    /// This represents the interval at which each color's stop position
-    /// is calculated in the gradient.
-    ///
-    /// The '~/'' operator is used to discard the fractional part of the
-    /// result of the division.
-    final stopInterval = 100 ~/ currentGradientColorAndStopListLength;
+    final int currentGradientColorAndStopListLength = currentStopList.length;
 
     final Random random = Random();
 
@@ -32,7 +27,7 @@ class RandomColorGenerator implements AbstractRandomColorGenerator {
       final Color randomColor = colorList.elementAt(randomIndex);
 
       /// The stop position of the color in the gradient.
-      final int stop = i * stopInterval;
+      final int stop = currentStopList.elementAt(i);
 
       randomColorsAndStops.add(
         (color: randomColor, stop: stop),

@@ -33,8 +33,7 @@ class HomeScreenState extends State<HomeScreen> {
   late final AbstractGradient defaultGradient = LinearStyleGradient(
       colorAndStopList: randomColorGenerator
           .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
-        currentGradientColorAndStopListLength:
-            ColorAndStopUtil().initialNumberOfColorAndStops,
+        currentStopList: ColorAndStopUtil().initialStopList,
       ),
       gradientDirection: GradientDirection.topLeft);
 

@@ -88,8 +88,8 @@ class _ColorAndStopSelectionWidgetState
           onPressed: () {
             final twoRandomColorsAndStops = randomColorGenerator
                 .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
-                    currentGradientColorAndStopListLength:
-                        widget.colorAndStopList.length);
+                    currentStopList:
+                        widget.colorAndStopList.map((e) => e.stop).toList());
 
             widget.onColorAndStopListChanged(twoRandomColorsAndStops,
                 index: currentSelectedColorIndex);
