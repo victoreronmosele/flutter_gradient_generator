@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
@@ -23,8 +24,13 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+  /// The minimum number of colors that can be showned on the [GeneratorSection]
+  final minimumNumberOfColors = 2;
+
   final AbstractRandomColorGenerator randomColorGenerator =
       const RandomColorGenerator();
+
+  final focusNode = FocusNode();
 
   late final AbstractGradient defaultGradient = LinearStyleGradient(
       colorAndStopList: randomColorGenerator.getTwoRandomColorsAndStops(),
@@ -40,6 +46,64 @@ class HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
     gradient = defaultGradient;
+
+    /// This is the event handler that is called when a key is pressed.
+    ///
+    /// The purpose here is to enable the user to delete a [ColorAndStop] by
+    /// pressing the delete or backspace key.
+    HardwareKeyboard.instance
+        .addHandler(_checkKeyEventAndMaybeDeleteColorAndStop);
+  }
+
+  /// Checks if the key event is a delete or backspace key event
+  /// and if so, deletes the currently selected [ColorAndStop].
+  bool _checkKeyEventAndMaybeDeleteColorAndStop(event) {
+    /// If a text field has focus, then the key event is not handled.
+    if (focusNode.hasFocus) return false;
+
+    /// If the event is not a key down event, then the key event is not handled.
+    /// This is so that we don't perform the same deletion multiple times.
+    if (event is! KeyDownEvent) return false;
+
+    final keyPressed = event.logicalKey;
+
+    final deleteOrBackspacePressed = [
+      LogicalKeyboardKey.backspace,
+      LogicalKeyboardKey.delete
+    ].contains(keyPressed);
+
+    if (deleteOrBackspacePressed) deleteSelectedColorAndStopIfMoreThanMinimum();
+
+    /// If the user presses the delete or backspace key, then `true` is returned
+    /// which prevents the key event from being propagated to the rest of the app.
+    ///
+    /// And if the user presses any other key, then `false` is returned which
+    /// allows the key event to be propagated to the rest of the app.
+    return deleteOrBackspacePressed;
+  }
+
+  /// Deletes the currently selected [ColorAndStop] if there are more than
+  /// [minimumNumberOfColors] colors in the gradient.
+  void deleteSelectedColorAndStopIfMoreThanMinimum() {
+    final currentColorAndStopList = gradient.getColorAndStopList();
+
+    /// The user cannot delete a color if there are only [minimumNumberOfColors]
+    /// colors in the gradient.
+    if (currentColorAndStopList.length <= minimumNumberOfColors) return;
+
+    final colorAndStopToDelete =
+        currentColorAndStopList[currentSelectedColorIndex];
+
+    onColorAndStopDeleted(colorAndStopToDelete);
+  }
+
+  @override
+  void dispose() {
+    focusNode.dispose();
+    HardwareKeyboard.instance
+        .removeHandler(_checkKeyEventAndMaybeDeleteColorAndStop);
+
+    super.dispose();
   }
 
   void onGradientStyleChanged(GradientStyle newGradientStyle) {
@@ -104,6 +168,21 @@ class HomeScreenState extends State<HomeScreen> {
         index: newColorAndStopIndex);
   }
 
+  void onColorAndStopDeleted(ColorAndStop colorAndStopToDelete) {
+    final List<ColorAndStop> colorAndStopListCopy =
+        List<ColorAndStop>.from(gradient.getColorAndStopList());
+
+    colorAndStopListCopy.remove(colorAndStopToDelete);
+
+    final updatedColorAndStopList = colorAndStopListCopy;
+
+    final newSelectedColorIndex =
+        currentSelectedColorIndex - 1 < 0 ? 0 : currentSelectedColorIndex - 1;
+
+    onColorAndStopListChanged(updatedColorAndStopList,
+        index: newSelectedColorIndex);
+  }
+
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
@@ -113,38 +192,41 @@ class HomeScreenState extends State<HomeScreen> {
     final previewSection = PreviewSection(
         gradient: gradient, borderRadius: displayPortrait ? 16.0 : 0.0);
 
-    return Scaffold(
-      body: Row(
-        crossAxisAlignment: displayPortrait
-            ? CrossAxisAlignment.center
-            : CrossAxisAlignment.stretch,
-        children: [
-          Flexible(
-            flex: displayPortrait ? 1 : 0,
-            child: Stack(
-              alignment: Alignment.bottomCenter,
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: GeneratorSection(
-                    gradient: gradient,
-                    onGradientStyleChanged: onGradientStyleChanged,
-                    onGradientDirectionChanged: onGradientDirectionChanged,
-                    onColorAndStopListChanged: onColorAndStopListChanged,
-                    onNewColorAndStopAdded: onNewColorAndStopAdded,
-                    portraitInformation: (
-                      previewWidgetForPortrait: previewSection,
-                      isPortrait: displayPortrait,
+    return Focus(
+      focusNode: focusNode,
+      child: Scaffold(
+        body: Row(
+          crossAxisAlignment: displayPortrait
+              ? CrossAxisAlignment.center
+              : CrossAxisAlignment.stretch,
+          children: [
+            Flexible(
+              flex: displayPortrait ? 1 : 0,
+              child: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: GeneratorSection(
+                      gradient: gradient,
+                      onGradientStyleChanged: onGradientStyleChanged,
+                      onGradientDirectionChanged: onGradientDirectionChanged,
+                      onColorAndStopListChanged: onColorAndStopListChanged,
+                      onNewColorAndStopAdded: onNewColorAndStopAdded,
+                      portraitInformation: (
+                        previewWidgetForPortrait: previewSection,
+                        isPortrait: displayPortrait,
+                      ),
+                      currentSelectedColorIndex: currentSelectedColorIndex,
                     ),
-                    currentSelectedColorIndex: currentSelectedColorIndex,
                   ),
-                ),
-                const FooterWidget()
-              ],
+                  const FooterWidget()
+                ],
+              ),
             ),
-          ),
-          if (!displayPortrait) Flexible(child: previewSection),
-        ],
+            if (!displayPortrait) Flexible(child: previewSection),
+          ],
+        ),
       ),
     );
   }

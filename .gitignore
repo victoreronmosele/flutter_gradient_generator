@@ -46,3 +46,4 @@ app.*.map.json
 .metals
 .fvm/
 lib/firebase_options.dart
+.vscode/settings.json
