@@ -12,21 +12,25 @@ import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_pic
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
+import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 
 class ColorAndStopSelectionWidget extends StatefulWidget {
   const ColorAndStopSelectionWidget({
     Key? key,
     required this.colorAndStopList,
+    required this.currentSelectedColorIndex,
     required this.onColorAndStopListChanged,
     required this.onNewColorAndStopAdded,
-    required this.currentSelectedColorIndex,
+    required this.onColorAndStopDeleteButtonPressed,
   }) : super(key: key);
 
   final List<ColorAndStop> colorAndStopList;
+  final int currentSelectedColorIndex;
   final void Function(List<ColorAndStop>, {required int index})
       onColorAndStopListChanged;
   final void Function(ColorAndStop) onNewColorAndStopAdded;
-  final int currentSelectedColorIndex;
+  final void Function({required int indexToDelete})
+      onColorAndStopDeleteButtonPressed;
 
   @override
   State<ColorAndStopSelectionWidget> createState() =>
@@ -41,6 +45,9 @@ class _ColorAndStopSelectionWidgetState
       const RandomColorGenerator();
 
   final NewColorGeneratorInterface newColorGenerator = NewColorGenerator();
+
+  bool get canDeleteColorAndStop => ColorAndStopUtil()
+      .isColorAndStopListMoreThanMinimum(widget.colorAndStopList);
 
   late int currentSelectedColorIndex;
 
@@ -72,6 +79,9 @@ class _ColorAndStopSelectionWidgetState
       fontSize: 12.0,
       color: Colors.black.withOpacity(0.6),
     );
+
+    const deleteButtonIconSize = 16.0;
+
     return SelectionWidgetContainer(
       titleWidgetInformation: (
         mainTitle: AppStrings.colorsAndStops,
@@ -171,6 +181,29 @@ class _ColorAndStopSelectionWidgetState
                             ),
                             SizedBox(
                               width: compactButtonWidth,
+                              child: canDeleteColorAndStop
+                                  ? Center(
+                                      child: Tooltip(
+                                        message: AppStrings.deleteColor,
+                                        child: InkWell(
+                                          radius: deleteButtonIconSize,
+                                          onTap: () {
+                                            widget
+                                                .onColorAndStopDeleteButtonPressed(
+                                                    indexToDelete: index);
+                                          },
+                                          child: Icon(
+                                            Icons.close,
+                                            color: AppColors.darkGrey
+                                                .withOpacity(0.5),
+                                            size: deleteButtonIconSize,
+                                            semanticLabel:
+                                                AppStrings.deleteColor,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                  : null,
                             ),
                           ],
                         ),

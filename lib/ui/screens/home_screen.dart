@@ -13,6 +13,7 @@ import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.d
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/footer/footer_widget.dart';
+import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -24,9 +25,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-  /// The minimum number of colors that can be showned on the [GeneratorSection]
-  final minimumNumberOfColors = 2;
-
   final AbstractRandomColorGenerator randomColorGenerator =
       const RandomColorGenerator();
 
@@ -72,7 +70,10 @@ class HomeScreenState extends State<HomeScreen> {
       LogicalKeyboardKey.delete
     ].contains(keyPressed);
 
-    if (deleteOrBackspacePressed) deleteSelectedColorAndStopIfMoreThanMinimum();
+    if (deleteOrBackspacePressed) {
+      deleteSelectedColorAndStopIfMoreThanMinimum(
+          indexToDelete: currentSelectedColorIndex);
+    }
 
     /// If the user presses the delete or backspace key, then `true` is returned
     /// which prevents the key event from being propagated to the rest of the app.
@@ -84,17 +85,20 @@ class HomeScreenState extends State<HomeScreen> {
 
   /// Deletes the currently selected [ColorAndStop] if there are more than
   /// [minimumNumberOfColors] colors in the gradient.
-  void deleteSelectedColorAndStopIfMoreThanMinimum() {
+  void deleteSelectedColorAndStopIfMoreThanMinimum(
+      {required int indexToDelete}) {
     final currentColorAndStopList = gradient.getColorAndStopList();
 
-    /// The user cannot delete a color if there are only [minimumNumberOfColors]
-    /// colors in the gradient.
-    if (currentColorAndStopList.length <= minimumNumberOfColors) return;
+    final colorAndStopListIsMoreThanMinimum = ColorAndStopUtil()
+        .isColorAndStopListMoreThanMinimum(currentColorAndStopList);
 
-    final colorAndStopToDelete =
-        currentColorAndStopList[currentSelectedColorIndex];
+    /// Only delete the currently selected [ColorAndStop] if there are more than
+    /// [minimumNumberOfColors] colors in the gradient.
+    if (colorAndStopListIsMoreThanMinimum) {
+      final colorAndStopToDelete = currentColorAndStopList[indexToDelete];
 
-    onColorAndStopDeleted(colorAndStopToDelete);
+      _onColorAndStopDeleted(colorAndStopToDelete);
+    }
   }
 
   @override
@@ -168,7 +172,11 @@ class HomeScreenState extends State<HomeScreen> {
         index: newColorAndStopIndex);
   }
 
-  void onColorAndStopDeleted(ColorAndStop colorAndStopToDelete) {
+  void onColorAndStopDeleteButtonPressed({required int indexToDelete}) {
+    deleteSelectedColorAndStopIfMoreThanMinimum(indexToDelete: indexToDelete);
+  }
+
+  void _onColorAndStopDeleted(ColorAndStop colorAndStopToDelete) {
     final List<ColorAndStop> colorAndStopListCopy =
         List<ColorAndStop>.from(gradient.getColorAndStopList());
 
@@ -213,6 +221,8 @@ class HomeScreenState extends State<HomeScreen> {
                       onGradientDirectionChanged: onGradientDirectionChanged,
                       onColorAndStopListChanged: onColorAndStopListChanged,
                       onNewColorAndStopAdded: onNewColorAndStopAdded,
+                      onColorAndStopDeleteButtonPressed:
+                          onColorAndStopDeleteButtonPressed,
                       portraitInformation: (
                         previewWidgetForPortrait: previewSection,
                         isPortrait: displayPortrait,

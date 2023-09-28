@@ -19,6 +19,8 @@ class GeneratorSection extends StatelessWidget {
   final void Function(List<ColorAndStop>, {required int index})
       onColorAndStopListChanged;
   final void Function(ColorAndStop) onNewColorAndStopAdded;
+  final void Function({required int indexToDelete})
+      onColorAndStopDeleteButtonPressed;
 
   final ({
     Widget previewWidgetForPortrait,
@@ -36,6 +38,7 @@ class GeneratorSection extends StatelessWidget {
     required this.portraitInformation,
     required this.currentSelectedColorIndex,
     required this.onNewColorAndStopAdded,
+    required this.onColorAndStopDeleteButtonPressed,
   }) : super(key: key);
 
   @override
@@ -101,11 +104,12 @@ class GeneratorSection extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             ColorAndStopSelectionWidget(
-              colorAndStopList: colorAndStopList,
-              onColorAndStopListChanged: onColorAndStopListChanged,
-              currentSelectedColorIndex: currentSelectedColorIndex,
-              onNewColorAndStopAdded: onNewColorAndStopAdded,
-            ),
+                colorAndStopList: colorAndStopList,
+                onColorAndStopListChanged: onColorAndStopListChanged,
+                currentSelectedColorIndex: currentSelectedColorIndex,
+                onNewColorAndStopAdded: onNewColorAndStopAdded,
+                onColorAndStopDeleteButtonPressed:
+                    onColorAndStopDeleteButtonPressed),
             const SizedBox(height: 48),
             GetGradientButton(
               onTap: () async {
