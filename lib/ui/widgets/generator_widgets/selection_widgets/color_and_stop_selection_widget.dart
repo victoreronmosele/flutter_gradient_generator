@@ -185,6 +185,8 @@ class _ColorAndStopSelectionWidgetState
                                   ? Center(
                                       child: Tooltip(
                                         message: AppStrings.deleteColor,
+                                        waitDuration:
+                                            const Duration(milliseconds: 500),
                                         child: InkWell(
                                           radius: deleteButtonIconSize,
                                           onTap: () {
