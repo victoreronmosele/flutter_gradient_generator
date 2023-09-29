@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/radial_style_gradient.dart';
@@ -6,29 +7,25 @@ import 'package:test/test.dart';
 
 void main() {
   group('RadialStyleGradient', () {
-    late final List<Color> colorList;
-    late final List<int> stopList;
+    late final List<ColorAndStop> colorAndStopList;
     late final RadialStyleGradient radialStyleGradient;
 
     setUpAll(() {
-      colorList = [
-        const Color(0xFF921E1E),
-        const Color(0xFF0A951F),
+      colorAndStopList = [
+        (color: const Color(0xFF921E1E), stop: 0),
+        (color: const Color(0xFF0A951F), stop: 100),
       ];
 
-      stopList = [0, 100];
-
       radialStyleGradient = RadialStyleGradient(
-          colorList: colorList,
-          stopList: stopList,
+          colorAndStopList: colorAndStopList,
           gradientDirection: GradientDirection.topLeft);
     });
 
     test('.toWidgetString() returns the correct widget string', () {
       final actualWidgetString = radialStyleGradient.toWidgetString();
       final expectedWidgetString = '''RadialGradient(
-          colors: $colorList,
-          stops: ${stopList.map((stop) => stop / 100).toList()},
+          colors: ${colorAndStopList.map((colorAndStop) => colorAndStop.color).toList()},
+          stops: ${colorAndStopList.map((colorAndStop) => colorAndStop.stop / 100).toList()},
           center: ${Alignment.topLeft},
         )
       ''';
@@ -54,8 +51,7 @@ void main() {
       gradientDirectionToCenterAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final RadialStyleGradient testRadialStyleGradient = RadialStyleGradient(
-            colorList: colorList,
-            stopList: stopList,
+            colorAndStopList: colorAndStopList,
             gradientDirection: gradientDirection);
 
         final Alignment actualAlignment =
@@ -77,9 +73,12 @@ void main() {
     test('.toFlutterGradient() returns the right RadialGradient object', () {
       final Gradient actualGradient = radialStyleGradient.toFlutterGradient();
       final Gradient expectedGradient = RadialGradient(
-        colors: colorList,
+        colors:
+            colorAndStopList.map((colorAndStop) => colorAndStop.color).toList(),
         center: Alignment.topLeft,
-        stops: stopList.map((stop) => stop / 100).toList(),
+        stops: colorAndStopList
+            .map((colorAndStop) => colorAndStop.stop / 100)
+            .toList(),
       );
 
       expect(actualGradient, expectedGradient);

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
@@ -11,24 +12,20 @@ void main() {
   test(
       'GradientFactory returns the right AbstractGradient object given a GradientStyle',
       () {
-    final List<Color> colorList = [
-      const Color(0xFF921E1E),
-      const Color(0xFF0A951F),
+    final List<ColorAndStop> colorAndStopList = [
+      (color: const Color(0xFF921E1E), stop: 0),
+      (color: const Color(0xFF0A951F), stop: 100),
     ];
-
-    final List<int> stopList = [0, 100];
 
     const GradientDirection gradientDirection = GradientDirection.topLeft;
 
     final Map<GradientStyle, AbstractGradient>
         gradientStyleToAbstractGradientMap = {
       GradientStyle.linear: LinearStyleGradient(
-          colorList: colorList,
-          stopList: stopList,
+          colorAndStopList: colorAndStopList,
           gradientDirection: gradientDirection),
       GradientStyle.radial: RadialStyleGradient(
-          colorList: colorList,
-          stopList: stopList,
+          colorAndStopList: colorAndStopList,
           gradientDirection: gradientDirection)
     };
 
@@ -37,8 +34,7 @@ void main() {
       final AbstractGradient actualAbstractGradient = GradientFactory()
           .getGradient(
               gradientStyle: gradientStyle,
-              colorList: colorList,
-              stopList: stopList,
+              colorAndStopList: colorAndStopList,
               gradientDirection: gradientDirection);
       final AbstractGradient expectedAbstractGradient = abstractGradient;
 
