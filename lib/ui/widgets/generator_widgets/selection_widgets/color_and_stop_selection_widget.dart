@@ -12,7 +12,13 @@ import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_pic
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
+
+enum ColorAndStopAdditionOrDeletionOperation {
+  addition,
+  deletion,
+}
 
 class ColorAndStopSelectionWidget extends StatefulWidget {
   const ColorAndStopSelectionWidget({
@@ -38,7 +44,14 @@ class ColorAndStopSelectionWidget extends StatefulWidget {
 }
 
 class _ColorAndStopSelectionWidgetState
-    extends State<ColorAndStopSelectionWidget> {
+    extends State<ColorAndStopSelectionWidget>
+    with SingleTickerProviderStateMixin {
+  late final CurvedAnimation _curvedAnimation = CurvedAnimation(
+    parent: _animationController,
+    curve: Curves.easeIn,
+    reverseCurve: Curves.easeOut,
+  );
+
   final ColorPickerInterface colorPicker = const CyclopColorPicker();
 
   final AbstractRandomColorGenerator randomColorGenerator =
@@ -47,21 +60,75 @@ class _ColorAndStopSelectionWidgetState
   final NewColorGeneratorInterface newColorGenerator = NewColorGenerator();
 
   bool get canDeleteColorAndStop => ColorAndStopUtil()
-      .isColorAndStopListMoreThanMinimum(widget.colorAndStopList);
+      .isColorAndStopListMoreThanMinimum(colorAndStopListFromWidget);
 
   late int currentSelectedColorIndex;
+
+  late final AnimationController _animationController;
+  late final Animation<double> _colorAndStopAddedOrDeletedOpacity;
+  late final Animation<double> _colorAndStopAddedOrDeletedSizeFactor;
+
+  /// This is the source of truth for the actual [ColorAndStop]s that are
+  /// currently being showned on the [GeneratorSection].
+  List<ColorAndStop> get colorAndStopListFromWidget => widget.colorAndStopList;
+
+  /// This is the list of [ColorAndStop]s that was previously showned on the
+  /// [GeneratorSection].
+  ///
+  /// It is non-null when the [colorAndStopListFromWidget] is changed since at the first
+  /// build, the [previousColorAndStopList] is null.
+  ///
+  /// Changes to the [colorAndStopListFromWidget] are detected in the [didUpdateWidget]
+  /// and they could be:
+  /// - Adding a [ColorAndStop]
+  /// - Deleting a [ColorAndStop]
+  /// - Changing a [ColorAndStop]
+  /// - Gnerating a new set of [ColorAndStop] like when the user taps the random button.
+  List<ColorAndStop>? previousColorAndStopList;
 
   @override
   void initState() {
     super.initState();
 
     currentSelectedColorIndex = widget.currentSelectedColorIndex;
+
+    _animationController = AnimationController(
+        duration: const Duration(milliseconds: 200), vsync: this);
+
+    _colorAndStopAddedOrDeletedOpacity = _curvedAnimation;
+    _colorAndStopAddedOrDeletedSizeFactor = _curvedAnimation;
   }
 
   @override
   void didUpdateWidget(covariant ColorAndStopSelectionWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
+
     currentSelectedColorIndex = widget.currentSelectedColorIndex;
+
+    previousColorAndStopList = oldWidget.colorAndStopList;
+
+    /// This tells us whether a new [ColorAndStop] has been added to or deleted
+    /// from the [colorAndStopList].
+    ///
+    /// In other [ColorAndStop]s list modification cases like generating
+    /// random [ColorAndStop]s, the length of the [colorAndStopList] will be
+    /// the same as the [previousColorAndStopList].
+    ///
+    final colorAndStopListWasChangedByAddingOrDeleting =
+        previousColorAndStopList!.length != colorAndStopListFromWidget.length;
+
+    if (colorAndStopListWasChangedByAddingOrDeleting) {
+      final newColorAndStopWasAdded = colorAndStopListFromWidget.length >
+          (previousColorAndStopList!.length);
+
+      if (newColorAndStopWasAdded) {
+        _animationController.reset();
+        _animationController.forward();
+      } else {
+        _animationController.value = 1.0;
+        _animationController.reverse();
+      }
+    }
   }
 
   @override
@@ -81,15 +148,76 @@ class _ColorAndStopSelectionWidgetState
 
     const deleteButtonIconSize = 16.0;
 
-    return SelectionWidgetContainer(
-      titleWidgetInformation: (
+    /// This is the list of [ColorAndStop]s that is used only for the animation
+    /// when adding or deleting a [ColorAndStop].
+    ///
+    final List<ColorAndStop> colorAndStopListForAnimation;
+
+    ColorAndStop? addedOrDeletedColorAndStop;
+
+    ColorAndStopAdditionOrDeletionOperation?
+        addedOrDeletedColorAndStopOperation;
+
+    if (previousColorAndStopList != null) {
+      /// This tells us whether a new [ColorAndStop] has been added to or deleted
+      /// from the [colorAndStopList].
+      ///
+      /// In other [ColorAndStop]s list modification cases like generating
+      /// random [ColorAndStop]s, the length of the [colorAndStopList] will be
+      /// the same as the [previousColorAndStopList].
+      ///
+      final colorAndStopListWasChangedByAddingOrDeleting =
+          previousColorAndStopList!.length != colorAndStopListFromWidget.length;
+
+      if (colorAndStopListWasChangedByAddingOrDeleting) {
+        final newColorAndStopWasAdded = colorAndStopListFromWidget.length >
+            (previousColorAndStopList!.length);
+
+        if (newColorAndStopWasAdded) {
+          addedOrDeletedColorAndStop = colorAndStopListFromWidget
+              .where((element) => !previousColorAndStopList!.contains(element))
+              .first;
+          addedOrDeletedColorAndStopOperation =
+              ColorAndStopAdditionOrDeletionOperation.addition;
+
+          /// [colorAndStopListForAnimation] is set to the [colorAndStopList]
+          /// because it holds the newly added [ColorAndStop].
+          colorAndStopListForAnimation = colorAndStopListFromWidget;
+        } else {
+          addedOrDeletedColorAndStop = previousColorAndStopList!
+              .where((element) => !colorAndStopListFromWidget.contains(element))
+              .first;
+          addedOrDeletedColorAndStopOperation =
+              ColorAndStopAdditionOrDeletionOperation.deletion;
+
+          /// [colorAndStopListForAnimation] is set to the [previousColorAndStopList]
+          /// because it holds the deleted [ColorAndStop].
+          colorAndStopListForAnimation = previousColorAndStopList!;
+        }
+      } else {
+        /// [colorAndStopListForAnimation] is set to the [colorAndStopList]
+        /// since the [colorAndStopList] was not changed by adding or deleting
+        ///
+        /// This could be when the user changes the stop value of a [ColorAndStop]
+        /// or when the random [ColorAndStop]s are generated.
+        colorAndStopListForAnimation = colorAndStopListFromWidget;
+      }
+    } else {
+      /// [colorAndStopListForAnimation] is set to the [colorAndStopList]
+      /// since the [previousColorAndStopList] is null.
+      colorAndStopListForAnimation = colorAndStopListFromWidget;
+    }
+
+    ({String mainTitle, CompactButton trailingActionWidget})
+        getTitleWidgetInformation() {
+      return (
         mainTitle: AppStrings.colorsAndStops,
         trailingActionWidget: CompactButton.text(
           onPressed: () {
             final twoRandomColorsAndStops = randomColorGenerator
                 .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
                     currentStopList:
-                        widget.colorAndStopList.map((e) => e.stop).toList());
+                        colorAndStopListFromWidget.map((e) => e.stop).toList());
 
             widget.onColorAndStopListChanged(twoRandomColorsAndStops,
                 index: currentSelectedColorIndex);
@@ -101,45 +229,124 @@ class _ColorAndStopSelectionWidgetState
           ),
           text: AppStrings.random,
         ),
-      ),
-      selectionWidget: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              SizedBox(
-                width: compactButtonWidth,
-                child: Text(
-                  AppStrings.tapToEdit,
-                  textAlign: TextAlign.left,
-                  style: colorsAndStopsLabelStyle,
-                ),
-              ),
-              SizedBox(
-                width: compactButtonMargin,
-              ),
-              SizedBox(
-                width: compactButtonWidth,
-                child: Text(
-                  AppStrings.enterInPercentage,
-                  textAlign: TextAlign.left,
-                  style: colorsAndStopsLabelStyle,
-                ),
-              )
-            ],
-          ),
-          const SizedBox(height: 6),
-          Column(
-            children: List.generate(
-              widget.colorAndStopList.length,
-              (index) {
-                final (:color, :stop) =
-                    widget.colorAndStopList.elementAt(index);
+      );
+    }
 
-                return Column(
+    Widget getSelectionWidget() {
+      Widget getInstructionTopRow() {
+        return Row(
+          children: [
+            SizedBox(
+              width: compactButtonWidth,
+              child: Text(
+                AppStrings.tapToEdit,
+                textAlign: TextAlign.left,
+                style: colorsAndStopsLabelStyle,
+              ),
+            ),
+            SizedBox(
+              width: compactButtonMargin,
+            ),
+            SizedBox(
+              width: compactButtonWidth,
+              child: Text(
+                AppStrings.enterInPercentage,
+                textAlign: TextAlign.left,
+                style: colorsAndStopsLabelStyle,
+              ),
+            )
+          ],
+        );
+      }
+
+      Widget getColorAndStopDisplaySection() {
+        return Column(
+          children: List.generate(
+            colorAndStopListForAnimation.length,
+            (indexForAnimation) {
+              final colorAndStop =
+                  colorAndStopListForAnimation.elementAt(indexForAnimation);
+
+              final (:color, :stop) = colorAndStop;
+
+              /// This is the actual index of the [ColorAndStop] in the
+              /// [colorAndStopListFromWidget].
+              ///
+              /// [indexForAnimation] is the index of the [ColorAndStop] in the
+              /// [colorAndStopListForAnimation] but we won't use it in actual
+              /// logic.
+              final actualIndex = colorAndStopListFromWidget.indexOf(
+                colorAndStop,
+              );
+
+              final thisIsTheAnimatingColorAndStop =
+                  addedOrDeletedColorAndStop == colorAndStop;
+
+              void setSelectedColorIndex({required int newlySelectedIndex}) {
+                if (newlySelectedIndex != currentSelectedColorIndex) {
+                  setState(() {
+                    currentSelectedColorIndex = newlySelectedIndex;
+                  });
+                }
+              }
+
+              void selectColor({
+                required BuildContext context,
+                required int currentColorAndStopIndex,
+              }) {
+                final (:color, :stop) = colorAndStopListFromWidget
+                    .elementAt(currentColorAndStopIndex);
+
+                colorPicker.selectColor(
+                    context: context,
+                    currentColor: color,
+                    onColorSelected: (selectedColor) {
+                      final newColorAndStop = (
+                        color: selectedColor,
+                        stop: stop,
+                      );
+
+                      /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
+                      final List<ColorAndStop> newColorAndStopList =
+                          List.from(colorAndStopListFromWidget);
+                      newColorAndStopList[currentColorAndStopIndex] =
+                          newColorAndStop;
+
+                      widget.onColorAndStopListChanged(newColorAndStopList,
+                          index: currentColorAndStopIndex);
+                    });
+              }
+
+              void changeStop({
+                required int newStop,
+                required int currentColorAndStopIndex,
+              }) {
+                // ignore: unused_local_variable
+                final (:color, :stop) = colorAndStopListFromWidget
+                    .elementAt(currentColorAndStopIndex);
+
+                final newColorAndStop = (
+                  color: color,
+                  stop: newStop,
+                );
+
+                /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
+                final List<ColorAndStop> newColorAndStopList =
+                    List.from(colorAndStopListFromWidget);
+                newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
+
+                widget.onColorAndStopListChanged(newColorAndStopList,
+                    index: currentColorAndStopIndex);
+              }
+
+              final colorAndStopSelectionWidgetItem = IgnorePointer(
+                ignoring: thisIsTheAnimatingColorAndStop &&
+                    addedOrDeletedColorAndStopOperation ==
+                        ColorAndStopAdditionOrDeletionOperation.deletion,
+                child: Column(
                   children: [
                     Container(
-                      color: index == currentSelectedColorIndex
+                      color: actualIndex == currentSelectedColorIndex
                           ? color.withOpacity(0.1)
                           : null,
                       child: Padding(
@@ -148,12 +355,12 @@ class _ColorAndStopSelectionWidgetState
                           children: [
                             CompactButton.empty(
                               onPressed: () {
-                                _setSelectedColorIndex(
-                                    newlySelectedIndex: index);
+                                setSelectedColorIndex(
+                                    newlySelectedIndex: actualIndex);
 
-                                _selectColor(
+                                selectColor(
                                   context: context,
-                                  currentColorAndStopIndex: index,
+                                  currentColorAndStopIndex: actualIndex,
                                 );
                               },
                               backgroundColor: color,
@@ -169,13 +376,13 @@ class _ColorAndStopSelectionWidgetState
                               key: UniqueKey(),
                               stop: stop,
                               onStopChanged: (int newStop) {
-                                _changeStop(
+                                changeStop(
                                     newStop: newStop,
-                                    currentColorAndStopIndex: index);
+                                    currentColorAndStopIndex: actualIndex);
                               },
                               onTap: () {
-                                _setSelectedColorIndex(
-                                    newlySelectedIndex: index);
+                                setSelectedColorIndex(
+                                    newlySelectedIndex: actualIndex);
                               },
                             ),
                             SizedBox(
@@ -194,7 +401,7 @@ class _ColorAndStopSelectionWidgetState
                                           onTap: () {
                                             widget
                                                 .onColorAndStopDeleteButtonPressed(
-                                                    indexToDelete: index);
+                                                    indexToDelete: actualIndex);
                                           },
                                           child: Icon(
                                             Icons.close,
@@ -217,427 +424,111 @@ class _ColorAndStopSelectionWidgetState
                       height: 6.0,
                     ),
                   ],
+                ),
+              );
+
+              if (thisIsTheAnimatingColorAndStop) {
+                return SizeTransition(
+                  sizeFactor: _colorAndStopAddedOrDeletedSizeFactor,
+                  child: FadeTransition(
+                    opacity: _colorAndStopAddedOrDeletedOpacity,
+                    child: colorAndStopSelectionWidgetItem,
+                  ),
                 );
-              },
-            ),
+              }
+
+              return colorAndStopSelectionWidgetItem;
+            },
           ),
+        );
+      }
+
+      Widget getAddColorButton() {
+        ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
+            getColorAndStopsForNewColorAddition() {
+          final colorAndStopList = colorAndStopListFromWidget;
+
+          ColorAndStop? startColorAndStop;
+          ColorAndStop? endColorAndStop;
+
+          const firstIndex = 0;
+          final lastIndex = colorAndStopList.length - 1;
+
+          if (currentSelectedColorIndex == firstIndex) {
+            const secondIndex = firstIndex + 1;
+
+            startColorAndStop = colorAndStopList.elementAtOrNull(firstIndex);
+            endColorAndStop = colorAndStopList.elementAtOrNull(secondIndex);
+          } else if (currentSelectedColorIndex == lastIndex) {
+            startColorAndStop =
+                colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
+            endColorAndStop = null;
+          } else {
+            final nextIndex = currentSelectedColorIndex + 1;
+
+            startColorAndStop =
+                colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
+            endColorAndStop = colorAndStopList.elementAtOrNull(nextIndex);
+          }
+
+          return (
+            startColorAndStop: startColorAndStop,
+            endColorAndStop: endColorAndStop
+          );
+        }
+
+        void addColor({
+          required ColorAndStop? startColorAndStop,
+          required ColorAndStop? endColorAndStop,
+        }) {
+          final newColorAndStop =
+              newColorGenerator.generateNewColorAndStopBetween(
+                  startColorAndStop: startColorAndStop,
+                  endColorAndStop: endColorAndStop);
+
+          if (newColorAndStop == null) {
+            return;
+          }
+
+          widget.onNewColorAndStopAdded(newColorAndStop);
+        }
+
+        return SizedBox(
+          width: generatorScreenContentWidth,
+          child: CompactButton.text(
+            onPressed: () {
+              final (:startColorAndStop, :endColorAndStop) =
+                  getColorAndStopsForNewColorAddition();
+
+              addColor(
+                startColorAndStop: startColorAndStop,
+                endColorAndStop: endColorAndStop,
+              );
+            },
+            backgroundColor: AppColors.grey,
+            foregroundColor: Colors.black,
+            text: AppStrings.addColor,
+          ),
+        );
+      }
+
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          getInstructionTopRow(),
+          const SizedBox(height: 6),
+          getColorAndStopDisplaySection(),
           const SizedBox(
             height: 8.0,
           ),
-          SizedBox(
-            width: generatorScreenContentWidth,
-            child: CompactButton.text(
-              onPressed: () {
-                final (:startColorAndStop, :endColorAndStop) =
-                    _getColorAndStopsForNewColorAddition();
-
-                _addColor(
-                  startColorAndStop: startColorAndStop,
-                  endColorAndStop: endColorAndStop,
-                );
-              },
-              backgroundColor: AppColors.grey,
-              foregroundColor: Colors.black,
-              text: AppStrings.addColor,
-            ),
-          ),
+          getAddColorButton(),
         ],
-      ),
+      );
+    }
+
+    return SelectionWidgetContainer(
+      titleWidgetInformation: getTitleWidgetInformation(),
+      selectionWidget: getSelectionWidget(),
     );
-  }
-
-  void _setSelectedColorIndex({required int newlySelectedIndex}) {
-    if (newlySelectedIndex != currentSelectedColorIndex) {
-      setState(() {
-        currentSelectedColorIndex = newlySelectedIndex;
-      });
-    }
-  }
-
-  ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
-      _getColorAndStopsForNewColorAddition() {
-    final colorAndStopList = widget.colorAndStopList;
-
-    ColorAndStop? startColorAndStop;
-    ColorAndStop? endColorAndStop;
-
-    const firstIndex = 0;
-    final lastIndex = colorAndStopList.length - 1;
-
-    if (currentSelectedColorIndex == firstIndex) {
-      const secondIndex = firstIndex + 1;
-
-      startColorAndStop = colorAndStopList.elementAtOrNull(firstIndex);
-      endColorAndStop = colorAndStopList.elementAtOrNull(secondIndex);
-    } else if (currentSelectedColorIndex == lastIndex) {
-      startColorAndStop =
-          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
-      endColorAndStop = null;
-    } else {
-      final nextIndex = currentSelectedColorIndex + 1;
-
-      startColorAndStop =
-          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
-      endColorAndStop = colorAndStopList.elementAtOrNull(nextIndex);
-    }
-
-    return (
-      startColorAndStop: startColorAndStop,
-      endColorAndStop: endColorAndStop
-    );
-  }
-
-  void _addColor({
-    required ColorAndStop? startColorAndStop,
-    required ColorAndStop? endColorAndStop,
-  }) {
-    final newColorAndStop = newColorGenerator.generateNewColorAndStopBetween(
-        startColorAndStop: startColorAndStop, endColorAndStop: endColorAndStop);
-
-    if (newColorAndStop == null) {
-      return;
-    }
-
-    widget.onNewColorAndStopAdded(newColorAndStop);
-  }
-
-  void _selectColor({
-    required BuildContext context,
-    required int currentColorAndStopIndex,
-  }) {
-    final (:color, :stop) =
-        widget.colorAndStopList.elementAt(currentColorAndStopIndex);
-
-    colorPicker.selectColor(
-        context: context,
-        currentColor: color,
-        onColorSelected: (selectedColor) {
-          final newColorAndStop = (
-            color: selectedColor,
-            stop: stop,
-          );
-
-          /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
-          final List<ColorAndStop> newColorAndStopList =
-              List.from(widget.colorAndStopList);
-          newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
-
-          widget.onColorAndStopListChanged(newColorAndStopList,
-              index: currentColorAndStopIndex);
-        });
-  }
-
-  void _changeStop({
-    required int newStop,
-    required int currentColorAndStopIndex,
-  }) {
-    // ignore: unused_local_variable
-    final (:color, :stop) =
-        widget.colorAndStopList.elementAt(currentColorAndStopIndex);
-
-    final newColorAndStop = (
-      color: color,
-      stop: newStop,
-    );
-
-    /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
-    final List<ColorAndStop> newColorAndStopList =
-        List.from(widget.colorAndStopList);
-    newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
-
-    widget.onColorAndStopListChanged(newColorAndStopList,
-        index: currentColorAndStopIndex);
-  }
-}
-
-/// A [TextField] that holds the stop value for a color on the Gradient. It only
-/// allows integers between [maximumInteger] and [minimumInteger].
-class StopTextBox extends StatefulWidget {
-  const StopTextBox({
-    super.key,
-    required this.stop,
-    required this.onStopChanged,
-    required this.onTap,
-  });
-
-  final int stop;
-  final void Function(int) onStopChanged;
-  final void Function() onTap;
-
-  @override
-  State<StopTextBox> createState() => _StopTextBoxState();
-}
-
-class _StopTextBoxState extends State<StopTextBox> {
-  final maximumInteger = 100;
-
-  final minumuInteger = 0;
-
-  final TextEditingController _controller = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
-
-  int get maximumIntegerLength => maximumInteger.toString().length;
-
-  List<TextInputFormatter> get inputFormatters => [
-        MinimumMaximumIntegerInputFormatter(
-            maximumInteger: maximumInteger, minimumInteger: minumuInteger),
-        LengthLimitingTextInputFormatter(maximumIntegerLength),
-      ];
-
-  /// Holds the number of times the user has tapped the text field in a row.
-  ///
-  /// This does not include taps outside of the text field.
-  int textFieldTapCount = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    _controller.text = widget.stop.toString();
-
-    _focusNode.addListener(() {
-      /// Run when the text field loses focus.
-      if (!_focusNode.hasFocus) {
-        /// Reset the text field tap count.
-        textFieldTapCount = 0;
-
-        /// Submit the stop value.
-        ///
-        /// This was added to capture when another text field is tapped because
-        /// the [onTapOutside] callback is not called when another text field is
-        /// tapped.
-        final text = _controller.text;
-
-        onStopSubmitted(text);
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    _focusNode.dispose();
-    textFieldTapCount = 0;
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedTextField(
-      inputFormatters: inputFormatters,
-      onSubmitted: onStopSubmitted,
-      onTap: () {
-        widget.onTap();
-        onTextFieldTap();
-      },
-      onTapOutside: onTapOutside,
-      controller: _controller,
-      focusNode: _focusNode,
-      keyboardType: TextInputType.number,
-    );
-  }
-
-  /// Called when the user taps outside of the text field.
-  ///
-  /// This helps to submit the stop value when the user taps outside of the
-  /// text field.
-  void onTapOutside(PointerDownEvent _) {
-    /// Check if the text field is focused.
-    final textFieldIsFocused = _focusNode.hasFocus;
-
-    /// We want to submit the stop value if the text field is focused.
-    /// No need to submit the stop value if the text field is not focused.
-    if (textFieldIsFocused) {
-      /// Unfocus the text field since the user tapped outside of it and
-      /// the stop will be submitted.
-      _focusNode.unfocus();
-
-      /// Get the stop value from the text field.
-      final text = _controller.text;
-
-      /// Submit the stop value.
-      onStopSubmitted(text);
-    }
-  }
-
-  /// Called when the user has submitted the stop text in the text field.
-  void onStopSubmitted(String? value) {
-    /// Reset the stop to the previous stop if the value is null or empty.
-    if (value == null || value.isEmpty) {
-      resetStopToPreviousStop();
-
-      return;
-    }
-
-    final int? stop = int.tryParse(value);
-
-    /// Reset the stop to the previous stop if the stop is null.
-    if (stop == null) {
-      resetStopToPreviousStop();
-
-      return;
-    }
-
-    /// Update the stop value.
-    widget.onStopChanged(stop);
-
-    return;
-  }
-
-  /// Resets the stop value to the previous stop value
-  void resetStopToPreviousStop() {
-    final previousStop = widget.stop;
-
-    _controller.text = previousStop.toString();
-
-    widget.onStopChanged(previousStop);
-  }
-
-  /// Called when the user taps on the text field.
-  void onTextFieldTap() {
-    /// Select the entire text in the text field the first time the user taps
-    /// the text field.
-    if (textFieldTapCount == 0) {
-      selectEntireText();
-    }
-
-    /// Increment the number of times the user has tapped the text field.
-    textFieldTapCount++;
-  }
-
-  /// Selects the entire text in the text field.
-  void selectEntireText() {
-    final textLength = _controller.text.length;
-
-    _controller.selection = TextSelection(
-      baseOffset: 0,
-      extentOffset: textLength,
-    );
-  }
-}
-
-/// A [TextField] with an [OutlineInputBorder].
-class OutlinedTextField extends StatelessWidget {
-  const OutlinedTextField({
-    super.key,
-    required this.inputFormatters,
-    required this.onSubmitted,
-    required this.onTap,
-    required this.controller,
-    required this.focusNode,
-    required this.onTapOutside,
-    this.keyboardType,
-  });
-
-  final List<TextInputFormatter> inputFormatters;
-  final ValueChanged<String?> onSubmitted;
-  final void Function() onTap;
-  final TextEditingController controller;
-  final FocusNode focusNode;
-  final void Function(PointerDownEvent) onTapOutside;
-
-  final TextInputType? keyboardType;
-
-  @override
-  Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
-
-    final compactButtonWidth = appDimensions.compactButtonWidth;
-    final compactButtonHeight = appDimensions.compactButtonHeight;
-
-    return SizedBox(
-      width: compactButtonWidth,
-      height: compactButtonHeight,
-      child: TextField(
-          inputFormatters: inputFormatters,
-          decoration: const InputDecoration(
-            border: OutlineInputBorder(),
-            contentPadding: EdgeInsets.zero,
-          ),
-          keyboardType: keyboardType,
-          textAlign: TextAlign.center,
-          onSubmitted: onSubmitted,
-          controller: controller,
-          focusNode: focusNode,
-          onTap: onTap,
-          onTapOutside: onTapOutside),
-    );
-  }
-}
-
-/// A [TextInputFormatter] that limits the input to a minimum and maximum integer.
-///
-/// If the input is greater than [maximumInteger], [maximumInteger],  is returned.
-/// If the input is less than [minimumInteger], [minimumInteger] is returned.
-class MinimumMaximumIntegerInputFormatter extends TextInputFormatter {
-  MinimumMaximumIntegerInputFormatter({
-    required this.maximumInteger,
-    required this.minimumInteger,
-  });
-
-  final int maximumInteger;
-  final int minimumInteger;
-
-  String get _maximumIntegerAsString => maximumInteger.toString();
-  int get _maximumIntegerLength => _maximumIntegerAsString.length;
-
-  String get _minimumIntegerAsString => minimumInteger.toString();
-  int get _minimumIntegerLength => _minimumIntegerAsString.length;
-
-  /// Returns the [TextEditingValue] with the maximum integer as the text.
-  TextEditingValue get _maximumIntegerTextEditingValue => TextEditingValue(
-      text: _maximumIntegerAsString,
-      selection: TextSelection.collapsed(offset: _maximumIntegerLength));
-
-  /// Returns the [TextEditingValue] with the minimum integer as the text.
-  TextEditingValue get _minimumIntegerTextEditingValue => TextEditingValue(
-      text: _minimumIntegerAsString,
-      selection: TextSelection.collapsed(offset: _minimumIntegerLength));
-
-  /// Returns an empty [TextEditingValue].
-  TextEditingValue get _emptyTextEditingValue => const TextEditingValue();
-
-  @override
-  TextEditingValue formatEditUpdate(
-      TextEditingValue oldValue, TextEditingValue newValue) {
-    /// Gets the length of the new text.
-    final newTextLength = newValue.text.length;
-
-    /// If the new text length is greater than the maximum integer length,
-    /// return the [_maximumIntegerTextEditingValue]
-    ///
-    /// Example:
-    /// Assume:
-    /// - the maximum integer is 100.
-    /// - the user types 1000.
-    ///
-    /// The new text length is 4, which is greater than the maximum integer length
-    /// of 3. Therefore, return the [_maximumIntegerTextEditingValue].
-    if (newTextLength > _maximumIntegerLength) {
-      return _maximumIntegerTextEditingValue;
-    }
-
-    /// Try to parse the new text as an integer.
-    final newVaultAsInt = int.tryParse(newValue.text);
-
-    /// [newVaultAsInt] is null if the new text is not a valid integer.
-    /// So return [_emptyTextEditingValue]
-    if (newVaultAsInt == null) {
-      return _emptyTextEditingValue;
-    }
-
-    /// If the new integer is greater than the maximum integer, return the
-    /// [_maximumIntegerTextEditingValue].
-    if (newVaultAsInt > maximumInteger) {
-      return _maximumIntegerTextEditingValue;
-    }
-
-    /// If the new integer is less than the minimum integer, return the
-    /// [_minimumIntegerTextEditingValue].
-    if (newVaultAsInt < minimumInteger) {
-      return _minimumIntegerTextEditingValue;
-    }
-
-    /// If the new integer is valid, return [newValue]
-    return newValue;
   }
 }
