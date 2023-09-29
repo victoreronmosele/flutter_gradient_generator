@@ -48,8 +48,8 @@ class _ColorAndStopSelectionWidgetState
     with SingleTickerProviderStateMixin {
   late final CurvedAnimation _curvedAnimation = CurvedAnimation(
     parent: _animationController,
-    curve: Curves.easeIn,
-    reverseCurve: Curves.easeOut,
+    curve: Curves.easeOut,
+    reverseCurve: Curves.easeIn,
   );
 
   final ColorPickerInterface colorPicker = const CyclopColorPicker();
