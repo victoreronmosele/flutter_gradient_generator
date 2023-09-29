@@ -1,9 +1,9 @@
 import 'package:cyclop/cyclop.dart';
 import 'package:flutter/material.dart';
 
-import 'package:flutter_gradient_generator/ui/util/color_picker/abstract_color_picker.dart';
+import 'package:flutter_gradient_generator/ui/util/color_picker/color_picker_interface.dart';
 
-class CyclopColorPicker implements AbstractColorPicker {
+class CyclopColorPicker implements ColorPickerInterface {
   const CyclopColorPicker();
 
   @override

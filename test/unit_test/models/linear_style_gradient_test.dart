@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
@@ -6,29 +7,25 @@ import 'package:test/test.dart';
 
 void main() {
   group('LinearStyleGradient', () {
-    late final List<Color> colorList;
-    late final List<int> stopList;
+    late final List<ColorAndStop> colorAndStopList;
     late final LinearStyleGradient linearStyleGradient;
 
     setUpAll(() {
-      colorList = [
-        const Color(0xFF921E1E),
-        const Color(0xFF0A951F),
+      colorAndStopList = [
+        (color: const Color(0xFF921E1E), stop: 0),
+        (color: const Color(0xFF0A951F), stop: 100),
       ];
 
-      stopList = [0, 100];
-
       linearStyleGradient = LinearStyleGradient(
-          colorList: colorList,
-          stopList: stopList,
+          colorAndStopList: colorAndStopList,
           gradientDirection: GradientDirection.topLeft);
     });
 
     test('.toWidgetString() returns the correct widget string', () {
       final actualWidgetString = linearStyleGradient.toWidgetString();
       final expectedWidgetString = '''LinearGradient(
-          colors: $colorList,
-          stops: ${stopList.map((stop) => stop / 100).toList()},
+          colors: ${colorAndStopList.map((colorAndStop) => colorAndStop.color).toList()},
+          stops: ${colorAndStopList.map((colorAndStop) => colorAndStop.stop / 100).toList()},
           begin: ${Alignment.topLeft},
           end: ${Alignment.bottomRight},
         )
@@ -55,8 +52,7 @@ void main() {
       gradientDirectionToBeginAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
-            colorList: colorList,
-            stopList: stopList,
+            colorAndStopList: colorAndStopList,
             gradientDirection: gradientDirection);
 
         final Alignment actualAlignment =
@@ -84,8 +80,7 @@ void main() {
       gradientDirectionToEndAlignmentMap
           .forEach((GradientDirection gradientDirection, Alignment alignment) {
         final LinearStyleGradient testLinearStyleGradient = LinearStyleGradient(
-            colorList: colorList,
-            stopList: stopList,
+            colorAndStopList: colorAndStopList,
             gradientDirection: gradientDirection);
 
         final Alignment actualAlignment = testLinearStyleGradient.endAlignment;
@@ -106,10 +101,14 @@ void main() {
     test('.toFlutterGradient() returns the right LinearGradient object', () {
       final Gradient actualGradient = linearStyleGradient.toFlutterGradient();
       final Gradient expectedGradient = LinearGradient(
-          colors: colorList,
+          colors: colorAndStopList
+              .map((colorAndStop) => colorAndStop.color)
+              .toList(),
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
-          stops: stopList.map((stop) => stop / 100).toList());
+          stops: colorAndStopList
+              .map((colorAndStop) => colorAndStop.stop / 100)
+              .toList());
 
       expect(actualGradient, expectedGradient);
     });
