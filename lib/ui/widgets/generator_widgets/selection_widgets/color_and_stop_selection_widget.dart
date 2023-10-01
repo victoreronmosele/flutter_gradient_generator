@@ -1,5 +1,8 @@
+import 'dart:ui_web' as ui_web;
+// ignore: avoid_web_libraries_in_flutter
+import 'dart:html' as html;
+
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
@@ -7,8 +10,6 @@ import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator_interface.dart';
 import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
-import 'package:flutter_gradient_generator/ui/util/color_picker/color_picker_interface.dart';
-import 'package:flutter_gradient_generator/ui/util/color_picker/cyclop_color_picker.dart';
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
@@ -51,8 +52,6 @@ class _ColorAndStopSelectionWidgetState
     curve: Curves.easeOut,
     reverseCurve: Curves.easeIn,
   );
-
-  final ColorPickerInterface colorPicker = const CyclopColorPicker();
 
   final AbstractRandomColorGenerator randomColorGenerator =
       const RandomColorGenerator();
@@ -290,33 +289,6 @@ class _ColorAndStopSelectionWidgetState
                 }
               }
 
-              void selectColor({
-                required BuildContext context,
-                required int currentColorAndStopIndex,
-              }) {
-                final (:color, :stop) = colorAndStopListFromWidget
-                    .elementAt(currentColorAndStopIndex);
-
-                colorPicker.selectColor(
-                    context: context,
-                    currentColor: color,
-                    onColorSelected: (selectedColor) {
-                      final newColorAndStop = (
-                        color: selectedColor,
-                        stop: stop,
-                      );
-
-                      /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
-                      final List<ColorAndStop> newColorAndStopList =
-                          List.from(colorAndStopListFromWidget);
-                      newColorAndStopList[currentColorAndStopIndex] =
-                          newColorAndStop;
-
-                      widget.onColorAndStopListChanged(newColorAndStopList,
-                          index: currentColorAndStopIndex);
-                    });
-              }
-
               void changeStop({
                 required int newStop,
                 required int currentColorAndStopIndex,
@@ -353,22 +325,37 @@ class _ColorAndStopSelectionWidgetState
                         padding: const EdgeInsets.symmetric(vertical: 2.0),
                         child: Row(
                           children: [
-                            CompactButton.empty(
-                              onPressed: () {
-                                setSelectedColorIndex(
-                                    newlySelectedIndex: actualIndex);
+                            HtmlColorInput(
+                                initialColor: color,
+                                uniqueId: 'color-input$actualIndex',
+                                onInput: (event) {
+                                  final eventTarget =
+                                      event.currentTarget as html.InputElement;
+                                  final eventTargetValue = eventTarget.value;
 
-                                selectColor(
-                                  context: context,
-                                  currentColorAndStopIndex: actualIndex,
-                                );
-                              },
-                              backgroundColor: color,
-                              foregroundColor: Colors.black,
-                              borderSide: BorderSide(
-                                color: AppColors.grey,
-                              ),
-                            ),
+                                  if (eventTargetValue == null) {
+                                    return;
+                                  }
+
+                                  final color = ColorAndStopUtil().hexToColor(
+                                    eventTargetValue,
+                                  );
+
+                                  final newColorAndStop = (
+                                    color: color,
+                                    stop: stop,
+                                  );
+
+                                  /// Creates a copy of the `colorAndStopList` so modifying the new list does not modify `colorAndStopList`
+                                  final List<ColorAndStop> newColorAndStopList =
+                                      List.from(colorAndStopListFromWidget);
+                                  newColorAndStopList[actualIndex] =
+                                      newColorAndStop;
+
+                                  widget.onColorAndStopListChanged(
+                                      newColorAndStopList,
+                                      index: actualIndex);
+                                }),
                             SizedBox(
                               width: compactButtonMargin,
                             ),
@@ -529,6 +516,71 @@ class _ColorAndStopSelectionWidgetState
     return SelectionWidgetContainer(
       titleWidgetInformation: getTitleWidgetInformation(),
       selectionWidget: getSelectionWidget(),
+    );
+  }
+}
+
+class HtmlColorInput extends StatefulWidget {
+  const HtmlColorInput({
+    super.key,
+    required this.uniqueId,
+    this.initialColor,
+    this.onInput,
+  });
+
+  final String uniqueId;
+  final Color? initialColor;
+  final void Function(html.Event)? onInput;
+
+  @override
+  State<HtmlColorInput> createState() => _HtmlColorInputState();
+}
+
+class _HtmlColorInputState extends State<HtmlColorInput> {
+  @override
+  void initState() {
+    super.initState();
+
+    registerColorInputView();
+  }
+
+  void registerColorInputView() {
+    ui_web.platformViewRegistry.registerViewFactory(widget.uniqueId,
+        (int viewId) {
+      final inputElement = html.InputElement()
+        ..type = 'color'
+        ..value = widget.initialColor == null
+            ? null
+            : ColorAndStopUtil().colorToHex(widget.initialColor!)
+        ..onInput.listen((event) {
+          widget.onInput?.call(event);
+        })
+        ..style.width = '100%'
+        ..style.height = '100%';
+
+      return inputElement;
+    });
+  }
+
+  @override
+  void didUpdateWidget(covariant HtmlColorInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    registerColorInputView();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final AppDimensions appDimensions = AppDimensions.of(context);
+    final compactButtonWidth = appDimensions.compactButtonWidth;
+    final compactButtonHeight = appDimensions.compactButtonHeight;
+
+    return SizedBox(
+      width: compactButtonWidth,
+      height: compactButtonHeight,
+      child: HtmlElementView(
+        viewType: widget.uniqueId,
+      ),
     );
   }
 }

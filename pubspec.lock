@@ -25,14 +25,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.7.1"
-  archive:
-    dependency: transitive
-    description:
-      name: archive
-      sha256: d6347d54a2d8028e0437e3c099f66fdb8ae02c4720c1e7534c9f24c10351f85d
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.6"
   args:
     dependency: transitive
     description:
@@ -49,14 +41,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.11.0"
-  basics:
-    dependency: transitive
-    description:
-      name: basics
-      sha256: bc2385021fe7cb78785fbd12cdf374ab2fe5727879b332477b403cfb0ffc9cab
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.6.0"
   boolean_selector:
     dependency: transitive
     description:
@@ -113,15 +97,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  cyclop:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "feat/update-color-button-with-child"
-      resolved-ref: "44e024e0a719c2b88e2ca9483b717f60b9147cfd"
-      url: "git://github.com/victoreronmosele/cyclop.git"
-    source: git
-    version: "0.6.1"
   fake_async:
     dependency: transitive
     description:
@@ -273,14 +248,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.2"
-  image:
-    dependency: transitive
-    description:
-      name: image
-      sha256: "8e9d133755c3e84c73288363e6343157c383a0c6c56fc51afcc5d4d7180306d6"
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.3.0"
   io:
     dependency: transitive
     description:
@@ -417,14 +384,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
-  petitparser:
-    dependency: transitive
-    description:
-      name: petitparser
-      sha256: "49392a45ced973e8d94a85fdb21293fbb40ba805fc49f2965101ae748a3683b4"
-      url: "https://pub.dev"
-    source: hosted
-    version: "5.1.0"
   platform:
     dependency: transitive
     description:
@@ -441,14 +400,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
-  pointycastle:
-    dependency: transitive
-    description:
-      name: pointycastle
-      sha256: db7306cf0249f838d1a24af52b5a5887c5bf7f31d8bb4e827d071dc0939ad346
-      url: "https://pub.dev"
-    source: hosted
-    version: "3.6.2"
   pool:
     dependency: transitive
     description:
@@ -742,14 +693,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.0"
-  xml:
-    dependency: transitive
-    description:
-      name: xml
-      sha256: "979ee37d622dec6365e2efa4d906c37470995871fe9ae080d967e192d88286b5"
-      url: "https://pub.dev"
-    source: hosted
-    version: "6.2.2"
   yaml:
     dependency: transitive
     description:
