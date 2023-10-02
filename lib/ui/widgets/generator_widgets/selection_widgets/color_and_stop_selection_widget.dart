@@ -6,12 +6,13 @@ import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/html_color_input.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
+import 'package:provider/provider.dart';
 
 class ColorAndStopSelectionWidget extends StatefulWidget {
   const ColorAndStopSelectionWidget({super.key});
@@ -24,16 +25,11 @@ class ColorAndStopSelectionWidget extends StatefulWidget {
 class _ColorAndStopSelectionWidgetState
     extends State<ColorAndStopSelectionWidget> {
   late AppDimensions appDimensions;
-  late GradientService gradientService;
+  late GradientViewModel gradientViewModel;
 
   double get compactButtonMargin => appDimensions.compactButtonMargin;
   double get compactButtonWidth => appDimensions.compactButtonWidth;
   double get compactButtonHeight => appDimensions.compactButtonHeight;
-
-  List<ColorAndStop> get colorAndStopList =>
-      gradientService.gradient.getColorAndStopList();
-  int get currentSelectedColorIndex =>
-      gradientService.currentSelectedColorIndex;
 
   double get deleteButtonIconSize => appDimensions.deleteButtonIconSize;
 
@@ -45,7 +41,7 @@ class _ColorAndStopSelectionWidgetState
     return SelectionWidgetContainer(
       titleWidgetInformation: getTitleWidgetInformation(
         onRandomButtonPressed: () {
-          gradientService.randomizeColors();
+          gradientViewModel.randomizeColors();
         },
       ),
       selectionWidget: getSelectionWidget(),
@@ -57,14 +53,14 @@ class _ColorAndStopSelectionWidgetState
     super.didChangeDependencies();
 
     appDimensions = AppDimensions.of(context);
-    gradientService = GradientServiceProvider.of(context).gradientService;
+    gradientViewModel = context.read<GradientViewModel>();
   }
 
   Widget getAddColorButton() {
     return SizedBox(
       width: generatorScreenContentWidth,
       child: CompactButton.text(
-        onPressed: gradientService.addNewColor,
+        onPressed: gradientViewModel.addNewColor,
         backgroundColor: AppColors.grey,
         foregroundColor: Colors.black,
         text: AppStrings.addColor,
@@ -73,107 +69,126 @@ class _ColorAndStopSelectionWidgetState
   }
 
   Widget getColorAndStopDisplaySection() {
-    return Column(
-      children: List.generate(
-        colorAndStopList.length,
-        (index) {
-          final colorAndStop = colorAndStopList.elementAt(index);
+    final colorAndStopList = gradientViewModel.gradient.getColorAndStopList();
+    final currentSelectedColorIndex =
+        gradientViewModel.currentSelectedColorIndex;
 
-          final (:color, :stop) = colorAndStop;
+    /// This [Selector] is needed to prevent the [HtmlColorInput] from
+    /// rebuilding when the color is changed from the [HtmlColorInput] itself.
+    ///
+    /// This is because the color picker will be closed when tapped as a result
+    /// of the [HtmlColorInput] rebuilding.
+    ///
+    /// This only happens in Chrome.
+    return Selector<GradientViewModel, bool>(
+      selector: (_, gradientViewModel) =>
+          gradientViewModel.isColorChangeFromHtmlColorInput,
+      shouldRebuild: (previous, next) => !next,
+      builder: (_, __, ___) {
+        return Column(
+          children: List.generate(
+            colorAndStopList.length,
+            (index) {
+              final colorAndStop = colorAndStopList.elementAt(index);
 
-          final canDeleteColorAndStops = ColorAndStopUtil()
-              .isColorAndStopListMoreThanMinimum(colorAndStopList);
+              final (:color, :stop) = colorAndStop;
 
-          final colorAndStopSelectionWidgetItem = Column(
-            children: [
-              Container(
-                color: index == currentSelectedColorIndex
-                    ? color.withOpacity(0.1)
-                    : null,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  child: Row(
-                    children: [
-                      HtmlColorInput(
-                          key: ValueKey(color),
-                          initialColor: color,
-                          uniqueId: 'color-input$color',
-                          onInput: (event) {
-                            final eventTarget =
-                                event.currentTarget as html.InputElement;
-                            final eventTargetValue = eventTarget.value;
+              final canDeleteColorAndStops = ColorAndStopUtil()
+                  .isColorAndStopListMoreThanMinimum(colorAndStopList);
 
-                            if (eventTargetValue == null) {
-                              return;
-                            }
+              final colorAndStopSelectionWidgetItem = Column(
+                children: [
+                  Container(
+                    color: index == currentSelectedColorIndex
+                        ? color.withOpacity(0.1)
+                        : null,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 2.0),
+                      child: Row(
+                        children: [
+                          HtmlColorInput(
+                              key: ValueKey(color),
+                              initialColor: color,
+                              uniqueId: 'color-input$color',
+                              onInput: (event) {
+                                final eventTarget =
+                                    event.currentTarget as html.InputElement;
+                                final eventTargetValue = eventTarget.value;
 
-                            final color = ColorAndStopUtil().hexToColor(
-                              eventTargetValue,
-                            );
+                                if (eventTargetValue == null) {
+                                  return;
+                                }
 
-                            gradientService.changeColor(
-                              newColor: color,
-                              currentColorAndStopIndex: index,
-                            );
-                          }),
-                      SizedBox(
-                        width: compactButtonMargin,
-                      ),
-                      StopTextBox(
-                        key: UniqueKey(),
-                        stop: stop,
-                        onStopChanged: (int newStop) {
-                          gradientService.changeStop(
-                              newStop: newStop,
-                              currentColorAndStopIndex: index);
-                        },
-                        onTap: () {
-                          gradientService.currentSelectedColorIndex = index;
-                        },
-                      ),
-                      SizedBox(
-                        width: compactButtonMargin,
-                      ),
-                      SizedBox(
-                        width: compactButtonWidth,
-                        child: canDeleteColorAndStops
-                            ? Center(
-                                child: Tooltip(
-                                  message: AppStrings.deleteColor,
-                                  waitDuration:
-                                      const Duration(milliseconds: 500),
-                                  child: InkWell(
-                                    radius: deleteButtonIconSize,
-                                    onTap: () {
-                                      gradientService
-                                          .deleteSelectedColorAndStopIfMoreThanMinimum(
-                                              indexToDelete: index);
-                                    },
-                                    child: Icon(
-                                      Icons.close,
-                                      color:
-                                          AppColors.darkGrey.withOpacity(0.5),
-                                      size: deleteButtonIconSize,
-                                      semanticLabel: AppStrings.deleteColor,
+                                final color = ColorAndStopUtil().hexToColor(
+                                  eventTargetValue,
+                                );
+
+                                gradientViewModel.changeColor(
+                                  newColor: color,
+                                  currentColorAndStopIndex: index,
+                                );
+                              }),
+                          SizedBox(
+                            width: compactButtonMargin,
+                          ),
+                          StopTextBox(
+                            key: UniqueKey(),
+                            stop: stop,
+                            onStopChanged: (int newStop) {
+                              gradientViewModel.changeStop(
+                                  newStop: newStop,
+                                  currentColorAndStopIndex: index);
+                            },
+                            onTap: () {
+                              gradientViewModel.currentSelectedColorIndex =
+                                  index;
+                            },
+                          ),
+                          SizedBox(
+                            width: compactButtonMargin,
+                          ),
+                          SizedBox(
+                            width: compactButtonWidth,
+                            child: canDeleteColorAndStops
+                                ? Center(
+                                    child: Tooltip(
+                                      message: AppStrings.deleteColor,
+                                      waitDuration:
+                                          const Duration(milliseconds: 500),
+                                      child: InkWell(
+                                        radius: deleteButtonIconSize,
+                                        onTap: () {
+                                          gradientViewModel
+                                              .deleteSelectedColorAndStopIfMoreThanMinimum(
+                                                  indexToDelete: index);
+                                        },
+                                        child: Icon(
+                                          Icons.close,
+                                          color: AppColors.darkGrey
+                                              .withOpacity(0.5),
+                                          size: deleteButtonIconSize,
+                                          semanticLabel: AppStrings.deleteColor,
+                                        ),
+                                      ),
                                     ),
-                                  ),
-                                ),
-                              )
-                            : null,
+                                  )
+                                : null,
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(
-                height: 6.0,
-              ),
-            ],
-          );
+                  const SizedBox(
+                    height: 6.0,
+                  ),
+                ],
+              );
 
-          return colorAndStopSelectionWidgetItem;
-        },
-      ),
+              return colorAndStopSelectionWidgetItem;
+            },
+          ),
+        );
+      },
     );
   }
 

@@ -3,10 +3,11 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
+import 'package:provider/provider.dart';
 
 class DirectionSelectionWidget extends StatelessWidget {
   DirectionSelectionWidget({
@@ -46,9 +47,10 @@ class DirectionSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
-    final gradientService = GradientServiceProvider.of(context).gradientService;
+    
+    final gradientViewModel = context.watch<GradientViewModel>();
 
-    final gradient = gradientService.gradient;
+    final gradient = gradientViewModel.gradient;
 
     final gradientStyle = gradient.getGradientStyle();
     final selectedGradientDirection = gradient.getGradientDirection();
@@ -107,7 +109,7 @@ class DirectionSelectionWidget extends StatelessWidget {
                         isSelected:
                             gradientDirection == selectedGradientDirection,
                         onGradientDirectionChanged:
-                            gradientService.changeGradientDirection,
+                            gradientViewModel.changeGradientDirection,
                       ),
                     ),
                   ],

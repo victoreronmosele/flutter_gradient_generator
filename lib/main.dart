@@ -4,8 +4,9 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/firebase_options.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
+import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 
 void main() async {
@@ -15,14 +16,11 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
-
-  /// The [GradientService] instance to be used by the app.
-  final gradientService = GradientService();
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -36,8 +34,9 @@ class MyApp extends StatelessWidget {
         home: AppDimensions(
           orientation: orientation,
           screenWidth: width,
-          child: GradientServiceProvider(
-            gradientService: gradientService,
+        
+          child: ChangeNotifierProvider.value(
+            value: GradientViewModel(),
             child: const HomeScreen(),
           ),
         ),

@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/generator_section.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
 import 'package:flutter_gradient_generator/ui/widgets/footer/footer_widget.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
@@ -18,14 +19,14 @@ class HomeScreen extends StatefulWidget {
 
 class HomeScreenState extends State<HomeScreen> {
   final focusNode = FocusNode();
-  late GradientService gradientService;
+  late GradientViewModel gradientService;
 
   @override
   void initState() {
     super.initState();
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      gradientService = GradientServiceProvider.of(context).gradientService;
+      gradientService = context.read<GradientViewModel>();
 
       /// This is the event handler that is called when a key is pressed.
       ///

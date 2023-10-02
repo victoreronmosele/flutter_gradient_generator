@@ -3,9 +3,10 @@ import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
+import 'package:provider/provider.dart';
 
 class StyleSelectionWidget extends StatelessWidget {
   const StyleSelectionWidget({
@@ -15,9 +16,9 @@ class StyleSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
-    final gradientService = GradientServiceProvider.of(context).gradientService;
+    final gradientViewModel = context.watch<GradientViewModel>();
 
-    final gradient = gradientService.gradient;
+    final gradient = gradientViewModel.gradient;
 
     final gradientStyle = gradient.getGradientStyle();
 
@@ -44,7 +45,7 @@ class StyleSelectionWidget extends StatelessWidget {
               children: [
                 CompactButton.text(
                   onPressed: () {
-                    gradientService.changeGradientStyle(style);
+                    gradientViewModel.changeGradientStyle(style);
                   },
                   foregroundColor: Colors.black,
                   backgroundColor: buttonColor,

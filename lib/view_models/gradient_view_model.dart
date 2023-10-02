@@ -12,7 +12,7 @@ import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstra
 import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 
-class GradientService with ChangeNotifier {
+class GradientViewModel with ChangeNotifier {
   final AbstractRandomColorGenerator _randomColorGenerator =
       const RandomColorGenerator();
 
@@ -28,6 +28,12 @@ class GradientService with ChangeNotifier {
   int _currentSelectedColorIndex = 0;
 
   late AbstractGradient gradient = _defaultGradient;
+
+  /// Whether the color change is from the [HtmlColorInput] widget.
+  ///
+  /// This is needed to prevent the [HtmlColorInput] widget from closing when
+  /// tapped.
+  bool isColorChangeFromHtmlColorInput = false;
 
   /// The index of the currently selected color in the color list being
   /// showned on the [GeneratorSection]
@@ -73,8 +79,11 @@ class GradientService with ChangeNotifier {
     final List<ColorAndStop> newColorAndStopList = List.from(colorAndStopList);
     newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
 
-    _onColorAndStopListChanged(newColorAndStopList,
-        index: currentColorAndStopIndex);
+    _onColorAndStopListChanged(
+      newColorAndStopList,
+      index: currentColorAndStopIndex,
+      isChangeFromHtmlColorInput: true,
+    );
   }
 
   void changeStop({
@@ -96,8 +105,11 @@ class GradientService with ChangeNotifier {
     final List<ColorAndStop> newColorAndStopList = List.from(colorAndStopList);
     newColorAndStopList[currentColorAndStopIndex] = newColorAndStop;
 
-    _onColorAndStopListChanged(newColorAndStopList,
-        index: currentColorAndStopIndex);
+    _onColorAndStopListChanged(
+      newColorAndStopList,
+      index: currentColorAndStopIndex,
+      isChangeFromHtmlColorInput: false,
+    );
   }
 
   /// Deletes the currently selected [ColorAndStop] if there are more than
@@ -159,8 +171,11 @@ class GradientService with ChangeNotifier {
     final newColorAndStopIndex =
         updatedColorAndStopList.lastIndexOf(newColorAndStop);
 
-    _onColorAndStopListChanged(updatedColorAndStopList,
-        index: newColorAndStopIndex);
+    _onColorAndStopListChanged(
+      updatedColorAndStopList,
+      index: newColorAndStopIndex,
+      isChangeFromHtmlColorInput: false,
+    );
   }
 
   void randomizeColors() {
@@ -170,8 +185,11 @@ class GradientService with ChangeNotifier {
           gradient.getColorAndStopList().map((e) => e.stop).toList(),
     );
 
-    _onColorAndStopListChanged(newColorAndStopList,
-        index: currentSelectedColorIndex);
+    _onColorAndStopListChanged(
+      newColorAndStopList,
+      index: currentSelectedColorIndex,
+      isChangeFromHtmlColorInput: false,
+    );
   }
 
   ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
@@ -221,12 +239,15 @@ class GradientService with ChangeNotifier {
         ? 0
         : indexBeforeCurrentSelectedColorIndex;
 
-    _onColorAndStopListChanged(updatedColorAndStopList,
-        index: newSelectedColorIndex);
+    _onColorAndStopListChanged(
+      updatedColorAndStopList,
+      index: newSelectedColorIndex,
+      isChangeFromHtmlColorInput: false,
+    );
   }
 
   void _onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList,
-      {required int index}) {
+      {required int index, required bool isChangeFromHtmlColorInput}) {
     if (!const ListEquality<ColorAndStop>()
         .equals(gradient.getColorAndStopList(), newColorAndStopList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
@@ -237,28 +258,9 @@ class GradientService with ChangeNotifier {
 
       gradient = newGradient;
       currentSelectedColorIndex = index;
+      isColorChangeFromHtmlColorInput = isChangeFromHtmlColorInput;
 
       notifyListeners();
     }
-  }
-}
-
-class GradientServiceProvider extends InheritedNotifier<GradientService> {
-  final GradientService gradientService;
-
-  const GradientServiceProvider(
-      {super.key, required super.child, required this.gradientService})
-      : super(notifier: gradientService);
-
-  static GradientServiceProvider? maybeOf(BuildContext context) {
-    return context
-        .dependOnInheritedWidgetOfExactType<GradientServiceProvider>();
-  }
-
-  static GradientServiceProvider of(BuildContext context) {
-    final gradientService = GradientServiceProvider.maybeOf(context);
-    assert(gradientService != null,
-        'No GradientService found in context. Wrap your app in a GradientService widget.');
-    return gradientService!;
   }
 }

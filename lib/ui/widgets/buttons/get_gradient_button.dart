@@ -1,16 +1,18 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
+import 'package:provider/provider.dart';
 
 class GetGradientButton extends StatefulWidget {
   const GetGradientButton({
     Key? key,
-    required this.onTap,
   }) : super(key: key);
-
-  final Future<void> Function() onTap;
 
   @override
   State<GetGradientButton> createState() => _GetGradientButtonState();
@@ -55,9 +57,19 @@ class _GetGradientButtonState extends State<GetGradientButton> {
     final wideButtonWidth = appDimensions.wideButtonWidth;
     final wideButtonHeight = appDimensions.wideButtonHeight;
 
+    final gradient = context.watch<GradientViewModel>().gradient;
+    final generatedCode = gradient.toWidgetString();
+
     return TextButton(
       onPressed: () async {
-        await widget.onTap();
+        await Clipboard.setData(ClipboardData(text: generatedCode));
+
+        /// Log event to Firebase Analytics if not in debug mode
+        if (!kDebugMode) {
+          await FirebaseAnalytics.instance.logEvent(
+              name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
+              parameters: gradient.toJson());
+        }
 
         setState(() {
           _showCopiedText = true;

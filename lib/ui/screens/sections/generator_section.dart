@@ -1,10 +1,5 @@
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
-import 'package:flutter_gradient_generator/data/app_strings.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/get_gradient_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/app_title_widget.dart';
@@ -18,12 +13,7 @@ class GeneratorSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
-    final gradient =
-        GradientServiceProvider.of(context).gradientService.gradient;
-
     final isPortrait = appDimensions.shouldDisplayPortraitUI;
-
-    final generatedCode = gradient.toWidgetString();
 
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
@@ -71,18 +61,7 @@ class GeneratorSection extends StatelessWidget {
             const SizedBox(height: 24),
             const ColorAndStopSelectionWidget(),
             const SizedBox(height: 48),
-            GetGradientButton(
-              onTap: () async {
-                await Clipboard.setData(ClipboardData(text: generatedCode));
-
-                /// Log event to Firebase Analytics if not in debug mode
-                if (!kDebugMode) {
-                  await FirebaseAnalytics.instance.logEvent(
-                      name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
-                      parameters: gradient.toJson());
-                }
-              },
-            ),
+            const GetGradientButton(),
             const SizedBox(height: 100),
           ],
         ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gradient_generator/services/gradient_service.dart';
+import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
+import 'package:provider/provider.dart';
 
 class PreviewSection extends StatelessWidget {
   static const _portraitBorderRadius = 16.0;
@@ -22,9 +24,9 @@ class PreviewSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gradientService = GradientServiceProvider.of(context).gradientService;
+    final gradient = context.select<GradientViewModel, AbstractGradient>(
+        (GradientViewModel viewModel) => viewModel.gradient);
 
-    final gradient = gradientService.gradient;
     final flutterGradient = gradient.toFlutterGradient();
 
     return Container(
