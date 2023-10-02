@@ -3,27 +3,28 @@ import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/services/gradient_service.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 
 class StyleSelectionWidget extends StatelessWidget {
   const StyleSelectionWidget({
-    Key? key,
-    required this.gradientStyle,
-    required this.onGradientStyleChanged,
-  }) : super(key: key);
-
-  final GradientStyle gradientStyle;
-  final void Function(GradientStyle p1) onGradientStyleChanged;
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
+    final gradientService = GradientServiceProvider.of(context).gradientService;
+
+    final gradient = gradientService.gradient;
+
+    final gradientStyle = gradient.getGradientStyle();
 
     final compactButtonMargin = appDimensions.compactButtonMargin;
 
-    final Color selectedStyleButtonColor = AppColors.grey;
-    const Color unselectedStyleButtonColor = Colors.transparent;
+    final selectedStyleButtonColor = AppColors.grey;
+    const unselectedStyleButtonColor = Colors.transparent;
 
     return SelectionWidgetContainer(
       titleWidgetInformation: (
@@ -43,7 +44,7 @@ class StyleSelectionWidget extends StatelessWidget {
               children: [
                 CompactButton.text(
                   onPressed: () {
-                    onGradientStyleChanged(style);
+                    gradientService.changeGradientStyle(style);
                   },
                   foregroundColor: Colors.black,
                   backgroundColor: buttonColor,

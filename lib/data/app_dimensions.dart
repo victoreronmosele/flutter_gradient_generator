@@ -25,6 +25,8 @@ class AppDimensions extends InheritedWidget {
         shouldDisplayPortraitUI ? screenWidth : _landscapeGeneratorScreenWidth;
   }
 
+  final double deleteButtonIconSize = 16;
+
   /// Whether the app should display the portrait UI.
   final bool shouldDisplayPortraitUI;
 

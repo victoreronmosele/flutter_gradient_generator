@@ -49,11 +49,11 @@ class _GetGradientButtonState extends State<GetGradientButton> {
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
 
-    final double wideButtonPadding = appDimensions.widebuttonPadding;
-    final double wideButtonWidth = appDimensions.wideButtonWidth;
-    final double wideButtonHeight = appDimensions.wideButtonHeight;
+    final wideButtonPadding = appDimensions.widebuttonPadding;
+    final wideButtonWidth = appDimensions.wideButtonWidth;
+    final wideButtonHeight = appDimensions.wideButtonHeight;
 
     return TextButton(
       onPressed: () async {

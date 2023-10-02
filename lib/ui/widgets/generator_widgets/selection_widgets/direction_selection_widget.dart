@@ -3,25 +3,19 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/services/gradient_service.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 
 class DirectionSelectionWidget extends StatelessWidget {
-  final GradientStyle gradientStyle;
-  final GradientDirection selectedGradientDirection;
-  final void Function(GradientDirection) onGradientDirectionChanged;
-
   DirectionSelectionWidget({
-    Key? key,
-    required this.gradientStyle,
-    required this.selectedGradientDirection,
-    required this.onGradientDirectionChanged,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// The index of the center alignment icon set in the total icon set list,
   /// [iconSetList]
-  final int centerGradientDirectionIndexInIconSetList = 1;
+  final centerGradientDirectionIndexInIconSetList = 1;
 
   /// The index of the center alignment icon in the center alignment icon set,
   /// [iconSetList].
@@ -29,9 +23,9 @@ class DirectionSelectionWidget extends StatelessWidget {
   /// This refers to `GradientDirection.center` in the center alignment icon set
   /// and it does not refer `GradientDirection.centerLeft` or `GradientDirection.centerRight`
   ///
-  final int centerGradientDirectionIndexWithinCenterDirectionSet = 1;
+  final centerGradientDirectionIndexWithinCenterDirectionSet = 1;
 
-  final List<Map<GradientDirection, IconData>> iconSetList = [
+  final iconSetList = [
     {
       GradientDirection.topLeft: MaterialCommunityIcons.arrow_top_left,
       GradientDirection.topCenter: MaterialCommunityIcons.arrow_up,
@@ -51,7 +45,13 @@ class DirectionSelectionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
+    final gradientService = GradientServiceProvider.of(context).gradientService;
+
+    final gradient = gradientService.gradient;
+
+    final gradientStyle = gradient.getGradientStyle();
+    final selectedGradientDirection = gradient.getGradientDirection();
 
     final compactButtonMargin = appDimensions.compactButtonMargin;
 
@@ -63,9 +63,9 @@ class DirectionSelectionWidget extends StatelessWidget {
       selectionWidget: Column(
         children: iconSetList.map(
             (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
-          final int iconSetIndex =
+          final iconSetIndex =
               iconSetList.indexOf(gradientDirectionToIconSetMap);
-          const int firstIconSetIndex = 0;
+          const firstIconSetIndex = 0;
 
           return Column(
             children: [
@@ -73,23 +73,23 @@ class DirectionSelectionWidget extends StatelessWidget {
                 const SizedBox(height: 8.0),
               Row(
                   children: gradientDirectionToIconSetMap.values.map((icon) {
-                final int iconIndex =
+                final iconIndex =
                     gradientDirectionToIconSetMap.values.toList().indexOf(icon);
-                final GradientDirection gradientDirection =
+                final gradientDirection =
                     gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
 
-                const int firstIconIndex = 0;
+                const firstIconIndex = 0;
 
-                final bool gradientStyleIsLinear =
+                final gradientStyleIsLinear =
                     gradientStyle == GradientStyle.linear;
 
-                final bool thisIsTheMiddleCenterDirectionButton =
-                    iconSetIndex == centerGradientDirectionIndexInIconSetList &&
-                        iconIndex ==
-                            centerGradientDirectionIndexWithinCenterDirectionSet;
+                final thisIsTheMiddleCenterDirectionButton = iconSetIndex ==
+                        centerGradientDirectionIndexInIconSetList &&
+                    iconIndex ==
+                        centerGradientDirectionIndexWithinCenterDirectionSet;
 
                 /// Circle radial button is not shown for linear gradients
-                final bool showDirection = !(gradientStyleIsLinear &&
+                final showDirection = !(gradientStyleIsLinear &&
                     thisIsTheMiddleCenterDirectionButton);
 
                 return Row(
@@ -106,7 +106,8 @@ class DirectionSelectionWidget extends StatelessWidget {
                         gradientDirection: gradientDirection,
                         isSelected:
                             gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged: onGradientDirectionChanged,
+                        onGradientDirectionChanged:
+                            gradientService.changeGradientDirection,
                       ),
                     ),
                   ],
