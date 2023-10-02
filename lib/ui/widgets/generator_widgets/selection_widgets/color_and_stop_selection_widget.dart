@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
-import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
@@ -25,7 +24,7 @@ class ColorAndStopSelectionWidget extends StatefulWidget {
 class _ColorAndStopSelectionWidgetState
     extends State<ColorAndStopSelectionWidget> {
   late AppDimensions appDimensions;
-  late GradientViewModel gradientViewModel;
+  late GradientViewModel gradientViewModelReadOnly;
 
   double get compactButtonMargin => appDimensions.compactButtonMargin;
   double get compactButtonWidth => appDimensions.compactButtonWidth;
@@ -41,7 +40,7 @@ class _ColorAndStopSelectionWidgetState
     return SelectionWidgetContainer(
       titleWidgetInformation: getTitleWidgetInformation(
         onRandomButtonPressed: () {
-          gradientViewModel.randomizeColors();
+          gradientViewModelReadOnly.randomizeColors();
         },
       ),
       selectionWidget: getSelectionWidget(),
@@ -53,14 +52,14 @@ class _ColorAndStopSelectionWidgetState
     super.didChangeDependencies();
 
     appDimensions = AppDimensions.of(context);
-    gradientViewModel = context.read<GradientViewModel>();
+    gradientViewModelReadOnly = context.read<GradientViewModel>();
   }
 
   Widget getAddColorButton() {
     return SizedBox(
       width: generatorScreenContentWidth,
       child: CompactButton.text(
-        onPressed: gradientViewModel.addNewColor,
+        onPressed: gradientViewModelReadOnly.addNewColor,
         backgroundColor: AppColors.grey,
         foregroundColor: Colors.black,
         text: AppStrings.addColor,
@@ -69,10 +68,6 @@ class _ColorAndStopSelectionWidgetState
   }
 
   Widget getColorAndStopDisplaySection() {
-    final colorAndStopList = gradientViewModel.gradient.getColorAndStopList();
-    final currentSelectedColorIndex =
-        gradientViewModel.currentSelectedColorIndex;
-
     /// This [Selector] is needed to prevent the [HtmlColorInput] from
     /// rebuilding when the color is changed from the [HtmlColorInput] itself.
     ///
@@ -80,11 +75,15 @@ class _ColorAndStopSelectionWidgetState
     /// of the [HtmlColorInput] rebuilding.
     ///
     /// This only happens in Chrome.
-    return Selector<GradientViewModel, bool>(
-      selector: (_, gradientViewModel) =>
-          gradientViewModel.isColorChangeFromHtmlColorInput,
-      shouldRebuild: (previous, next) => !next,
-      builder: (_, __, ___) {
+    return Selector<GradientViewModel, GradientViewModel>(
+      selector: (_, gradientViewModel) => gradientViewModel,
+      shouldRebuild: (previous, next) => !next.isColorChangeFromHtmlColorInput,
+      builder: (_, gradientViewModel, ___) {
+        final colorAndStopList =
+            gradientViewModel.gradient.getColorAndStopList();
+        final currentSelectedColorIndex =
+            gradientViewModel.currentSelectedColorIndex;
+
         return Column(
           children: List.generate(
             colorAndStopList.length,
@@ -123,7 +122,7 @@ class _ColorAndStopSelectionWidgetState
                                   eventTargetValue,
                                 );
 
-                                gradientViewModel.changeColor(
+                                gradientViewModelReadOnly.changeColor(
                                   newColor: color,
                                   currentColorAndStopIndex: index,
                                 );
@@ -135,13 +134,13 @@ class _ColorAndStopSelectionWidgetState
                             key: UniqueKey(),
                             stop: stop,
                             onStopChanged: (int newStop) {
-                              gradientViewModel.changeStop(
+                              gradientViewModelReadOnly.changeStop(
                                   newStop: newStop,
                                   currentColorAndStopIndex: index);
                             },
                             onTap: () {
-                              gradientViewModel.currentSelectedColorIndex =
-                                  index;
+                              gradientViewModelReadOnly
+                                  .currentSelectedColorIndex = index;
                             },
                           ),
                           SizedBox(
@@ -158,7 +157,7 @@ class _ColorAndStopSelectionWidgetState
                                       child: InkWell(
                                         radius: deleteButtonIconSize,
                                         onTap: () {
-                                          gradientViewModel
+                                          gradientViewModelReadOnly
                                               .deleteSelectedColorAndStopIfMoreThanMinimum(
                                                   indexToDelete: index);
                                         },

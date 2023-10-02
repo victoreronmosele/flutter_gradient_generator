@@ -19,8 +19,22 @@ void main() async {
   runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key}) : super(key: key);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  late final GradientViewModel gradientViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+
+    gradientViewModel = GradientViewModel();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,9 +48,8 @@ class MyApp extends StatelessWidget {
         home: AppDimensions(
           orientation: orientation,
           screenWidth: width,
-        
           child: ChangeNotifierProvider.value(
-            value: GradientViewModel(),
+            value: gradientViewModel,
             child: const HomeScreen(),
           ),
         ),
