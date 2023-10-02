@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
-import 'package:flutter_gradient_generator/ui/widgets/buttons/get_gradient_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/buttons/copy_gradient_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/app_title_widget.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_widgets.dart';
 
@@ -61,7 +61,7 @@ class GeneratorSection extends StatelessWidget {
             const SizedBox(height: 24),
             const ColorAndStopSelectionWidget(),
             const SizedBox(height: 48),
-            const GetGradientButton(),
+            const CopyGradientButton(),
             const SizedBox(height: 100),
           ],
         ),

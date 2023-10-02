@@ -9,21 +9,21 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
 
-class GetGradientButton extends StatefulWidget {
-  const GetGradientButton({
+class CopyGradientButton extends StatefulWidget {
+  const CopyGradientButton({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<GetGradientButton> createState() => _GetGradientButtonState();
+  State<CopyGradientButton> createState() => _CopyGradientButtonState();
 }
 
-class _GetGradientButtonState extends State<GetGradientButton> {
+class _CopyGradientButtonState extends State<CopyGradientButton> {
   bool _showCopiedText = false;
 
   String get _buttonText => _showCopiedText
       ? AppStrings.gradientCodeCopied
-      : AppStrings.getGradientCode;
+      : AppStrings.copyGradientCode;
 
   Color _getBackgroundColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
