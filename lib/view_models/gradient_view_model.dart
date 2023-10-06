@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
@@ -15,13 +16,11 @@ import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 class GradientViewModel with ChangeNotifier {
   final AbstractRandomColorGenerator _randomColorGenerator =
       const RandomColorGenerator();
+  final _colorAndStopUtil = ColorAndStopUtil();
 
   late final AbstractGradient _defaultGradient = LinearStyleGradient(
-      colorAndStopList: _randomColorGenerator
-          .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
-        currentStopList: ColorAndStopUtil().initialStopList,
-      ),
-      gradientDirection: GradientDirection.topLeft);
+      colorAndStopList: AppColors.initialColorAndStopList,
+      gradientDirection: GradientDirection.bottomLeft);
 
   final NewColorGeneratorInterface _newColorGenerator = NewColorGenerator();
 
@@ -118,7 +117,7 @@ class GradientViewModel with ChangeNotifier {
       {required int indexToDelete}) {
     final currentColorAndStopList = gradient.getColorAndStopList();
 
-    final colorAndStopListIsMoreThanMinimum = ColorAndStopUtil()
+    final colorAndStopListIsMoreThanMinimum = _colorAndStopUtil
         .isColorAndStopListMoreThanMinimum(currentColorAndStopList);
 
     /// Only delete the currently selected [ColorAndStop] if there are more than

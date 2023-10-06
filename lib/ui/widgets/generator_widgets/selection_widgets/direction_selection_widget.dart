@@ -47,7 +47,7 @@ class DirectionSelectionWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
-    
+
     final gradientViewModel = context.watch<GradientViewModel>();
 
     final gradient = gradientViewModel.gradient;
