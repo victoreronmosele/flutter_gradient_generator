@@ -43,16 +43,13 @@ class GradientViewModel with ChangeNotifier {
   void changeCurrentSelectedColorIndex({
     required int newCurrentSelectedColorIndex,
     required bool isChangeFromHtmlColorInput,
-    bool notify = true,
   }) {
     if (newCurrentSelectedColorIndex != currentSelectedColorIndex) {
       _currentSelectedColorIndex = newCurrentSelectedColorIndex;
 
       changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
 
-      if (notify) {
-        notifyListeners();
-      }
+      notifyListeners();
     }
   }
 
@@ -77,7 +74,7 @@ class GradientViewModel with ChangeNotifier {
     final colorAndStopList = gradient.getColorAndStopList();
 
     // ignore: unused_local_variable
-    final (:color, :stop) =
+    final (color: _, stop: stop) =
         colorAndStopList.elementAt(currentColorAndStopIndex);
 
     final newColorAndStop = (
@@ -103,7 +100,7 @@ class GradientViewModel with ChangeNotifier {
     final colorAndStopList = gradient.getColorAndStopList();
 
     // ignore: unused_local_variable
-    final (:color, :stop) =
+    final (color: color, stop: _) =
         colorAndStopList.elementAt(currentColorAndStopIndex);
 
     final newColorAndStop = (
@@ -241,6 +238,8 @@ class GradientViewModel with ChangeNotifier {
 
     colorAndStopListCopy.remove(colorAndStopToDelete);
 
+    colorAndStopListCopy.sort((a, b) => a.stop.compareTo(b.stop));
+
     final updatedColorAndStopList = colorAndStopListCopy;
 
     final indexBeforeCurrentSelectedColorIndex = currentSelectedColorIndex - 1;
@@ -270,7 +269,6 @@ class GradientViewModel with ChangeNotifier {
       changeCurrentSelectedColorIndex(
         newCurrentSelectedColorIndex: index,
         isChangeFromHtmlColorInput: isChangeFromHtmlColorInput,
-        notify: false,
       );
       changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
 

@@ -14,13 +14,11 @@ class HtmlColorInput extends StatefulWidget {
     required this.uniqueId,
     this.initialColor,
     this.onInput,
-    this.onClick,
   });
 
   final String uniqueId;
   final Color? initialColor;
   final void Function(html.Event)? onInput;
-  final void Function()? onClick;
 
   @override
   State<HtmlColorInput> createState() => _HtmlColorInputState();
@@ -45,9 +43,6 @@ class _HtmlColorInputState extends State<HtmlColorInput> {
             : ColorAndStopUtil().colorToHex(widget.initialColor!)
         ..onInput.listen((event) {
           widget.onInput?.call(event);
-        })
-        ..onClick.listen((_) {
-          widget.onClick?.call();
         })
         ..style.width = '100%'
         ..style.height = '100%';

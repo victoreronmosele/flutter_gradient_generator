@@ -90,7 +90,8 @@ class _ColorAndStopSelectionWidgetState
             (index) {
               final colorAndStop = colorAndStopList.elementAt(index);
 
-              final (:color, :stop) = colorAndStop;
+              final color = colorAndStop.color;
+              final stop = colorAndStop.stop;
 
               final canDeleteColorAndStops = ColorAndStopUtil()
                   .isColorAndStopListMoreThanMinimum(colorAndStopList);
@@ -118,13 +119,15 @@ class _ColorAndStopSelectionWidgetState
                                     currentSelectedColorIndexFromBuilder);
 
                             // ignore: unused_local_variable
-                            final (:color, :stop) =
-                                currentSelectorColorAndStopFromBuilder;
+                            final (
+                              color: colorFromBuilder,
+                              stop: _
+                            ) = currentSelectorColorAndStopFromBuilder;
 
                             return Container(
                               color:
                                   index == currentSelectedColorIndexFromBuilder
-                                      ? color.withOpacity(0.1)
+                                      ? colorFromBuilder.withOpacity(0.1)
                                       : null,
                               height: compactButtonHeight,
                               width: generatorScreenContentWidth,
@@ -155,12 +158,6 @@ class _ColorAndStopSelectionWidgetState
                                   newColor: color,
                                   currentColorAndStopIndex: index,
                                 );
-                              },
-                              onClick: () {
-                                gradientViewModelReadOnly
-                                    .changeCurrentSelectedColorIndex(
-                                        newCurrentSelectedColorIndex: index,
-                                        isChangeFromHtmlColorInput: true);
                               },
                             ),
                             SizedBox(
