@@ -30,18 +30,29 @@ class GradientViewModel with ChangeNotifier {
 
   /// Whether the color change is from the [HtmlColorInput] widget.
   ///
-  /// This is needed to prevent the [HtmlColorInput] widget from closing when
-  /// tapped.
-  bool isColorChangeFromHtmlColorInput = false;
+  /// This is needed to prevent rebuilds in listening widgets.
+  ///
+  /// It is used specifically to prevent the [HtmlColorInput] widget from closing
+  /// when tapped.
+  bool changeIsFromHtmlColorInput = false;
 
   /// The index of the currently selected color in the color list being
   /// showned on the [GeneratorSection]
   int get currentSelectedColorIndex => _currentSelectedColorIndex;
 
-  set currentSelectedColorIndex(int newCurrentSelectedColorIndex) {
+  void changeCurrentSelectedColorIndex({
+    required int newCurrentSelectedColorIndex,
+    required bool isChangeFromHtmlColorInput,
+    bool notify = true,
+  }) {
     if (newCurrentSelectedColorIndex != currentSelectedColorIndex) {
       _currentSelectedColorIndex = newCurrentSelectedColorIndex;
-      notifyListeners();
+
+      changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
+
+      if (notify) {
+        notifyListeners();
+      }
     }
   }
 
@@ -256,8 +267,12 @@ class GradientViewModel with ChangeNotifier {
       );
 
       gradient = newGradient;
-      currentSelectedColorIndex = index;
-      isColorChangeFromHtmlColorInput = isChangeFromHtmlColorInput;
+      changeCurrentSelectedColorIndex(
+        newCurrentSelectedColorIndex: index,
+        isChangeFromHtmlColorInput: isChangeFromHtmlColorInput,
+        notify: false,
+      );
+      changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
 
       notifyListeners();
     }
