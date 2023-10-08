@@ -29,7 +29,7 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
 
 4. Choose the gradient colors. You can either 
    - use the color pickers to select your colors,
-   - generate random colors by clicking the random button or 
+   - generate random colors by clicking the "Random" button or 
    - add more colors by clicking the "Add Color" button.
 
 5. Enter the color stops. 
