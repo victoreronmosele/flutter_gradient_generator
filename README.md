@@ -28,14 +28,13 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
    - bottom-right
 
 4. Choose the gradient colors. You can either 
-   - use the color pickers to select your colors or,
-   - use random colors by clicking the random button
+   - use the color pickers to select your colors,
+   - generate random colors by clicking the "Random" button or 
+   - add more colors by clicking the "Add Color" button.
 
-5. Enter the color stops. The default color stops are:
-   - 0% and
-   - 100%. 
+5. Enter the color stops. 
 
-6. Click on "Get Gradient Code" and the code will be copied to your clipboard.
+6. Click on "Copy Gradient Code" and the code will be copied to your clipboard.
 
 ## Running
 1. Clone the repository
@@ -61,7 +60,7 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
 - [x] Sweep gradient
 - [x] Color picker
 - [x] Color stops
-- [ ] Addition of more colors
+- [x] Addition of more colors
 - [ ] Addition of more gradient styles
 - [ ] CSS to Flutter converter
 - [ ] Dark mode
@@ -75,7 +74,6 @@ Project Link: [https://github.com/victoreronmosele/flutter_gradient_generator](h
 ## Acknowledgments
 
 * [CSS Gradient Generator](https://www.css-gradient.com/) for the visual design inspiration.
-* [Cyclop](https://github.com/rxlabz/cyclop) for the color picker
 
 
 ## License

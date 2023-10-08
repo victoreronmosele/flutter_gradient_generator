@@ -1,27 +1,29 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
+import 'package:provider/provider.dart';
 
-class GetGradientButton extends StatefulWidget {
-  const GetGradientButton({
+class CopyGradientButton extends StatefulWidget {
+  const CopyGradientButton({
     Key? key,
-    required this.onTap,
   }) : super(key: key);
 
-  final Future<void> Function() onTap;
-
   @override
-  State<GetGradientButton> createState() => _GetGradientButtonState();
+  State<CopyGradientButton> createState() => _CopyGradientButtonState();
 }
 
-class _GetGradientButtonState extends State<GetGradientButton> {
+class _CopyGradientButtonState extends State<CopyGradientButton> {
   bool _showCopiedText = false;
 
   String get _buttonText => _showCopiedText
       ? AppStrings.gradientCodeCopied
-      : AppStrings.getGradientCode;
+      : AppStrings.copyGradientCode;
 
   Color _getBackgroundColor(Set<MaterialState> states) {
     const Set<MaterialState> interactiveStates = <MaterialState>{
@@ -49,15 +51,25 @@ class _GetGradientButtonState extends State<GetGradientButton> {
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
 
-    final double wideButtonPadding = appDimensions.widebuttonPadding;
-    final double wideButtonWidth = appDimensions.wideButtonWidth;
-    final double wideButtonHeight = appDimensions.wideButtonHeight;
+    final wideButtonPadding = appDimensions.widebuttonPadding;
+    final wideButtonWidth = appDimensions.wideButtonWidth;
+    final wideButtonHeight = appDimensions.wideButtonHeight;
+
+    final gradient = context.watch<GradientViewModel>().gradient;
+    final generatedCode = gradient.toWidgetString();
 
     return TextButton(
       onPressed: () async {
-        await widget.onTap();
+        await Clipboard.setData(ClipboardData(text: generatedCode));
+
+        /// Log event to Firebase Analytics if not in debug mode
+        if (!kDebugMode) {
+          await FirebaseAnalytics.instance.logEvent(
+              name: AppStrings.gradientGeneratedFirebaseAnalyticsKey,
+              parameters: gradient.toJson());
+        }
 
         setState(() {
           _showCopiedText = true;

@@ -10,12 +10,10 @@ class StopTextBox extends StatefulWidget {
     super.key,
     required this.stop,
     required this.onStopChanged,
-    required this.onTap,
   });
 
   final int stop;
   final void Function(int) onStopChanged;
-  final void Function() onTap;
 
   @override
   State<StopTextBox> createState() => _StopTextBoxState();
@@ -79,7 +77,6 @@ class _StopTextBoxState extends State<StopTextBox> {
       inputFormatters: inputFormatters,
       onSubmitted: onStopSubmitted,
       onTap: () {
-        widget.onTap();
         onTextFieldTap();
       },
       onTapOutside: onTapOutside,

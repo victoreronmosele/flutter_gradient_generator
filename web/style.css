@@ -5,25 +5,30 @@
 
 :root {
   --font-family: "Nunito";
-  --start-color: #1488cc;
-  --end-color: #2b32b2;
+
+  --start-color: #FC466B;
+  --end-color: #3F5EFB;
+
+  --start-color-stop-percent: 75%;
+  --end-color-stop-percent: 25%;
+
 }
 
 body {
-  background: var(--end-color); /* fallback for old browsers */
-  background: -webkit-linear-gradient(
-    to left bottom,
-    var(--end-color),
-    var(--start-color)
-  ); /* Chrome 10-25, Safari 5.1-6 */
-  background: linear-gradient(
-    to left bottom,
-    var(--end-color),
-    var(--start-color)
-  ); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+  background: var(--end-color);
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to left top,
+      var(--end-color) var(--end-color-stop-percent),
+      var(--start-color) var(--start-color-stop-percent));
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to left top,
+      var(--end-color) var(--end-color-stop-percent),
+      var(--start-color) var(--start-color-stop-percent));
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   font-family: var(--font-family);
-  height: 100vh; /* Fallback for browsers that do not support Custom Properties */
+  height: 100vh;
+  /* Fallback for browsers that do not support Custom Properties */
   height: calc(var(--vh, 1vh) * 100);
   width: 100vw;
   margin: 0 auto;
@@ -83,9 +88,11 @@ main h1 {
   position: absolute;
   top: 0;
 }
+
 .inc {
   animation: increase 2s infinite;
 }
+
 .dec {
   animation: decrease 2s 0.5s infinite;
 }
@@ -125,14 +132,17 @@ footer a {
   from {
     transform: translateX(-5%) scaleX(0.05);
   }
+
   to {
     transform: translateX(130%) scaleX(1);
   }
 }
+
 @keyframes decrease {
   from {
     transform: translateX(-80%) scaleX(0.8);
   }
+
   to {
     transform: translateX(110%) scaleX(0.1);
   }

@@ -14,8 +14,8 @@ class FooterWidget extends StatefulWidget {
 }
 
 class _FooterWidgetState extends State<FooterWidget> {
-  final TapGestureRecognizer _builtTapRecognizer = TapGestureRecognizer();
-  final TapGestureRecognizer _nameTapGestureRecognizer = TapGestureRecognizer();
+  final _builtTapRecognizer = TapGestureRecognizer();
+  final _nameTapGestureRecognizer = TapGestureRecognizer();
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _FooterWidgetState extends State<FooterWidget> {
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
 
     final generatorScreenContentWidth =
         appDimensions.generatorScreenContentWidth;
