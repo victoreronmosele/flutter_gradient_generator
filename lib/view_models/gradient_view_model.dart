@@ -20,7 +20,7 @@ class GradientViewModel with ChangeNotifier {
 
   late final AbstractGradient _defaultGradient = LinearStyleGradient(
       colorAndStopList: AppColors.initialColorAndStopList,
-      gradientDirection: GradientDirection.bottomLeft);
+      gradientDirection: GradientDirection.topLeft);
 
   final NewColorGeneratorInterface _newColorGenerator = NewColorGenerator();
 
