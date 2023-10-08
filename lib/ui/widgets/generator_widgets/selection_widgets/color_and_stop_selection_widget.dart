@@ -108,6 +108,8 @@ class _ColorAndStopSelectionWidgetState
                               currentColorAndStopIndex: index,
                             );
                           },
+                          width: compactButtonWidth,
+                          height: compactButtonHeight,
                         ),
                         SizedBox(
                           width: compactButtonMargin,
