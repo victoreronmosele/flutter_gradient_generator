@@ -37,6 +37,7 @@ dependencies:
     git:
       url: https://github.com/victoreronmosele/flutter_html_color_input.git
       ref: feature/implement-html-color-input
+  tinycolor2: ^3.0.1
   
 
 dev_dependencies:

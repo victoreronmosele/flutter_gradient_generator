@@ -35,15 +35,10 @@ class GradientViewModel with ChangeNotifier {
   bool changeIsFromHtmlColorInput = false;
 
   void addNewColor() {
-    final (:startColorAndStop, :endColorAndStop) =
-        _getColorAndStopsForNewColorAddition();
-
-    final newColorAndStop = _newColorGenerator.generateNewColorAndStopBetween(
-        startColorAndStop: startColorAndStop, endColorAndStop: endColorAndStop);
-
-    if (newColorAndStop == null) {
-      return;
-    }
+    final lastColorAndStop = gradient.getColorAndStopList().last;
+    final newColorAndStop = _newColorGenerator.generateNewColorAndStop(
+      seedColorAndStop: lastColorAndStop,
+    );
 
     onNewColorAndStopAdded(newColorAndStop);
   }
@@ -150,8 +145,6 @@ class GradientViewModel with ChangeNotifier {
 
     colorAndStopListCopy.add(newColorAndStop);
 
-    colorAndStopListCopy.sort((a, b) => a.stop.compareTo(b.stop));
-
     final updatedColorAndStopList = colorAndStopListCopy;
 
     _onColorAndStopListChanged(
@@ -173,24 +166,11 @@ class GradientViewModel with ChangeNotifier {
     );
   }
 
-  ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
-      _getColorAndStopsForNewColorAddition() {
-    ColorAndStop? startColorAndStop;
-    ColorAndStop? endColorAndStop;
-
-    return (
-      startColorAndStop: startColorAndStop,
-      endColorAndStop: endColorAndStop
-    );
-  }
-
   void _onColorAndStopDeleted(ColorAndStop colorAndStopToDelete) {
     final List<ColorAndStop> colorAndStopListCopy =
         List<ColorAndStop>.from(gradient.getColorAndStopList());
 
     colorAndStopListCopy.remove(colorAndStopToDelete);
-
-    colorAndStopListCopy.sort((a, b) => a.stop.compareTo(b.stop));
 
     final updatedColorAndStopList = colorAndStopListCopy;
 
