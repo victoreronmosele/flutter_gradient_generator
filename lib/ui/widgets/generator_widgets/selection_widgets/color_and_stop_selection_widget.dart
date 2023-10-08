@@ -8,9 +8,9 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/html_color_input.dart';
 import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
+import 'package:html_color_input/html_color_input.dart';
 import 'package:provider/provider.dart';
 
 class ColorAndStopSelectionWidget extends StatefulWidget {
@@ -119,10 +119,8 @@ class _ColorAndStopSelectionWidgetState
                                     currentSelectedColorIndexFromBuilder);
 
                             // ignore: unused_local_variable
-                            final (
-                              color: colorFromBuilder,
-                              stop: _
-                            ) = currentSelectorColorAndStopFromBuilder;
+                            final (color: colorFromBuilder, stop: _) =
+                                currentSelectorColorAndStopFromBuilder;
 
                             return Container(
                               color:
@@ -140,22 +138,9 @@ class _ColorAndStopSelectionWidgetState
                             HtmlColorInput(
                               key: ValueKey(color),
                               initialColor: color,
-                              uniqueId: 'color-input$color',
-                              onInput: (event) {
-                                final eventTarget =
-                                    event.currentTarget as html.InputElement;
-                                final eventTargetValue = eventTarget.value;
-
-                                if (eventTargetValue == null) {
-                                  return;
-                                }
-
-                                final color = ColorAndStopUtil().hexToColor(
-                                  eventTargetValue,
-                                );
-
+                              onInput: (newColor, event) {
                                 gradientViewModelReadOnly.changeColor(
-                                  newColor: color,
+                                  newColor: newColor,
                                   currentColorAndStopIndex: index,
                                 );
                               },
