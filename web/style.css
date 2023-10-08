@@ -5,20 +5,25 @@
 
 :root {
   --font-family: "Nunito";
+
   --start-color: #FC466B;
   --end-color: #3F5EFB;
+
+  --start-color-stop-percent: 75%;
+  --end-color-stop-percent: 25%;
+
 }
 
 body {
   background: var(--end-color);
   /* fallback for old browsers */
   background: -webkit-linear-gradient(to left top,
-      var(--end-color),
-      var(--start-color));
+      var(--end-color) var(--end-color-stop-percent),
+      var(--start-color) var(--start-color-stop-percent));
   /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to left top,
-      var(--end-color),
-      var(--start-color));
+      var(--end-color) var(--end-color-stop-percent),
+      var(--start-color) var(--start-color-stop-percent));
   /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
 
   font-family: var(--font-family);
