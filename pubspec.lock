@@ -229,7 +229,7 @@ packages:
     description:
       path: "."
       ref: "feature/implement-html-color-input"
-      resolved-ref: "2e1e91135994f80b4eff75ffd00361524feecc15"
+      resolved-ref: "2a0b26d9c46283f82d5482a246202b4e2c906d6b"
       url: "https://github.com/victoreronmosele/flutter_html_color_input.git"
     source: git
     version: "0.0.1"
@@ -526,6 +526,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -670,6 +678,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.0"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: b715b8d3858b6fa9f68f87d20d98830283628014750c2b09b6f516c1da4af2a7
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   vector_math:
     dependency: transitive
     description:
