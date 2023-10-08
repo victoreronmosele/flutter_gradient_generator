@@ -24,8 +24,6 @@ class GradientViewModel with ChangeNotifier {
 
   final NewColorGeneratorInterface _newColorGenerator = NewColorGenerator();
 
-  int _currentSelectedColorIndex = 0;
-
   late AbstractGradient gradient = _defaultGradient;
 
   /// Whether the color change is from the [HtmlColorInput] widget.
@@ -35,23 +33,6 @@ class GradientViewModel with ChangeNotifier {
   /// It is used specifically to prevent the [HtmlColorInput] widget from closing
   /// when tapped.
   bool changeIsFromHtmlColorInput = false;
-
-  /// The index of the currently selected color in the color list being
-  /// showned on the [GeneratorSection]
-  int get currentSelectedColorIndex => _currentSelectedColorIndex;
-
-  void changeCurrentSelectedColorIndex({
-    required int newCurrentSelectedColorIndex,
-    required bool isChangeFromHtmlColorInput,
-  }) {
-    if (newCurrentSelectedColorIndex != currentSelectedColorIndex) {
-      _currentSelectedColorIndex = newCurrentSelectedColorIndex;
-
-      changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
-
-      notifyListeners();
-    }
-  }
 
   void addNewColor() {
     final (:startColorAndStop, :endColorAndStop) =
@@ -88,7 +69,6 @@ class GradientViewModel with ChangeNotifier {
 
     _onColorAndStopListChanged(
       newColorAndStopList,
-      index: currentColorAndStopIndex,
       isChangeFromHtmlColorInput: true,
     );
   }
@@ -114,7 +94,6 @@ class GradientViewModel with ChangeNotifier {
 
     _onColorAndStopListChanged(
       newColorAndStopList,
-      index: currentColorAndStopIndex,
       isChangeFromHtmlColorInput: false,
     );
   }
@@ -175,12 +154,8 @@ class GradientViewModel with ChangeNotifier {
 
     final updatedColorAndStopList = colorAndStopListCopy;
 
-    final newColorAndStopIndex =
-        updatedColorAndStopList.lastIndexOf(newColorAndStop);
-
     _onColorAndStopListChanged(
       updatedColorAndStopList,
-      index: newColorAndStopIndex,
       isChangeFromHtmlColorInput: false,
     );
   }
@@ -194,37 +169,14 @@ class GradientViewModel with ChangeNotifier {
 
     _onColorAndStopListChanged(
       newColorAndStopList,
-      index: currentSelectedColorIndex,
       isChangeFromHtmlColorInput: false,
     );
   }
 
   ({ColorAndStop? startColorAndStop, ColorAndStop? endColorAndStop})
       _getColorAndStopsForNewColorAddition() {
-    final colorAndStopList = gradient.getColorAndStopList();
-
     ColorAndStop? startColorAndStop;
     ColorAndStop? endColorAndStop;
-
-    const firstIndex = 0;
-    final lastIndex = colorAndStopList.length - 1;
-
-    if (currentSelectedColorIndex == firstIndex) {
-      const secondIndex = firstIndex + 1;
-
-      startColorAndStop = colorAndStopList.elementAtOrNull(firstIndex);
-      endColorAndStop = colorAndStopList.elementAtOrNull(secondIndex);
-    } else if (currentSelectedColorIndex == lastIndex) {
-      startColorAndStop =
-          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
-      endColorAndStop = null;
-    } else {
-      final nextIndex = currentSelectedColorIndex + 1;
-
-      startColorAndStop =
-          colorAndStopList.elementAtOrNull(currentSelectedColorIndex);
-      endColorAndStop = colorAndStopList.elementAtOrNull(nextIndex);
-    }
 
     return (
       startColorAndStop: startColorAndStop,
@@ -242,21 +194,14 @@ class GradientViewModel with ChangeNotifier {
 
     final updatedColorAndStopList = colorAndStopListCopy;
 
-    final indexBeforeCurrentSelectedColorIndex = currentSelectedColorIndex - 1;
-
-    final newSelectedColorIndex = indexBeforeCurrentSelectedColorIndex < 0
-        ? 0
-        : indexBeforeCurrentSelectedColorIndex;
-
     _onColorAndStopListChanged(
       updatedColorAndStopList,
-      index: newSelectedColorIndex,
       isChangeFromHtmlColorInput: false,
     );
   }
 
   void _onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList,
-      {required int index, required bool isChangeFromHtmlColorInput}) {
+      {required bool isChangeFromHtmlColorInput}) {
     if (!const ListEquality<ColorAndStop>()
         .equals(gradient.getColorAndStopList(), newColorAndStopList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
@@ -266,10 +211,7 @@ class GradientViewModel with ChangeNotifier {
       );
 
       gradient = newGradient;
-      changeCurrentSelectedColorIndex(
-        newCurrentSelectedColorIndex: index,
-        isChangeFromHtmlColorInput: isChangeFromHtmlColorInput,
-      );
+
       changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
 
       notifyListeners();

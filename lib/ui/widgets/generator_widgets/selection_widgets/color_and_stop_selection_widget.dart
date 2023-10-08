@@ -1,6 +1,3 @@
-// ignore: avoid_web_libraries_in_flutter
-import 'dart:html' as html;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
@@ -98,106 +95,64 @@ class _ColorAndStopSelectionWidgetState
 
               final colorAndStopSelectionWidgetItem = Column(
                 children: [
-                  Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      Selector<GradientViewModel, GradientViewModel>(
-                          selector: (_, gradientViewModel) => gradientViewModel,
-                          shouldRebuild: (previous, next) {
-                            return true;
-                          },
-                          builder: (_, gradientViewModel, __) {
-                            final currentSelectedColorIndexFromBuilder =
-                                gradientViewModel.currentSelectedColorIndex;
-
-                            final colorAndStopListFromBuilder =
-                                gradientViewModel.gradient
-                                    .getColorAndStopList();
-
-                            final currentSelectorColorAndStopFromBuilder =
-                                colorAndStopListFromBuilder.elementAt(
-                                    currentSelectedColorIndexFromBuilder);
-
-                            // ignore: unused_local_variable
-                            final (color: colorFromBuilder, stop: _) =
-                                currentSelectorColorAndStopFromBuilder;
-
-                            return Container(
-                              color:
-                                  index == currentSelectedColorIndexFromBuilder
-                                      ? colorFromBuilder.withOpacity(0.1)
-                                      : null,
-                              height: compactButtonHeight,
-                              width: generatorScreenContentWidth,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 2.0),
+                    child: Row(
+                      children: [
+                        HtmlColorInput(
+                          key: ValueKey(color),
+                          initialColor: color,
+                          onInput: (newColor, event) {
+                            gradientViewModelReadOnly.changeColor(
+                              newColor: newColor,
+                              currentColorAndStopIndex: index,
                             );
-                          }),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 2.0),
-                        child: Row(
-                          children: [
-                            HtmlColorInput(
-                              key: ValueKey(color),
-                              initialColor: color,
-                              onInput: (newColor, event) {
-                                gradientViewModelReadOnly.changeColor(
-                                  newColor: newColor,
-                                  currentColorAndStopIndex: index,
-                                );
-                              },
-                            ),
-                            SizedBox(
-                              width: compactButtonMargin,
-                            ),
-                            StopTextBox(
-                              key: UniqueKey(),
-                              stop: stop,
-                              onStopChanged: (int newStop) {
-                                gradientViewModelReadOnly.changeStop(
-                                    newStop: newStop,
-                                    currentColorAndStopIndex: index);
-                              },
-                              onTap: () {
-                                gradientViewModelReadOnly
-                                    .changeCurrentSelectedColorIndex(
-                                        newCurrentSelectedColorIndex: index,
-                                        isChangeFromHtmlColorInput: false);
-                              },
-                            ),
-                            SizedBox(
-                              width: compactButtonMargin,
-                            ),
-                            SizedBox(
-                              width: compactButtonWidth,
-                              child: canDeleteColorAndStops
-                                  ? Center(
-                                      child: Tooltip(
-                                        message: AppStrings.deleteColor,
-                                        waitDuration:
-                                            const Duration(milliseconds: 500),
-                                        child: InkWell(
-                                          radius: deleteButtonIconSize,
-                                          onTap: () {
-                                            gradientViewModelReadOnly
-                                                .deleteSelectedColorAndStopIfMoreThanMinimum(
-                                                    indexToDelete: index);
-                                          },
-                                          child: Icon(
-                                            Icons.close,
-                                            color: AppColors.darkGrey
-                                                .withOpacity(0.5),
-                                            size: deleteButtonIconSize,
-                                            semanticLabel:
-                                                AppStrings.deleteColor,
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  : null,
-                            ),
-                          ],
+                          },
                         ),
-                      ),
-                    ],
+                        SizedBox(
+                          width: compactButtonMargin,
+                        ),
+                        StopTextBox(
+                          key: UniqueKey(),
+                          stop: stop,
+                          onStopChanged: (int newStop) {
+                            gradientViewModelReadOnly.changeStop(
+                                newStop: newStop,
+                                currentColorAndStopIndex: index);
+                          },
+                        ),
+                        SizedBox(
+                          width: compactButtonMargin,
+                        ),
+                        SizedBox(
+                          width: compactButtonWidth,
+                          child: canDeleteColorAndStops
+                              ? Center(
+                                  child: Tooltip(
+                                    message: AppStrings.deleteColor,
+                                    waitDuration:
+                                        const Duration(milliseconds: 500),
+                                    child: InkWell(
+                                      radius: deleteButtonIconSize,
+                                      onTap: () {
+                                        gradientViewModelReadOnly
+                                            .deleteSelectedColorAndStopIfMoreThanMinimum(
+                                                indexToDelete: index);
+                                      },
+                                      child: Icon(
+                                        Icons.close,
+                                        color:
+                                            AppColors.darkGrey.withOpacity(0.5),
+                                        size: deleteButtonIconSize,
+                                        semanticLabel: AppStrings.deleteColor,
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              : null,
+                        ),
+                      ],
+                    ),
                   ),
                   const SizedBox(
                     height: 6.0,
