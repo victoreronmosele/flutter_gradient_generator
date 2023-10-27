@@ -24,7 +24,12 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_vector_icons: ^2.0.0
+  # The original package, https://pub.dev/packages/flutter_vector_icons, does not support
+  # icon tree shaking. This is my fork of the original package with fixes for icon tree shaking.
+  flutter_vector_icons: 
+    git: 
+      url: https://github.com/victoreronmosele/flutter-vector-icons.git
+      ref: v3.0.0
   collection: ^1.15.0
   url_strategy: ^0.2.0
   quiver: ^3.0.1+1

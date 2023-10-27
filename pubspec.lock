@@ -57,6 +57,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.3.0"
+  charcode:
+    dependency: transitive
+    description:
+      name: charcode
+      sha256: fb98c0f6d12c920a02ee2d998da788bca066ca5f148492b7085ee23372b12306
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.1"
   clock:
     dependency: transitive
     description:
@@ -97,6 +105,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  csslib:
+    dependency: transitive
+    description:
+      name: csslib
+      sha256: "706b5707578e0c1b4b7550f64078f0a0f19dec3f50a178ffae7006b0a9ca58fb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   fake_async:
     dependency: transitive
     description:
@@ -190,11 +206,12 @@ packages:
   flutter_vector_icons:
     dependency: "direct main"
     description:
-      name: flutter_vector_icons
-      sha256: "20a77e282f8cb438c8edcee4eec85d8497d5f4cbeb07d116e9d2d01c9edfc5e2"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.0"
+      path: "."
+      ref: "v3.0.0"
+      resolved-ref: "364f724521c2dc580ee66c1e653329a2bac38e89"
+      url: "https://github.com/victoreronmosele/flutter-vector-icons.git"
+    source: git
+    version: "3.0.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -224,15 +241,23 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.0.3"
+  html:
+    dependency: transitive
+    description:
+      name: html
+      sha256: "3a7812d5bcd2894edf53dfaf8cd640876cf6cef50a8f238745c8b8120ea74d3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.15.4"
   html_color_input:
     dependency: "direct main"
     description:
       path: "."
       ref: "feature/implement-html-color-input"
-      resolved-ref: "2a0b26d9c46283f82d5482a246202b4e2c906d6b"
+      resolved-ref: dbbfd5a781d5a8cae436f851bd9fd6e12520b109
       url: "https://github.com/victoreronmosele/flutter_html_color_input.git"
     source: git
-    version: "0.0.1"
+    version: "1.0.0"
   http:
     dependency: transitive
     description:
@@ -321,6 +346,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.4"
+  mocktail:
+    dependency: transitive
+    description:
+      name: mocktail
+      sha256: bac151b31e4ed78bd59ab89aa4c0928f297b1180186d5daf03734519e5f596c1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   nested:
     dependency: transitive
     description:
@@ -602,10 +635,26 @@ packages:
     dependency: transitive
     description:
       name: typed_data
-      sha256: "26f87ade979c47a150c9eaab93ccd2bebe70a27dc0b4b29517f2904f04eb11a5"
+      sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.2"
+  universal_html:
+    dependency: transitive
+    description:
+      name: universal_html
+      sha256: "56536254004e24d9d8cfdb7dbbf09b74cf8df96729f38a2f5c238163e3d58971"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.4"
+  universal_io:
+    dependency: transitive
+    description:
+      name: universal_io
+      sha256: "1722b2dcc462b4b2f3ee7d188dad008b6eb4c40bbd03a3de451d82c78bba9aad"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.2"
   url_launcher:
     dependency: "direct main"
     description:
