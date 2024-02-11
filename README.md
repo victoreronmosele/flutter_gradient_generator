@@ -9,14 +9,18 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
 
 ## Usage
 
-1. Visit the [web app](https://fluttergradientgenerator.com/).
+1. **Visit the [web app](https://fluttergradientgenerator.com/).**
 
-2. Choose the gradient style. The options are:
+2. **Choose the gradient style.** 
+    
+    The options are:
    - linear
    - radial
    - sweep
 
-3. Choose the gradient direction. The options are:
+3. **Choose the gradient direction.** 
+
+    The options are:
    - top-left
    - top-center
    - top-right
@@ -27,14 +31,18 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
    - bottom-center
    - bottom-right
 
-4. Choose the gradient colors. You can either 
+4. **Choose the gradient colors.** 
+
+    You can: 
    - use the color pickers to select your colors,
-   - generate random colors by clicking the "Random" button or 
-   - add more colors by clicking the "Add Color" button.
+   - click on a gradient sample to use the sample's colors,
+   - use a random gradient sample by clicking on the <img src="./shuffle.svg" alt="shuffle" width="12"/> button,
+   - add more colors by clicking the &#43; button.
 
-5. Enter the color stops. 
+5. **Enter the color stops.** 
 
-6. Click on "Copy Gradient Code" and the code will be copied to your clipboard.
+6. **Click on "Copy Gradient Code" and the code will be copied to your clipboard.**
+
 
 ## Running
 1. Clone the repository
@@ -61,19 +69,20 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
 - [x] Color picker
 - [x] Color stops
 - [x] Addition of more colors
-- [ ] Addition of more gradient styles
+- [x] Gradient samples
+- [x] Downloading gradient as image
+- [ ] Addition of more gradient styles 
+- [ ] Text gradients
 - [ ] CSS to Flutter converter
 - [ ] Dark mode
 
 ## Contact
 
-Victor Eronmosele - victoreronmosele@gmail.com
-
 Project Link: [https://github.com/victoreronmosele/flutter_gradient_generator](https://github.com/victoreronmosele/flutter_gradient_generator)
 
 ## Acknowledgments
 
-* [CSS Gradient Generator](https://www.css-gradient.com/) for the visual design inspiration.
+* [Gradient samples](https://github.com/ghosh/uiGradients/blob/master/gradients.json) are from [uiGradients](https://uigradients.com/).
 
 
 ## License
