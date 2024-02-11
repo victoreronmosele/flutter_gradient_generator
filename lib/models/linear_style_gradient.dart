@@ -106,13 +106,13 @@ class LinearStyleGradient extends AbstractGradient {
   }
 
   @override
-  Gradient toFlutterGradient() {
-    return LinearGradient(
-      colors: getColorList(),
-      begin: beginAlignment,
-      end: endAlignment,
-      stops: getStopListForFlutterCode(),
-    );
+  FlutterGradientConverter getFlutterGradientConverter() {
+    return ({required colors, stops}) => LinearGradient(
+          colors: colors,
+          begin: beginAlignment,
+          end: endAlignment,
+          stops: stops,
+        );
   }
 
   @override

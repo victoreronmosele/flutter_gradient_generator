@@ -70,12 +70,14 @@ class SweepStyleGradient extends AbstractGradient {
   }
 
   @override
-  Gradient toFlutterGradient() {
-    return SweepGradient(
-      colors: getColorList(),
-      center: centerAlignment,
-      stops: getStopListForFlutterCode(),
-    );
+  FlutterGradientConverter getFlutterGradientConverter() {
+    return ({required colors, stops}) {
+      return SweepGradient(
+        colors: colors,
+        center: centerAlignment,
+        stops: stops,
+      );
+    };
   }
 
   @override

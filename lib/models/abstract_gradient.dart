@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:meta/meta.dart';
 
 /// A 2D gradient.
 ///
-/// This is an abstract class that allows holds information about a gradient.
-/// This information include:
+/// This is an abstract class that holds information about a gradient.
+///
+/// This information includes:
 ///   - [ColorAndStop]s
 ///   - Direction
 ///   - Style
@@ -53,11 +55,26 @@ abstract class AbstractGradient {
   /// Returns a [String] representation of the Gradient
   String toWidgetString();
 
+  /// Returns a [Function] that converts the a list of [Color]s and a list of
+  /// [Stop]s to a [Gradient] from Flutter's painting library.
+  ///
+  /// The purpose of this method is to decouple the Flutter Gradient conversion
+  /// from the [Color]s and [Stop]s of the child class where the
+  /// conversion is done. This will allow the reuse of the logic for other
+  /// instances like the gradient samples.
+  @mustBeOverridden
+  FlutterGradientConverter getFlutterGradientConverter();
+
   /// Returns a [Gradient] from Flutter's painting library
   ///
-  /// This should use the [getColorList] and [getStopListForFlutterCode] methods
-  /// for the colors and stops respectively
-  Gradient toFlutterGradient();
+  /// Do not override this method. Instead, override [getFlutterGradientConverter]
+  @nonVirtual
+  Gradient toFlutterGradient() {
+    return getFlutterGradientConverter().call(
+      colors: getColorList(),
+      stops: getStopListForFlutterCode(),
+    );
+  }
 
   Map<String, String> toJson() {
     return {
