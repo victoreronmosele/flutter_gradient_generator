@@ -22,4 +22,18 @@ class AppColors {
       (color: _initialGradientEndColor, stop: _initialGradientEndStop)
     ];
   }
+
+  //TODO: Make this dependent on the theme and set it to
+  //[_previewBackgroundLight] or [_previewBackgroundDark] accordingly
+  static const previewBackground = _previewBackgroundLight;
+  static const _previewBackgroundLight = Color(0xfff5f5f5);
+  // ignore: unused_field
+  static const _previewBackgroundDark = Color(0xff1e1e1e);
+
+  static const toolBar = Color(0xff2c2c2c);
+  static const toolBarIcon = white;
+  static final toolBarIconHover = white.withOpacity(0.08);
+  static final toolBarIconFocus = white.withOpacity(0.12);
+
+  static final colorPickerBorder = grey;
 }
