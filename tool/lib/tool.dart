@@ -1,20 +1,23 @@
 import 'dart:convert';
-import 'dart:io';
-import 'package:path/path.dart';
+import 'package:file/file.dart';
 
 /// Generates the gradient samples used in the app from the gradients.json file.
 ///
 /// Throws an [Exception] if the gradients.json file is not found.
-void generateGradientSamples() {
+/// 
+/// [onGenerationComplete] is called when the generation is complete.
+void generateGradientSamples({
+  required String gradientsJsonPath,
+  required String generatedGradientSamplesPath,
+  required FileSystem fileSystem,
+  required void Function() onGenerationComplete,
+}) {
   try {
     //////////////////////////////////////////////////////
     /////// Read and parse the gradients.json file ///////
     //////////////////////////////////////////////////////
 
-    final gradientsJsonPath = join(dirname(Platform.script.toFilePath()), '..',
-        'assets', 'gradients.json');
-
-    final gradientsJsonFile = File(gradientsJsonPath);
+    final gradientsJsonFile = fileSystem.file(gradientsJsonPath);
 
     if (!gradientsJsonFile.existsSync()) {
       throw Exception('gradients.json file not found');
@@ -33,16 +36,22 @@ void generateGradientSamples() {
 
     final buffer = StringBuffer();
 
+    buffer.writeln('// This is a generated file. Do not edit it manually.');
+    buffer.writeln('//');
+    buffer.writeln(
+        '// To regenerate this file, run the following command from the project root:');
+    buffer.writeln('// dart tool/bin/generate_gradient_samples.dart\n');
+
     buffer.writeln('import \'package:flutter/material.dart\';\n');
 
     buffer.writeln('class _GradientSample {');
     buffer.writeln(
-        '    _GradientSample({required this.name, required this.colors});\n');
+        '    const _GradientSample({required this.name, required this.colors});\n');
     buffer.writeln('    final String name;');
     buffer.writeln('    final List<Color> colors;');
     buffer.writeln('}\n');
 
-    buffer.write('final gradientSamples = <_GradientSample>[');
+    buffer.write('const gradientSamples = <_GradientSample>[\n');
 
     for (final gradient in gradientsJsonDecoded) {
       final gradientName = gradient['name'] as String;
@@ -59,7 +68,7 @@ void generateGradientSamples() {
             }
 
             /// Convert 3 digit hex color to 6 digit hex color
-            /// 
+            ///
             /// For example, #fff to #ffffff
             if (updatedColor.length == 3) {
               final r = updatedColor[0];
@@ -71,54 +80,33 @@ void generateGradientSamples() {
 
             return '0xFF$updatedColor';
           })
-          .map((color) => 'const Color($color)')
+          .map((color) => 'Color($color)')
           .toList();
 
       buffer.write('_GradientSample(');
-      buffer.write('name: \'${gradientName.replaceAll("'", "\\'")}\',');
+      buffer.write('name: \'${gradientName.replaceAll("'", "\\'")}\', ');
       buffer.write('colors: [');
-      buffer.writeAll(gradientColorsHex, ',');
+      buffer.writeAll(gradientColorsHex, ', ');
       buffer.write(',]');
       buffer.write('),\n');
     }
 
-    buffer.write('\n');
     buffer.write('];');
 
     //////////////////////////////////////////////////////
     /////// Write the generated gradient_samples.dart /////
     //////////////////////////////////////////////////////
 
-    final generatedGradientSamplesPath = join(
-        dirname(Platform.script.toFilePath()),
-        '../..',
-        'lib',
-        'generated',
-        'gradient_samples.dart');
-
-    final generatedGradientSamplesFile = File(generatedGradientSamplesPath);
+    final generatedGradientSamplesFile =
+        fileSystem.file(generatedGradientSamplesPath);
 
     generatedGradientSamplesFile.writeAsStringSync(buffer.toString());
 
     //////////////////////////////////////////////////////
-    /////// Analyze and format the generated file /////////
+    /////// Call onGenerationComplete callback ////////////
     ////////////////////////////////////////////////////////
 
-    final dartAnalyzeResult =
-        Process.runSync('dart', ['analyze', generatedGradientSamplesPath]);
-
-    if (dartAnalyzeResult.exitCode != 0) {
-      throw Exception(
-          'Failed to analyze the generated gradient_samples.dart file');
-    }
-
-    final dartFormatResult =
-        Process.runSync('dart', ['format', generatedGradientSamplesPath]);
-
-    if (dartFormatResult.exitCode != 0) {
-      throw Exception(
-          'Failed to format the generated gradient_samples.dart file');
-    }
+    onGenerationComplete();
   } catch (e) {
     // Rethrowing so that the caller handles the exception.
     rethrow;
