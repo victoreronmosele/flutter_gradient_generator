@@ -30,6 +30,7 @@ class GeneratorSection extends StatelessWidget {
           // Using 6 instead of 16 to match the design due to additional space
           // added by the plus button in the `ColorAndStopSelectionWidget`
           const SizedBox(height: 6),
+
           ///TODO: Improve scrolling experience and performance by showing
           /// `ColorAndStop` widgets on demand
           const ColorAndStopSelectionWidget(),

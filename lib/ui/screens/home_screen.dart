@@ -36,7 +36,6 @@ class HomeScreenState extends State<HomeScreen> {
     // ignore: unused_local_variable
     final displayPortrait = appDimensions.shouldDisplayPortraitUI;
 
-
     final generatorScreenWidth = appDimensions.generatorScreenWidth;
     final previewSectionWidth = appDimensions.previewSectionWidth;
 

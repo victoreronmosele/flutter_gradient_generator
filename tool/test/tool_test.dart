@@ -79,7 +79,6 @@ _GradientSample(name: 'Sample Gradient 2', colors: [Color(0xFFFF0000), Color(0xF
 
     test('should throw an exception if the gradients.json file is not found',
         () {
-
       expect(
         () => generateGradientSamples(
           gradientsJsonPath: gradientsJsonPath,

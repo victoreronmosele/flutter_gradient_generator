@@ -76,7 +76,7 @@ class _StopTextBoxState extends State<StopTextBox> {
   Widget build(BuildContext context) {
     return OutlinedTextField(
       inputFormatters: inputFormatters,
-      onSubmitted: (_){},
+      onSubmitted: (_) {},
       onTap: () {
         onTextFieldTap();
       },

@@ -65,7 +65,7 @@ class DirectionSelectionWidget extends StatelessWidget {
           final iconSetIndex =
               iconSetList.indexOf(gradientDirectionToIconSetMap);
           const firstIconSetIndex = 0;
-      
+
           return Column(
             children: [
               if (iconSetIndex != firstIconSetIndex)
@@ -76,21 +76,21 @@ class DirectionSelectionWidget extends StatelessWidget {
                     gradientDirectionToIconSetMap.values.toList().indexOf(icon);
                 final gradientDirection =
                     gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
-      
+
                 const firstIconIndex = 0;
-      
+
                 final gradientStyleIsLinear =
                     gradientStyle == GradientStyle.linear;
-      
+
                 final thisIsTheMiddleCenterDirectionButton = iconSetIndex ==
                         centerGradientDirectionIndexInIconSetList &&
                     iconIndex ==
                         centerGradientDirectionIndexWithinCenterDirectionSet;
-      
+
                 /// Circle radial button is not shown for linear gradients
                 final showDirection = !(gradientStyleIsLinear &&
                     thisIsTheMiddleCenterDirectionButton);
-      
+
                 return Row(
                   children: [
                     if (iconIndex != firstIconIndex)

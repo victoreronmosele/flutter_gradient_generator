@@ -70,9 +70,9 @@ class BannerAd extends StatelessWidget {
 
                         final analytics = context.read<Analytics>();
 
-                        /// TODO: Remove this when the banner ad is dynamic 
-                        /// 
-                        /// This is only left for now since the banner ad is 
+                        /// TODO: Remove this when the banner ad is dynamic
+                        ///
+                        /// This is only left for now since the banner ad is
                         /// for giving feedback.
                         analytics.logFeedbackButtonClickEvent();
 

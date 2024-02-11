@@ -120,7 +120,6 @@ class _BuiltByVictorEronmoseleState extends State<BuiltByVictorEronmosele> {
 
     _tapGestureRecognizer = TapGestureRecognizer()
       ..onTap = () {
-
         final analytics = context.read<Analytics>();
 
         analytics.logVictorEronmoseleClickEvent();

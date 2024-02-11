@@ -15,4 +15,3 @@ typedef ColorAndStop = ({
 /// [stops] to a [Gradient] from Flutter's painting library.
 typedef FlutterGradientConverter = Gradient Function(
     {required List<Color> colors, List<double>? stops});
-

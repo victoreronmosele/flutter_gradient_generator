@@ -4,7 +4,7 @@ import 'package:file/file.dart';
 /// Generates the gradient samples used in the app from the gradients.json file.
 ///
 /// Throws an [Exception] if the gradients.json file is not found.
-/// 
+///
 /// [onGenerationComplete] is called when the generation is complete.
 void generateGradientSamples({
   required String gradientsJsonPath,
