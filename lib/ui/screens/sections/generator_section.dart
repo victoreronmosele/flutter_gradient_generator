@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/copy_gradient_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_widgets.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/direction_selection_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/style_selection_widget.dart';
 
 class GeneratorSection extends StatelessWidget {
   const GeneratorSection({

@@ -77,13 +77,8 @@ class _SelectionWidgetContainerState extends State<SelectionWidgetContainer>
   Widget build(BuildContext context) {
     final AppDimensions appDimensions = AppDimensions.of(context);
 
-    final compactButtonMargin = appDimensions.compactButtonMargin;
-
     final expansionIconSize = appDimensions.expansionIconSize;
-    final selectionContainerMainTitleWidth =
-        appDimensions.selectionContainerMainTitleWidth;
 
-    final generatorScreenWidth = appDimensions.generatorScreenWidth;
     final generatorScreenContentWidth =
         appDimensions.generatorScreenContentWidth;
 

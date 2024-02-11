@@ -26,6 +26,7 @@ class DirectionSelectionWidget extends StatelessWidget {
   ///
   final centerGradientDirectionIndexWithinCenterDirectionSet = 1;
 
+  ///TODO: Move this to [DirectionButton]
   final iconSetList = [
     {
       GradientDirection.topLeft: MaterialCommunityIcons.arrow_top_left,
