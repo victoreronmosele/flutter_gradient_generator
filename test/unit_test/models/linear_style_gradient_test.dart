@@ -5,6 +5,8 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:test/test.dart';
 
+import '../matchers.dart';
+
 void main() {
   group('LinearStyleGradient', () {
     late final List<ColorAndStop> colorAndStopList;
@@ -98,19 +100,36 @@ void main() {
       expect(actualGradientStyle, expectedGradientStyle);
     });
 
-    test('.toFlutterGradient() returns the right LinearGradient object', () {
-      final Gradient actualGradient = linearStyleGradient.toFlutterGradient();
-      final Gradient expectedGradient = LinearGradient(
-          colors: colorAndStopList
-              .map((colorAndStop) => colorAndStop.color)
-              .toList(),
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          stops: colorAndStopList
-              .map((colorAndStop) => colorAndStop.stop / 100)
-              .toList());
+    test(
+        '.getFlutterGradientConverter() returns the right FlutterGradientConverter object',
+        () {
+      final actualFlutterGradientConverter =
+          linearStyleGradient.getFlutterGradientConverter();
+      // ignore: prefer_function_declarations_over_variables
+      final expectedFlutterGradientConverter = (
+              {required List<Color> colors, List<double>? stops}) =>
+          LinearGradient(
+            colors: colors,
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            stops: stops,
+          );
 
-      expect(actualGradient, expectedGradient);
+      final colorsForValidation =
+          colorAndStopList.map((colorAndStop) => colorAndStop.color).toList();
+
+      final stopsForValidation = colorAndStopList
+          .map((colorAndStop) => colorAndStop.stop / 100)
+          .toList();
+
+      expect(
+        actualFlutterGradientConverter,
+        flutterGradientConverterEquals(
+          expectedFlutterGradientConverter,
+          colors: colorsForValidation,
+          stops: stopsForValidation,
+        ),
+      );
     });
   });
 }
