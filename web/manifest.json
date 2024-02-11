@@ -8,7 +8,7 @@
     "description": "Flutter Gradient Generator",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
-    "icons": [
+       "icons": [
         {
             "src": "/android-chrome-192x192.png",
             "sizes": "192x192",
