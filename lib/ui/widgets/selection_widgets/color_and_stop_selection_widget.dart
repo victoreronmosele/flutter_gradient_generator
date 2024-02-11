@@ -3,9 +3,8 @@ import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
-import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_container_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 import 'package:html_color_input/html_color_input.dart';
 import 'package:provider/provider.dart';
@@ -35,12 +34,10 @@ class _ColorAndStopSelectionWidgetState
   @override
   Widget build(BuildContext context) {
     return SelectionWidgetContainer(
-      titleWidgetInformation: getTitleWidgetInformation(
-        onRandomButtonPressed: () {
-          gradientViewModelReadOnly.randomizeColors();
-        },
-      ),
+      title: AppStrings.colorsAndStops,
       selectionWidget: getSelectionWidget(),
+      titleTrailingWidget: getAddColorButton(),
+      titleBottomMargin: 2.0,
     );
   }
 
@@ -53,13 +50,12 @@ class _ColorAndStopSelectionWidgetState
   }
 
   Widget getAddColorButton() {
-    return SizedBox(
-      width: generatorScreenContentWidth,
-      child: CompactButton.text(
+    return Tooltip(
+      message: AppStrings.addColor,
+      child: IconButton(
+        icon: const Icon(Icons.add),
         onPressed: gradientViewModelReadOnly.addNewColor,
-        backgroundColor: AppColors.grey,
-        foregroundColor: Colors.black,
-        text: AppStrings.addColor,
+        iconSize: 16.0,
       ),
     );
   }
@@ -82,6 +78,7 @@ class _ColorAndStopSelectionWidgetState
             gradientViewModel.gradient.getColorAndStopList();
 
         return Column(
+          mainAxisSize: MainAxisSize.min,
           children: List.generate(
             colorAndStopList.length,
             (index) {
@@ -99,7 +96,7 @@ class _ColorAndStopSelectionWidgetState
                     padding: const EdgeInsets.symmetric(vertical: 2.0),
                     child: Row(
                       children: [
-                        HtmlColorInput(
+                        WebColorPicker.builder(
                           key: ValueKey(color),
                           initialColor: color,
                           onInput: (newColor, event) {
@@ -108,8 +105,19 @@ class _ColorAndStopSelectionWidgetState
                               currentColorAndStopIndex: index,
                             );
                           },
-                          width: compactButtonWidth,
-                          height: compactButtonHeight,
+                          builder: ((context, selectedColor) {
+                            return Container(
+                              width: compactButtonWidth,
+                              height: compactButtonHeight,
+                              decoration: BoxDecoration(
+                                color: selectedColor ?? color,
+                                borderRadius: BorderRadius.circular(4.0),
+                                border: Border.all(
+                                  color: AppColors.colorPickerBorder,
+                                ),
+                              ),
+                            );
+                          }),
                         ),
                         SizedBox(
                           width: compactButtonMargin,
@@ -208,30 +216,7 @@ class _ColorAndStopSelectionWidgetState
         getInstructionTopRow(),
         const SizedBox(height: 6),
         getColorAndStopDisplaySection(),
-        const SizedBox(
-          height: 8.0,
-        ),
-        getAddColorButton(),
       ],
-    );
-  }
-
-  ({String mainTitle, CompactButton trailingActionWidget})
-      getTitleWidgetInformation(
-          {required void Function() onRandomButtonPressed}) {
-    return (
-      mainTitle: AppStrings.colorsAndStops,
-      trailingActionWidget: CompactButton.text(
-        onPressed: () {
-          onRandomButtonPressed();
-        },
-        backgroundColor: Colors.transparent,
-        foregroundColor: Colors.black,
-        borderSide: BorderSide(
-          color: AppColors.grey,
-        ),
-        text: AppStrings.random,
-      ),
     );
   }
 }

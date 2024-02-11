@@ -5,7 +5,7 @@ import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -58,17 +58,14 @@ class DirectionSelectionWidget extends StatelessWidget {
     final compactButtonMargin = appDimensions.compactButtonMargin;
 
     return SelectionWidgetContainer(
-      titleWidgetInformation: (
-        mainTitle: AppStrings.direction,
-        trailingActionWidget: const SizedBox.shrink(),
-      ),
+      title: AppStrings.direction,
       selectionWidget: Column(
         children: iconSetList.map(
             (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
           final iconSetIndex =
               iconSetList.indexOf(gradientDirectionToIconSetMap);
           const firstIconSetIndex = 0;
-
+      
           return Column(
             children: [
               if (iconSetIndex != firstIconSetIndex)
@@ -79,21 +76,21 @@ class DirectionSelectionWidget extends StatelessWidget {
                     gradientDirectionToIconSetMap.values.toList().indexOf(icon);
                 final gradientDirection =
                     gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
-
+      
                 const firstIconIndex = 0;
-
+      
                 final gradientStyleIsLinear =
                     gradientStyle == GradientStyle.linear;
-
+      
                 final thisIsTheMiddleCenterDirectionButton = iconSetIndex ==
                         centerGradientDirectionIndexInIconSetList &&
                     iconIndex ==
                         centerGradientDirectionIndexWithinCenterDirectionSet;
-
+      
                 /// Circle radial button is not shown for linear gradients
                 final showDirection = !(gradientStyleIsLinear &&
                     thisIsTheMiddleCenterDirectionButton);
-
+      
                 return Row(
                   children: [
                     if (iconIndex != firstIconIndex)

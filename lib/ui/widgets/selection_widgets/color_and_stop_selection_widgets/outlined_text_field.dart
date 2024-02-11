@@ -42,7 +42,6 @@ class OutlinedTextField extends StatelessWidget {
           ),
           keyboardType: keyboardType,
           textAlign: TextAlign.center,
-          onSubmitted: onSubmitted,
           controller: controller,
           focusNode: focusNode,
           onTap: onTap,

@@ -1,30 +1,31 @@
+import 'dart:math';
+
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_typedefs.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/generated/gradient_samples.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/models/gradient_factory.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator.dart';
 import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color_generator_interface.dart';
-import 'package:flutter_gradient_generator/ui/util/random_color_generator/abstract_random_color_generator.dart';
-import 'package:flutter_gradient_generator/ui/util/random_color_generator/random_color_generator.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 
 class GradientViewModel with ChangeNotifier {
-  final AbstractRandomColorGenerator _randomColorGenerator =
-      const RandomColorGenerator();
   final _colorAndStopUtil = ColorAndStopUtil();
 
-  late final AbstractGradient _defaultGradient = LinearStyleGradient(
+  /// The default gradient shown when the app is first opened.
+  late final AbstractGradient defaultGradient = LinearStyleGradient(
       colorAndStopList: AppColors.initialColorAndStopList,
       gradientDirection: GradientDirection.topLeft);
 
   final NewColorGeneratorInterface _newColorGenerator = NewColorGenerator();
 
-  late AbstractGradient gradient = _defaultGradient;
+  AbstractGradient get gradient => _gradient;
+  late AbstractGradient _gradient = defaultGradient;
 
   /// Whether the color change is from the [HtmlColorInput] widget.
   ///
@@ -35,7 +36,7 @@ class GradientViewModel with ChangeNotifier {
   bool changeIsFromHtmlColorInput = false;
 
   void addNewColor() {
-    final lastColorAndStop = gradient.getColorAndStopList().last;
+    final lastColorAndStop = _gradient.getColorAndStopList().last;
     final newColorAndStop = _newColorGenerator.generateNewColorAndStop(
       seedColorAndStop: lastColorAndStop,
     );
@@ -47,7 +48,7 @@ class GradientViewModel with ChangeNotifier {
     required Color newColor,
     required int currentColorAndStopIndex,
   }) {
-    final colorAndStopList = gradient.getColorAndStopList();
+    final colorAndStopList = _gradient.getColorAndStopList();
 
     // ignore: unused_local_variable
     final (color: _, stop: stop) =
@@ -72,9 +73,8 @@ class GradientViewModel with ChangeNotifier {
     required int newStop,
     required int currentColorAndStopIndex,
   }) {
-    final colorAndStopList = gradient.getColorAndStopList();
+    final colorAndStopList = _gradient.getColorAndStopList();
 
-    // ignore: unused_local_variable
     final (color: color, stop: _) =
         colorAndStopList.elementAt(currentColorAndStopIndex);
 
@@ -97,7 +97,7 @@ class GradientViewModel with ChangeNotifier {
   /// [minimumNumberOfColors] colors in the gradient.
   void deleteSelectedColorAndStopIfMoreThanMinimum(
       {required int indexToDelete}) {
-    final currentColorAndStopList = gradient.getColorAndStopList();
+    final currentColorAndStopList = _gradient.getColorAndStopList();
 
     final colorAndStopListIsMoreThanMinimum = _colorAndStopUtil
         .isColorAndStopListMoreThanMinimum(currentColorAndStopList);
@@ -112,36 +112,56 @@ class GradientViewModel with ChangeNotifier {
   }
 
   void changeGradientDirection(GradientDirection newGradientDirection) {
-    if (gradient.getGradientDirection() != newGradientDirection) {
+    if (_gradient.getGradientDirection() != newGradientDirection) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
-        gradientStyle: gradient.getGradientStyle(),
-        colorAndStopList: gradient.getColorAndStopList(),
+        gradientStyle: _gradient.getGradientStyle(),
+        colorAndStopList: _gradient.getColorAndStopList(),
         gradientDirection: newGradientDirection,
       );
 
-      gradient = newGradient;
+      _gradient = newGradient;
 
       notifyListeners();
     }
   }
 
   void changeGradientStyle(GradientStyle newGradientStyle) {
-    if (gradient.getGradientStyle() != newGradientStyle) {
+    if (_gradient.getGradientStyle() != newGradientStyle) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
         gradientStyle: newGradientStyle,
-        colorAndStopList: gradient.getColorAndStopList(),
-        gradientDirection: gradient.getGradientDirection(),
+        colorAndStopList: _gradient.getColorAndStopList(),
+        gradientDirection: _gradient.getGradientDirection(),
       );
 
-      gradient = newGradient;
+      _gradient = newGradient;
 
       notifyListeners();
     }
   }
 
+  void setNewFlutterGradient(Gradient newFlutterGradient) {
+    final colorCount = newFlutterGradient.colors.length;
+
+    final colorAndStopList = newFlutterGradient.colors.mapIndexed(
+      (index, color) {
+        final stop = ((100 * index) / (colorCount - 1)).ceil();
+
+        return (color: color, stop: stop);
+      },
+    );
+
+    _gradient = GradientFactory().getGradient(
+      gradientStyle: _gradient.getGradientStyle(),
+      colorAndStopList: colorAndStopList.toList(),
+      gradientDirection: _gradient.getGradientDirection(),
+    );
+
+    notifyListeners();
+  }
+
   void onNewColorAndStopAdded(ColorAndStop newColorAndStop) {
     final List<ColorAndStop> colorAndStopListCopy =
-        List<ColorAndStop>.from(gradient.getColorAndStopList());
+        List<ColorAndStop>.from(_gradient.getColorAndStopList());
 
     colorAndStopListCopy.add(newColorAndStop);
 
@@ -153,22 +173,24 @@ class GradientViewModel with ChangeNotifier {
     );
   }
 
-  void randomizeColors() {
-    final newColorAndStopList = _randomColorGenerator
-        .getRandomColorAndStopsOfCurrentGradientColorAndStopListLength(
-      currentStopList:
-          gradient.getColorAndStopList().map((e) => e.stop).toList(),
+  void displayRandomGradientFromSamples() {
+    final Random random = Random();
+
+    final randomGradientFromSamples =
+        gradientSamples[random.nextInt(gradientSamples.length)];
+
+    final flutterGradientConverter = gradient.getFlutterGradientConverter();
+
+    final randomGradient = flutterGradientConverter(
+      colors: randomGradientFromSamples.colors,
     );
 
-    _onColorAndStopListChanged(
-      newColorAndStopList,
-      isChangeFromHtmlColorInput: false,
-    );
+    setNewFlutterGradient(randomGradient);
   }
 
   void _onColorAndStopDeleted(ColorAndStop colorAndStopToDelete) {
     final List<ColorAndStop> colorAndStopListCopy =
-        List<ColorAndStop>.from(gradient.getColorAndStopList());
+        List<ColorAndStop>.from(_gradient.getColorAndStopList());
 
     colorAndStopListCopy.remove(colorAndStopToDelete);
 
@@ -183,14 +205,14 @@ class GradientViewModel with ChangeNotifier {
   void _onColorAndStopListChanged(List<ColorAndStop> newColorAndStopList,
       {required bool isChangeFromHtmlColorInput}) {
     if (!const ListEquality<ColorAndStop>()
-        .equals(gradient.getColorAndStopList(), newColorAndStopList)) {
+        .equals(_gradient.getColorAndStopList(), newColorAndStopList)) {
       final AbstractGradient newGradient = GradientFactory().getGradient(
-        gradientStyle: gradient.getGradientStyle(),
+        gradientStyle: _gradient.getGradientStyle(),
         colorAndStopList: newColorAndStopList,
-        gradientDirection: gradient.getGradientDirection(),
+        gradientDirection: _gradient.getGradientDirection(),
       );
 
-      gradient = newGradient;
+      _gradient = newGradient;
 
       changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
 
