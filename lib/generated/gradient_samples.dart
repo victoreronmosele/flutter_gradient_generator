@@ -1,3 +1,8 @@
+// This is a generated file. Do not edit it manually.
+//
+// To regenerate this file, run the following command from the project root:
+// dart tool/bin/generate_gradient_samples.dart
+
 import 'package:flutter/material.dart';
 
 class _GradientSample {
@@ -7,7 +12,7 @@ class _GradientSample {
   final List<Color> colors;
 }
 
- const gradientSamples = <_GradientSample>[
+const gradientSamples = <_GradientSample>[
   _GradientSample(name: 'Omolon', colors: [
     Color(0xFF091E3A),
     Color(0xFF2F80ED),
