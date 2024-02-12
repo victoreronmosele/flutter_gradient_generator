@@ -5,6 +5,8 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/sweep_style_gradient.dart';
 import 'package:test/test.dart';
 
+import '../matchers.dart';
+
 void main() {
   group('SweepStyleGradient', () {
     late final List<ColorAndStop> colorAndStopList;
@@ -70,19 +72,31 @@ void main() {
       expect(actualGradientStyle, expectedGradientStyle);
     });
 
-    test('.toFlutterGradient() returns the right SweepGradient object', () {
-      final Gradient actualSweepGradient =
-          sweepStyleGradient.toFlutterGradient();
-      final Gradient expectedSweepGradient = SweepGradient(
-        colors:
-            colorAndStopList.map((colorAndStop) => colorAndStop.color).toList(),
-        center: Alignment.topLeft,
-        stops: colorAndStopList
-            .map((colorAndStop) => colorAndStop.stop / 100)
-            .toList(),
-      );
+    test(
+        '.getFlutterGradientConverter() returns the right FlutterGradientConverter object',
+        () {
+      final FlutterGradientConverter actualFlutterGradientConverter =
+          sweepStyleGradient.getFlutterGradientConverter();
+      // ignore: prefer_function_declarations_over_variables
+      final FlutterGradientConverter expectedFlutterGradientConverter =
+          ({required List<Color> colors, List<double>? stops}) => SweepGradient(
+                colors: colors,
+                center: Alignment.topLeft,
+                stops: stops,
+              );
 
-      expect(actualSweepGradient, expectedSweepGradient);
+      final colorsForValidation =
+          colorAndStopList.map((colorAndStop) => colorAndStop.color).toList();
+
+      final stopsForValidation = colorAndStopList
+          .map((colorAndStop) => colorAndStop.stop / 100)
+          .toList();
+
+      expect(
+        actualFlutterGradientConverter,
+        flutterGradientConverterEquals(expectedFlutterGradientConverter,
+            colors: colorsForValidation, stops: stopsForValidation),
+      );
     });
   });
 }

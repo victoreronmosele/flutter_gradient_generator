@@ -5,6 +5,7 @@ import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/firebase_options.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
+import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
@@ -39,7 +40,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return OrientationBuilder(builder: (context, orientation) {
-      final width = MediaQuery.of(context).size.width;
+      final screenSize = MediaQuery.of(context).size;
+
+      final width = screenSize.width;
+      final height = screenSize.height;
 
       return MaterialApp(
         title: AppStrings.appTitle,
@@ -48,8 +52,16 @@ class _MyAppState extends State<MyApp> {
         home: AppDimensions(
           orientation: orientation,
           screenWidth: width,
-          child: ChangeNotifierProvider.value(
-            value: gradientViewModel,
+          screenHeight: height,
+          child: MultiProvider(
+            providers: [
+              ChangeNotifierProvider.value(
+                value: gradientViewModel,
+              ),
+              Provider.value(
+                value: Analytics(),
+              ),
+            ],
             child: const HomeScreen(),
           ),
         ),

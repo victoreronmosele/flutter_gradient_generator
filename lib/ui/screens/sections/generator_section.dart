@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_gradient_generator/data/app_dimensions.dart';
-import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/copy_gradient_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/app_title_widget.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/selection_widgets.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/direction_selection_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/style_selection_widget.dart';
 
 class GeneratorSection extends StatelessWidget {
   const GeneratorSection({
@@ -12,59 +11,40 @@ class GeneratorSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appDimensions = AppDimensions.of(context);
-    final isPortrait = appDimensions.shouldDisplayPortraitUI;
-
-    final generatorScreenHorizontalPadding =
-        appDimensions.generatorScreenHorizontalPadding;
-    final generatorScreenVerticalPadding =
-        appDimensions.generatorScreenVerticalPadding;
+    const divider = Divider(
+      thickness: 0.5,
+      height: 0,
+    );
 
     return SingleChildScrollView(
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: generatorScreenHorizontalPadding,
-          vertical: generatorScreenVerticalPadding,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Flex(
-              /// This results in:
-              /// - a [Column] (veritical [Flex]]) for portrait mode
-              /// - a [Row] (horizontal [Flex]]) for landscape mode
-              direction: isPortrait ? Axis.vertical : Axis.horizontal,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                AppTitleWidget(
-                  forPortrait: isPortrait,
-                ),
-                if (isPortrait) ...[
-                  const SizedBox(height: 40),
-                  const AspectRatio(
-                    aspectRatio: 16 / 9,
-                    child: PreviewSection.portrait(),
-                  ),
-                ],
-              ],
-            ),
-            const SizedBox(height: 40),
-            const StyleSelectionWidget(),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          const SizedBox(height: 16),
+          const StyleSelectionWidget(),
+          const SizedBox(height: 16),
+          divider,
+          const SizedBox(height: 16),
+          DirectionSelectionWidget(),
+          const SizedBox(height: 16),
+          divider,
+          // Using 6 instead of 16 to match the design due to additional space
+          // added by the plus button in the `ColorAndStopSelectionWidget`
+          const SizedBox(height: 6),
 
-            /// Ideally the spacing should be 24 but the [ColorAndStopSelectionWidget]
-            /// has an action button that gives it an extra height.
-            ///
-            /// So the height is adjusted to 32 to match the spacing between
-            /// [DirectionSelectionWidget] and [ColorAndStopSelectionWidget]
-            const SizedBox(height: 32),
-            DirectionSelectionWidget(),
-            const SizedBox(height: 24),
-            const ColorAndStopSelectionWidget(),
-            const SizedBox(height: 48),
-            const CopyGradientButton(),
-            const SizedBox(height: 100),
-          ],
-        ),
+          ///TODO: Improve scrolling experience and performance by showing
+          /// `ColorAndStop` widgets on demand
+          const ColorAndStopSelectionWidget(),
+          // Using 6 instead of 16 to match the design due to additional space
+          // added by the plus button in the `ColorAndStopSelectionWidget`
+          const SizedBox(height: 6),
+          divider,
+          const SizedBox(height: 16),
+          const CopyGradientButton(),
+          const SizedBox(height: 16),
+          divider,
+        ],
       ),
     );
   }

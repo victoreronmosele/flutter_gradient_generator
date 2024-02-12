@@ -5,6 +5,8 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/radial_style_gradient.dart';
 import 'package:test/test.dart';
 
+import '../matchers.dart';
+
 void main() {
   group('RadialStyleGradient', () {
     late final List<ColorAndStop> colorAndStopList;
@@ -70,18 +72,35 @@ void main() {
       expect(actualGradientStyle, expectedGradientStyle);
     });
 
-    test('.toFlutterGradient() returns the right RadialGradient object', () {
-      final Gradient actualGradient = radialStyleGradient.toFlutterGradient();
-      final Gradient expectedGradient = RadialGradient(
-        colors:
-            colorAndStopList.map((colorAndStop) => colorAndStop.color).toList(),
-        center: Alignment.topLeft,
-        stops: colorAndStopList
-            .map((colorAndStop) => colorAndStop.stop / 100)
-            .toList(),
-      );
+    test(
+        'getFlutterGradientConverter() returns the right FlutterGradientConverter',
+        () {
+      final actualFlutterGradientConverter =
+          radialStyleGradient.getFlutterGradientConverter();
 
-      expect(actualGradient, expectedGradient);
+      // ignore: prefer_function_declarations_over_variables
+      final expectedFlutterGradientConverter = (
+              {required List<Color> colors, List<double>? stops}) =>
+          RadialGradient(
+            colors: colors,
+            stops: stops,
+            center: Alignment.topLeft,
+          );
+
+      final colorsForValidation =
+          colorAndStopList.map((colorAndStop) => colorAndStop.color).toList();
+
+      final stopsForValidation = colorAndStopList
+          .map((colorAndStop) => colorAndStop.stop / 100)
+          .toList();
+
+      expect(
+          actualFlutterGradientConverter,
+          flutterGradientConverterEquals(
+            expectedFlutterGradientConverter,
+            colors: colorsForValidation,
+            stops: stopsForValidation,
+          ));
     });
   });
 }

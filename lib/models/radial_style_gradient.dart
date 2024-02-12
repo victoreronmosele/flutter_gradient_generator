@@ -70,12 +70,12 @@ class RadialStyleGradient extends AbstractGradient {
   }
 
   @override
-  Gradient toFlutterGradient() {
-    return RadialGradient(
-      colors: getColorList(),
-      center: centerAlignment,
-      stops: getStopListForFlutterCode(),
-    );
+  FlutterGradientConverter getFlutterGradientConverter() {
+    return ({required colors, stops}) => RadialGradient(
+          colors: colors,
+          center: centerAlignment,
+          stops: stops,
+        );
   }
 
   @override

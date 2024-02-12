@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
+import 'package:flutter_gradient_generator/ui/screens/sections/left_section.dart';
+import 'package:flutter_gradient_generator/ui/widgets/header/header.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/generator_section.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
-import 'package:flutter_gradient_generator/ui/widgets/footer/footer_widget.dart';
 import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -31,33 +32,45 @@ class HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
 
+    //TODO: Handle portrait UI
+    // ignore: unused_local_variable
     final displayPortrait = appDimensions.shouldDisplayPortraitUI;
+
+    final generatorScreenWidth = appDimensions.generatorScreenWidth;
+    final previewSectionWidth = appDimensions.previewSectionWidth;
 
     return Focus(
       child: Scaffold(
-        body: Row(
-          crossAxisAlignment: displayPortrait
-              ? CrossAxisAlignment.center
-              : CrossAxisAlignment.stretch,
-          children: [
-            Flexible(
-              flex: displayPortrait ? 1 : 0,
-              child: const Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: GeneratorSection(),
+        body: GridPaper(
+          color: Colors.transparent,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              const Header(),
+              Expanded(
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      SizedBox(
+                        width: generatorScreenWidth,
+                        child: const LeftSection(),
+                      ),
+                      SizedBox(
+                        width: previewSectionWidth,
+                        child: const PreviewSection.landscape(),
+                      ),
+                      SizedBox(
+                        width: generatorScreenWidth,
+                        child: const GeneratorSection(),
+                      ),
+                    ],
                   ),
-                  FooterWidget()
-                ],
+                ),
               ),
-            ),
-            if (!displayPortrait)
-              const Flexible(
-                child: PreviewSection.landscape(),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );

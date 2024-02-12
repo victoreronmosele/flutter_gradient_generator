@@ -15,13 +15,13 @@ jobs:
           java-version: "12.x"
       - uses: subosito/flutter-action@v1
         with:
-          flutter-version: "3.13.6"
+          flutter-version: "3.16.9"
           channel: stable
       - run: echo $FIREBASE_CONFIG | base64 -d > lib/firebase_options.dart
         env:
           FIREBASE_CONFIG: ${{ secrets.FIREBASE_CONFIG }}
       - run: flutter pub get
-      - run: flutter build web --release --no-tree-shake-icons
+      - run: flutter build web --release
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"

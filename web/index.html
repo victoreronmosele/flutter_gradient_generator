@@ -1,122 +1,118 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <!--
+
+<head>
+  <!--
     If you are serving your web app in a path other than the root, change the
     href value below to reflect the base path you are serving from.
 
     The path provided below has to start and end with a slash "/" in order for
     it to work correctly.
 
-    Fore more details:
+    For more details:
     * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
   -->
-    <base href="/" />
+  <base href="/">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
+  <meta name="title" content="Flutter Gradient Generator - Create Flutter Gradients" />
+  <meta name="description"
+    content="Online tool for generating linear, radial and sweep gradient code for use in Flutter applications." />
 
-    <meta charset="UTF-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, minimum-scale=1"
-    />
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible" />
-    <meta
-      name="title"
-      content="Flutter Gradient Generator - Create Flutter Gradients"
-    />
-    <meta
-      name="description"
-      content="Online tool for generating linear, radial and sweep gradient code for use in Flutter applications."
-    />
-
-    <meta property="og:site_name" content="Flutter Gradient Generator - Create Flutter Gradients" />
-    <meta property=“og:title” content="Flutter Gradient Generator - Create Flutter Gradients" />
-    <meta property="og:description"
-      content="Online tool for generating linear, radial and sweep gradient code for use in Flutter applications." />
-    <meta property="og:url" content="https://www.fluttergradientgenerator.com" />
-    <meta property="og:type" content="website" />
-    <meta property="og:image" content="https://www.fluttergradientgenerator.com/screenshot.png" />
-    <meta property="og:image:secure_url" content="https://www.fluttergradientgenerator.com/screenshot.png" />
-    <meta property="og:image:width" content="2300" />
-    <meta property="og:image:height" content="1369" />
-    <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:image" content="https://www.fluttergradientgenerator.com/screenshot.png" />
+  <meta property="og:site_name" content="Flutter Gradient Generator - Create Flutter Gradients" />
+  <meta property=“og:title” content="Flutter Gradient Generator - Create Flutter Gradients" />
+  <meta property="og:description"
+    content="Online tool for generating linear, radial and sweep gradient code for use in Flutter applications." />
+  <meta property="og:url" content="https://www.fluttergradientgenerator.com" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="https://www.fluttergradientgenerator.com/screenshot.png" />
+  <meta property="og:image:secure_url" content="https://www.fluttergradientgenerator.com/screenshot.png" />
+  <meta property="og:image:width" content="2300" />
+  <meta property="og:image:height" content="1369" />
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:image" content="https://www.fluttergradientgenerator.com/screenshot.png" />
 
 
-    <!-- iOS meta tags & icons -->
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
-    <meta
-      name="apple-mobile-web-app-title"
-      content="Flutter Gradient Generator"
-    />
-    <meta name="monetization" content="$ilp.uphold.com/RWarHaY2Xa7X" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
-    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
-    <link rel="manifest" href="/site.webmanifest" />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Nunito&amp;display=swap"
-      rel="stylesheet"
-    />
+  <!-- iOS meta tags & icons -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Flutter Gradient Generator" />
+  <meta name="monetization" content="$ilp.uphold.com/RWarHaY2Xa7X" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+  <link rel="manifest" href="/site.webmanifest" />
+  <link href="https://fonts.googleapis.com/css2?family=Nunito&amp;display=swap" rel="stylesheet" />
 
-    <title>Flutter Gradient Generator - Create Flutter Gradients</title>
-    <link rel="manifest" href="manifest.json" />
-    <script>
-      let vh = window.innerHeight * 0.01;
-      document.documentElement.style.setProperty("--vh", `${vh}px`);
-    </script>
-    <link rel="stylesheet" href="style.css" />
-  </head>
-  <body>
-    <main id="splash-screen">
-      <header>
-        <h1>Flutter&trade; Gradient Generator</h1>
-      </header>
+  <title>Flutter Gradient Generator - Create Flutter Gradients</title>
+  <link rel="manifest" href="manifest.json" />
+  <script>
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty("--vh", `${vh}px`);
+  </script>
+  <link rel="stylesheet" href="style.css" />
 
-      <div id="bottom-section">
-        <div class="slider">
-          <div class="line"></div>
-          <div class="subline inc"></div>
-          <div class="subline dec"></div>
-        </div>
+  <script>
+    // The value below is injected by flutter build, do not touch.
+    const serviceWorkerVersion = null;
+  </script>
+  <!-- This script adds the flutter initialization JS code -->
+  <script src="flutter.js" defer></script>
+</head>
 
-        <footer>
-          <p>
-            Flutter and the related logo are trademarks of Google LLC. We are
-            not endorsed by or affiliated with Google LLC.
-          </p>
-          <p>
-            <a
-              href="https://github.com/victoreronmosele/flutter_gradient_generator"
-              target="_blank"
-              rel="noopener"
-              >Built</a
-            >
-            by
-            <a
-              href="https://victoreronmosele.com"
-              target="_blank"
-              rel="noopener"
-              >Victor Eronmosele</a
-            >
-          </p>
-        </footer>
+<body>
+  <main id="splash-screen">
+    <header>
+      <h1>Flutter&trade; Gradient Generator</h1>
+    </header>
+
+    <div id="bottom-section">
+      <div class="slider">
+        <div class="line"></div>
+        <div class="subline inc"></div>
+        <div class="subline dec"></div>
       </div>
-    </main>
-    <!-- This script installs service_worker.js to provide PWA functionality to
-       application. For more information, see:
-       https://developers.google.com/web/fundamentals/primers/service-workers -->
-    <script>
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("flutter-first-frame", function () {
-          navigator.serviceWorker.register("flutter_service_worker.js");
-        });
-      }
-    </script>
-    <script
-      src="main.dart.js"
-      type="application/javascript"
-      onendload="document.getElementById('splash-screen').remove();"
-    ></script>
-  </body>
+
+      <footer>
+        <p>
+          Flutter and the related logo are trademarks of Google LLC. We are
+          not endorsed by or affiliated with Google LLC.
+        </p>
+        <p>
+          <a href="https://github.com/victoreronmosele/flutter_gradient_generator" target="_blank"
+            rel="noopener">Built</a>
+          by
+          <a href="https://victoreronmosele.com" target="_blank" rel="noopener">Victor Eronmosele</a>
+        </p>
+      </footer>
+    </div>
+  </main>
+  <script>
+    window.addEventListener('load', function (ev) {
+      // Download main.dart.js
+      _flutter.loader.loadEntrypoint({
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine(
+          ).then(function (appRunner) {
+            appRunner.runApp();
+
+            // Remove the splash screen
+            var splashScreen = document.getElementById('splash-screen');
+            if (splashScreen) {
+              splashScreen.remove();
+            }
+          });
+        }
+      });
+    });
+  </script>
+</body>
+
 </html>

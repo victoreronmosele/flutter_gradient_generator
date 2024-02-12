@@ -5,7 +5,7 @@ import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_container_widget.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_container_widget.dart';
 import 'package:flutter_vector_icons/flutter_vector_icons.dart';
 import 'package:provider/provider.dart';
 
@@ -26,6 +26,7 @@ class DirectionSelectionWidget extends StatelessWidget {
   ///
   final centerGradientDirectionIndexWithinCenterDirectionSet = 1;
 
+  ///TODO: Move this to [DirectionButton]
   final iconSetList = [
     {
       GradientDirection.topLeft: MaterialCommunityIcons.arrow_top_left,
@@ -58,10 +59,7 @@ class DirectionSelectionWidget extends StatelessWidget {
     final compactButtonMargin = appDimensions.compactButtonMargin;
 
     return SelectionWidgetContainer(
-      titleWidgetInformation: (
-        mainTitle: AppStrings.direction,
-        trailingActionWidget: const SizedBox.shrink(),
-      ),
+      title: AppStrings.direction,
       selectionWidget: Column(
         children: iconSetList.map(
             (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {

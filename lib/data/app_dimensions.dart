@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 /// Holds the dimensions of the app.
@@ -18,12 +20,16 @@ class AppDimensions extends InheritedWidget {
     super.key,
     required super.child,
     required Orientation orientation,
-    required double screenWidth,
+    required this.screenWidth,
+    required this.screenHeight,
   }) : shouldDisplayPortraitUI = (orientation == Orientation.portrait) &&
             (screenWidth < _portraitModeMaxWidth) {
     generatorScreenWidth =
         shouldDisplayPortraitUI ? screenWidth : _landscapeGeneratorScreenWidth;
   }
+
+  final double screenHeight;
+  final double screenWidth;
 
   final double deleteButtonIconSize = 16;
 
@@ -60,17 +66,56 @@ class AppDimensions extends InheritedWidget {
       numberOfCompactButtonPerRow;
   double get compactButtonHeight => 32;
   double get compactButtonPadding => 16;
+
   double get wideButtonWidth => generatorScreenContentWidth;
   double get wideButtonHeight => 48;
   double get widebuttonPadding => 24;
-  double get expansionIconSize => 20;
+  double get expansionIconSize => 16;
+
   double get selectionContainerMainTitleWidth => (generatorScreenContentWidth -
       (compactButtonWidth + (2 * compactButtonMargin) + expansionIconSize));
 
+  double get bannerAdHorizontalPadding => generatorScreenHorizontalPadding;
+
+  double get toolBarHeight => 48;
+
+  double get chooseRandomGradientIconButtonSize => 16;
+
+  double get sampleTitleBottomMargin => 2.0;
+
+  // Using 6 instead of 16 to match the design due to additional space
+  // added by the shuffle button in the `ColorAndStopSelectionWidget`
+  double get sampleSectionVerticalPadding => 6.0;
+
+  double get footerVerticalPadding => 8.0;
+
+  double get samplesListViewSize =>
+      screenHeight -
+      ((chooseRandomGradientIconButtonSize * 2) +
+          sampleTitleBottomMargin +
+          (2 * sampleSectionVerticalPadding) +
+          (2 * toolBarHeight) +
+          (2 * footerVerticalPadding) +
+          (4 * sampleSectionVerticalPadding) +
+          16.0 +
+          (3 * 14.0) +
+          (3 * 8.0) +
+          (2 * sampleSectionVerticalPadding));
+
+  double get _minimumPreviewSectionWidth => generatorScreenWidth;
+
+  double get previewSectionWidth => max(
+      screenWidth - (2 * generatorScreenWidth), _minimumPreviewSectionWidth);
+
+  double get toolBarIconButtonSize => 20;
+
+  /// Ensure to update this method when adding new properties or constructor
+  /// parameters that should trigger a rebuild when changed.
   @override
   bool updateShouldNotify(covariant AppDimensions oldWidget) {
     return oldWidget.shouldDisplayPortraitUI != shouldDisplayPortraitUI ||
-        oldWidget.generatorScreenWidth != generatorScreenWidth;
+        oldWidget.screenWidth != screenWidth ||
+        oldWidget.screenHeight != screenHeight;
   }
 
   static AppDimensions? maybeOf(BuildContext context) {

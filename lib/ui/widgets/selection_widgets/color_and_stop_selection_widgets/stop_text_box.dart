@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_gradient_generator/ui/widgets/generator_widgets/selection_widgets/color_and_stop_selection_widgets/outlined_text_field.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widgets/outlined_text_field.dart';
 import 'package:flutter_gradient_generator/utils/minimum_maximum_integer_input_formatter.dart';
 
 /// A [TextField] that holds the stop value for a color on the Gradient. It only
-/// allows integers between [maximumInteger] and [minimumInteger].
+/// allows integers between 0 and 100.
+///
+/// See: [_StopTextBoxState.minimumInteger] and [_StopTextBoxState.maximumInteger].
 class StopTextBox extends StatefulWidget {
   const StopTextBox({
     super.key,
@@ -20,9 +22,8 @@ class StopTextBox extends StatefulWidget {
 }
 
 class _StopTextBoxState extends State<StopTextBox> {
+  final minimumInteger = 0;
   final maximumInteger = 100;
-
-  final minumuInteger = 0;
 
   final TextEditingController _controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -31,7 +32,7 @@ class _StopTextBoxState extends State<StopTextBox> {
 
   List<TextInputFormatter> get inputFormatters => [
         MinimumMaximumIntegerInputFormatter(
-            maximumInteger: maximumInteger, minimumInteger: minumuInteger),
+            maximumInteger: maximumInteger, minimumInteger: minimumInteger),
         LengthLimitingTextInputFormatter(maximumIntegerLength),
       ];
 
@@ -75,7 +76,7 @@ class _StopTextBoxState extends State<StopTextBox> {
   Widget build(BuildContext context) {
     return OutlinedTextField(
       inputFormatters: inputFormatters,
-      onSubmitted: onStopSubmitted,
+      onSubmitted: (_) {},
       onTap: () {
         onTextFieldTap();
       },
@@ -97,10 +98,6 @@ class _StopTextBoxState extends State<StopTextBox> {
     /// We want to submit the stop value if the text field is focused.
     /// No need to submit the stop value if the text field is not focused.
     if (textFieldIsFocused) {
-      /// Unfocus the text field since the user tapped outside of it and
-      /// the stop will be submitted.
-      _focusNode.unfocus();
-
       /// Get the stop value from the text field.
       final text = _controller.text;
 

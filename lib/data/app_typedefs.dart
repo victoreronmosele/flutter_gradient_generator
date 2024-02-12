@@ -10,3 +10,8 @@ typedef ColorAndStop = ({
   Color color,
   Stop stop,
 });
+
+/// [FlutterGradientConverter] is a function that converts [colors] and optional
+/// [stops] to a [Gradient] from Flutter's painting library.
+typedef FlutterGradientConverter = Gradient Function(
+    {required List<Color> colors, List<double>? stops});
