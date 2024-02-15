@@ -34,20 +34,23 @@ class ToolBar extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: InkWell(
-                    onTap: () {
-                      launchUrl(
-                        Uri.parse('/'),
-
-                        /// Open in current tab
-                        webOnlyWindowName: '_self',
-                      );
-                    },
-                    child: Text(
-                      AppStrings.appTitle,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            color: AppColors.white,
-                          ),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: InkWell(
+                      onTap: () {
+                        launchUrl(
+                          Uri.parse('/'),
+                    
+                          /// Open in current tab
+                          webOnlyWindowName: '_self',
+                        );
+                      },
+                      child: Text(
+                        AppStrings.appTitle,
+                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                              color: AppColors.white,
+                            ),
+                      ),
                     ),
                   ),
                 ),
