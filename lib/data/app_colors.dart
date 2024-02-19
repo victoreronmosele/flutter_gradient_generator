@@ -32,6 +32,7 @@ class AppColors {
 
   static const toolBar = Color(0xff2c2c2c);
   static const toolBarIcon = white;
+  static final toolBarIconDisabled = white.withOpacity(0.38);
   static final toolBarIconHover = white.withOpacity(0.08);
   static final toolBarIconFocus = white.withOpacity(0.12);
 

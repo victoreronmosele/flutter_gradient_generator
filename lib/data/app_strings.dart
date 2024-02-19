@@ -25,6 +25,10 @@ class AppStrings {
   static const giveFeedback = 'Give Feedback';
   static const viewSourceCodeOnGitHub = 'View Source Code On GitHub';
   static const downloadGradientAsImage = 'Download Gradient As Image';
+  static const undo = 'Undo';
+  static const noActionsToUndo = 'No actions to undo';
+  static const redo = 'Redo';
+  static const noActionsToRedo = 'No actions to redo';
 
   /// URLs
   static const githubUrl =

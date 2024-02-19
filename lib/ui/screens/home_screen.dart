@@ -41,36 +41,33 @@ class HomeScreenState extends State<HomeScreen> {
 
     return Focus(
       child: Scaffold(
-        body: GridPaper(
-          color: Colors.transparent,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              const Header(),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      SizedBox(
-                        width: generatorScreenWidth,
-                        child: const LeftSection(),
-                      ),
-                      SizedBox(
-                        width: previewSectionWidth,
-                        child: const PreviewSection.landscape(),
-                      ),
-                      SizedBox(
-                        width: generatorScreenWidth,
-                        child: const GeneratorSection(),
-                      ),
-                    ],
-                  ),
+        body: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Header(),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: generatorScreenWidth,
+                      child: const LeftSection(),
+                    ),
+                    SizedBox(
+                      width: previewSectionWidth,
+                      child: const PreviewSection.landscape(),
+                    ),
+                    SizedBox(
+                      width: generatorScreenWidth,
+                      child: const GeneratorSection(),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
