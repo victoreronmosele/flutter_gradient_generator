@@ -257,15 +257,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.15.4"
-  html_color_input:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "feature/implement-html-color-input"
-      resolved-ref: "68943e86c867e97baf9dca270301bdd7fc743d47"
-      url: "https://github.com/victoreronmosele/flutter_html_color_input.git"
-    source: git
-    version: "1.0.0"
   http:
     dependency: transitive
     description:
@@ -807,6 +798,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.0"
+  web_color_picker:
+    dependency: "direct main"
+    description:
+      name: web_color_picker
+      sha256: f3f53c2de9a8969b6d640637dda68c62100ccabe6cefe66fe49710e4400ec797
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.2+1"
   web_socket_channel:
     dependency: transitive
     description:
