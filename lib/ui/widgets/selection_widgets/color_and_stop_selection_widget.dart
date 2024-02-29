@@ -6,8 +6,8 @@ import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart'
 import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_container_widget.dart';
 import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widgets/stop_text_box.dart';
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
-import 'package:html_color_input/html_color_input.dart';
 import 'package:provider/provider.dart';
+import 'package:web_color_picker/web_color_picker.dart';
 
 class ColorAndStopSelectionWidget extends StatefulWidget {
   const ColorAndStopSelectionWidget({super.key});

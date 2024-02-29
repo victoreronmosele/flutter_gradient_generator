@@ -115,6 +115,20 @@ class Analytics {
       FirebaseAnalyticsEvent.victorEronmoseleClicked,
     );
   }
+
+  /// Logs when the undo button is clicked.
+  Future<void> logUndoButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.undoButtonClicked,
+    );
+  }
+
+  /// Logs when the redo button is clicked.
+  Future<void> logRedoButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.redoButtonClicked,
+    );
+  }
 }
 
 /// The list of Firebase Analytics events to log.
@@ -134,6 +148,8 @@ enum FirebaseAnalyticsEvent {
   bugReportButtonClicked(key: 'bugReportButtonClicked'),
   viewSourceCodeOnGitHubButtonClicked(
       key: 'viewSourceCodeOnGitHubButtonClicked'),
+  undoButtonClicked(key: 'undoButtonClicked'),
+  redoButtonClicked(key: 'redoButtonClicked'),
   victorEronmoseleClicked(key: 'victorEronmoseleClicked');
 
   const FirebaseAnalyticsEvent({required this.key});

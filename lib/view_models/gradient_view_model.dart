@@ -15,6 +15,16 @@ import 'package:flutter_gradient_generator/ui/util/new_color_generator/new_color
 import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 
 class GradientViewModel with ChangeNotifier {
+  GradientViewModel({
+    required this.onNewGradientSet,
+  });
+
+  /// Called when a new gradient is set.
+  ///
+  /// This should not be called when the gradient is set as a result of an undo
+  /// action.
+  final void Function(AbstractGradient) onNewGradientSet;
+
   final _colorAndStopUtil = ColorAndStopUtil();
 
   /// The default gradient shown when the app is first opened.
@@ -34,6 +44,46 @@ class GradientViewModel with ChangeNotifier {
   /// It is used specifically to prevent the [HtmlColorInput] widget from closing
   /// when tapped.
   bool changeIsFromHtmlColorInput = false;
+
+  /// Sets the gradient details.
+  ///
+  /// [isNewGradient] tells if the gradient is newly created or not.
+  /// This is useful for when the gradient is set as a result of an undo action
+  /// which means it is not a new gradient.
+  /// In this case, the [isNewGradient] is set to `false` and the [onNewGradientSet]
+  /// function is not called.
+  /// 
+  /// Note: Use this method instead of setting the [_gradient] directly to ensure
+  /// that the [onNewGradientSet] function is called when a new gradient is set.
+  /// 
+  /// See also: [setGradientToDefault]
+  void setGradientDetails({
+    required AbstractGradient gradientToSet,
+    bool? isChangeFromHtmlColorInput,
+    bool isNewGradient = true,
+  }) {
+    _gradient = gradientToSet;
+
+    if (isChangeFromHtmlColorInput != null) {
+      changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
+    }
+
+    notifyListeners();
+
+    if (isNewGradient) {
+      onNewGradientSet(gradientToSet);
+    }
+  }
+
+  /// Sets the gradient to the default gradient.
+  void setGradientToDefault({
+    bool isNewGradient = true,
+  }) {
+    setGradientDetails(
+      gradientToSet: defaultGradient,
+      isNewGradient: isNewGradient,
+    );
+  }
 
   void addNewColor() {
     final lastColorAndStop = _gradient.getColorAndStopList().last;
@@ -119,9 +169,7 @@ class GradientViewModel with ChangeNotifier {
         gradientDirection: newGradientDirection,
       );
 
-      _gradient = newGradient;
-
-      notifyListeners();
+      setGradientDetails(gradientToSet: newGradient);
     }
   }
 
@@ -133,9 +181,7 @@ class GradientViewModel with ChangeNotifier {
         gradientDirection: _gradient.getGradientDirection(),
       );
 
-      _gradient = newGradient;
-
-      notifyListeners();
+      setGradientDetails(gradientToSet: newGradient);
     }
   }
 
@@ -150,13 +196,13 @@ class GradientViewModel with ChangeNotifier {
       },
     );
 
-    _gradient = GradientFactory().getGradient(
+    final newGradient = GradientFactory().getGradient(
       gradientStyle: _gradient.getGradientStyle(),
       colorAndStopList: colorAndStopList.toList(),
       gradientDirection: _gradient.getGradientDirection(),
     );
 
-    notifyListeners();
+    setGradientDetails(gradientToSet: newGradient);
   }
 
   void onNewColorAndStopAdded(ColorAndStop newColorAndStop) {
@@ -212,11 +258,10 @@ class GradientViewModel with ChangeNotifier {
         gradientDirection: _gradient.getGradientDirection(),
       );
 
-      _gradient = newGradient;
-
-      changeIsFromHtmlColorInput = isChangeFromHtmlColorInput;
-
-      notifyListeners();
+      setGradientDetails(
+        gradientToSet: newGradient,
+        isChangeFromHtmlColorInput: isChangeFromHtmlColorInput,
+      );
     }
   }
 }
