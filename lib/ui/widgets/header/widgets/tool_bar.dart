@@ -3,25 +3,23 @@ import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
+import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/header/widgets/tool_bar_icon_button.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
-import 'package:image_downloader_web/image_downloader_web.dart';
 import 'package:provider/provider.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class ToolBar extends StatelessWidget {
-  ToolBar({
+  const ToolBar({
     Key? key,
   }) : super(key: key);
-
-  final ScreenshotController screenshotController = ScreenshotController();
 
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
     final historyViewModel = context.watch<HistoryViewModel>();
+    final gradientDownloader = context.read<GradientDownloader>();
 
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
@@ -41,18 +39,15 @@ class ToolBar extends StatelessWidget {
                     alignment: Alignment.centerLeft,
                     child: InkWell(
                       onTap: () {
-                        launchUrl(
-                          Uri.parse('/'),
-
-                          /// Open in current tab
-                          webOnlyWindowName: '_self',
-                        );
+                        /// Launch the root URL in the current tab
+                        launchUrl(Uri.parse('/'), webOnlyWindowName: '_self');
                       },
                       child: Text(
                         AppStrings.appTitle,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                              color: AppColors.white,
-                            ),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(color: AppColors.white),
                       ),
                     ),
                   ),
@@ -97,21 +92,7 @@ class ToolBar extends StatelessWidget {
 
                     final gradient = gradientViewModel.gradient;
 
-                    final flutterGradient = gradient.toFlutterGradient();
-
-                    final imageBytes =
-                        await screenshotController.captureFromWidget(
-                      Container(
-                        decoration: BoxDecoration(
-                          gradient: flutterGradient,
-                        ),
-                      ),
-                    );
-
-                    await WebImageDownloader.downloadImageFromUInt8List(
-                      uInt8List: imageBytes,
-                      name: 'gradient.png',
-                    );
+                    await gradientDownloader.downloadGradientAsImage(gradient);
 
                     analytics.logGradientDownloadedAsImageEvent(gradient);
                   },

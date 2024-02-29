@@ -6,6 +6,7 @@ import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/firebase_options.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
+import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
 import 'package:provider/provider.dart';
@@ -32,6 +33,7 @@ class _MyAppState extends State<MyApp> {
   late final GradientViewModel gradientViewModel;
   late final HistoryViewModel historyViewModel;
   late final Analytics analytics;
+  late final GradientDownloader gradientDownloader;
 
   @override
   void initState() {
@@ -54,8 +56,8 @@ class _MyAppState extends State<MyApp> {
         }
       },
     );
-
     analytics = Analytics();
+    gradientDownloader = GradientDownloader();
   }
 
   @override
@@ -84,6 +86,9 @@ class _MyAppState extends State<MyApp> {
               ),
               Provider.value(
                 value: analytics,
+              ),
+              Provider.value(
+                value: gradientDownloader,
               ),
             ],
             child: const HomeScreen(),
