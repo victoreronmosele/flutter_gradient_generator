@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/color_and_stop_selection_widgets/outlined_text_field.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/buttons/compact_buttons/direction_button.dart';
 import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/selection_container_widget.dart';
@@ -61,62 +65,214 @@ class DirectionSelectionWidget extends StatelessWidget {
     return SelectionWidgetContainer(
       title: AppStrings.direction,
       selectionWidget: Column(
-        children: iconSetList.map(
+        children: [
+          ...iconSetList.map(
             (Map<GradientDirection, IconData> gradientDirectionToIconSetMap) {
-          final iconSetIndex =
-              iconSetList.indexOf(gradientDirectionToIconSetMap);
-          const firstIconSetIndex = 0;
+              final iconSetIndex =
+                  iconSetList.indexOf(gradientDirectionToIconSetMap);
+              const firstIconSetIndex = 0;
 
-          return Column(
-            children: [
-              if (iconSetIndex != firstIconSetIndex)
+              return Column(
+                children: [
+                  if (iconSetIndex != firstIconSetIndex)
+                    const SizedBox(height: 8.0),
+                  Row(
+                      children:
+                          gradientDirectionToIconSetMap.values.map((icon) {
+                    final iconIndex = gradientDirectionToIconSetMap.values
+                        .toList()
+                        .indexOf(icon);
+                    final gradientDirection =
+                        gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
+
+                    const firstIconIndex = 0;
+
+                    final gradientStyleIsLinear =
+                        gradientStyle == GradientStyle.linear;
+
+                    final thisIsTheMiddleCenterDirectionButton = iconSetIndex ==
+                            centerGradientDirectionIndexInIconSetList &&
+                        iconIndex ==
+                            centerGradientDirectionIndexWithinCenterDirectionSet;
+
+                    /// Circle radial button is not shown for linear gradients
+                    final showDirection = !(gradientStyleIsLinear &&
+                        thisIsTheMiddleCenterDirectionButton);
+
+                    return Row(
+                      children: [
+                        if (iconIndex != firstIconIndex)
+                          SizedBox(width: compactButtonMargin),
+                        Visibility(
+                          visible: showDirection,
+                          maintainSize: true,
+                          maintainAnimation: true,
+                          maintainState: true,
+                          child: DirectionButton(
+                            icon: icon,
+                            gradientDirection: gradientDirection,
+                            isSelected:
+                                gradientDirection == selectedGradientDirection,
+                            onGradientDirectionChanged:
+                                gradientViewModel.changeGradientDirection,
+                          ),
+                        ),
+                      ],
+                    );
+                  }).toList()),
+                ],
+              );
+            },
+          ),
+          const SizedBox(height: 16),
+          CompactButton.text(
+            text: AppStrings.custom,
+            onPressed: () {
+              gradientViewModel.changeGradientDirection(
+                GradientDirection.custom(),
+              );
+            },
+            foregroundColor: Colors.black,
+            backgroundColor:
+                selectedGradientDirection is GradientDirectionCustom
+                    ? AppColors.grey
+                    : Colors.transparent,
+            borderSide: BorderSide(
+              color: AppColors.grey,
+            ),
+          ),
+          if (selectedGradientDirection
+              case final GradientDirectionCustom customDirection)
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(AppStrings.alignment),
                 const SizedBox(height: 8.0),
-              Row(
-                  children: gradientDirectionToIconSetMap.values.map((icon) {
-                final iconIndex =
-                    gradientDirectionToIconSetMap.values.toList().indexOf(icon);
-                final gradientDirection =
-                    gradientDirectionToIconSetMap.keys.elementAt(iconIndex);
-
-                const firstIconIndex = 0;
-
-                final gradientStyleIsLinear =
-                    gradientStyle == GradientStyle.linear;
-
-                final thisIsTheMiddleCenterDirectionButton = iconSetIndex ==
-                        centerGradientDirectionIndexInIconSetList &&
-                    iconIndex ==
-                        centerGradientDirectionIndexWithinCenterDirectionSet;
-
-                /// Circle radial button is not shown for linear gradients
-                final showDirection = !(gradientStyleIsLinear &&
-                    thisIsTheMiddleCenterDirectionButton);
-
-                return Row(
-                  children: [
-                    if (iconIndex != firstIconIndex)
-                      SizedBox(width: compactButtonMargin),
-                    Visibility(
-                      visible: showDirection,
-                      maintainSize: true,
-                      maintainAnimation: true,
-                      maintainState: true,
-                      child: DirectionButton(
-                        icon: icon,
-                        gradientDirection: gradientDirection,
-                        isSelected:
-                            gradientDirection == selectedGradientDirection,
-                        onGradientDirectionChanged:
-                            gradientViewModel.changeGradientDirection,
+                _AlignmentInputGroup(
+                  alignment: customDirection.alignment,
+                  onAlignmentChanged: (newAlignment) {
+                    gradientViewModel.changeGradientDirection(
+                      GradientDirection.custom(
+                        alignment: newAlignment,
+                        endAlignment: customDirection.endAlignment,
                       ),
-                    ),
-                  ],
-                );
-              }).toList()),
-            ],
-          );
-        }).toList(),
+                    );
+                  },
+                ),
+                if (gradientStyle == GradientStyle.linear) ...[
+                  const SizedBox(height: 8.0),
+                  const Text(AppStrings.endAlignment),
+                  const SizedBox(height: 8.0),
+                  _AlignmentInputGroup(
+                    alignment: customDirection.endAlignment,
+                    onAlignmentChanged: (newAlignment) {
+                      gradientViewModel.changeGradientDirection(
+                        GradientDirection.custom(
+                          alignment: customDirection.alignment,
+                          endAlignment: newAlignment,
+                        ),
+                      );
+                    },
+                  ),
+                ]
+              ],
+            )
+        ],
       ),
+    );
+  }
+}
+
+class _AlignmentInputGroup extends StatelessWidget {
+  const _AlignmentInputGroup({
+    required this.alignment,
+    required this.onAlignmentChanged,
+  });
+
+  final Alignment alignment;
+  final void Function(Alignment) onAlignmentChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      children: [
+        const Text(AppStrings.alignmentX),
+        const SizedBox(width: 8.0),
+        _AlignmentDimensionInput(
+          value: alignment.x,
+          onValueChanged: (newX) {
+            onAlignmentChanged(Alignment(newX, alignment.y));
+          },
+        ),
+        const SizedBox(width: 8.0),
+        const Text(AppStrings.alignmentY),
+        const SizedBox(width: 8.0),
+        _AlignmentDimensionInput(
+          value: alignment.y,
+          onValueChanged: (newY) {
+            onAlignmentChanged(Alignment(alignment.x, newY));
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class _AlignmentDimensionInput extends StatefulWidget {
+  const _AlignmentDimensionInput({
+    required this.value,
+    required this.onValueChanged,
+  });
+
+  final double value;
+  final void Function(double) onValueChanged;
+
+  @override
+  State<_AlignmentDimensionInput> createState() =>
+      _AlignmentDimensionInputState();
+}
+
+class _AlignmentDimensionInputState extends State<_AlignmentDimensionInput> {
+  final TextEditingController _controller = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    updateControllerText();
+  }
+
+  @override
+  void didUpdateWidget(covariant _AlignmentDimensionInput oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    updateControllerText();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void updateControllerText() {
+    _controller.text = widget.value.toString();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return OutlinedTextField(
+      controller: _controller,
+      focusNode: _focusNode,
+      onTap: () {},
+      onTapOutside: (_) {
+        widget.onValueChanged(double.parse(_controller.text));
+      },
+      onSubmitted: (_) => {},
+      inputFormatters: [
+        FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),
+      ],
     );
   }
 }
