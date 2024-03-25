@@ -68,4 +68,16 @@ class GradientDirectionCustom extends GradientDirection {
 
   final Alignment alignment;
   final Alignment endAlignment;
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is GradientDirectionCustom &&
+        other.alignment == alignment &&
+        other.endAlignment == endAlignment;
+  }
+
+  @override
+  int get hashCode => alignment.hashCode ^ endAlignment.hashCode;
 }

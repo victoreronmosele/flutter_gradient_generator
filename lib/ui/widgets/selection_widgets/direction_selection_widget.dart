@@ -241,12 +241,17 @@ class _AlignmentDimensionInputState extends State<_AlignmentDimensionInput> {
   void initState() {
     super.initState();
     updateControllerText();
+    _controller.addListener(() {
+      widget.onValueChanged(double.parse(_controller.text));
+    });
   }
 
   @override
   void didUpdateWidget(covariant _AlignmentDimensionInput oldWidget) {
     super.didUpdateWidget(oldWidget);
-    updateControllerText();
+    if (widget.value != double.parse(_controller.text)) {
+      updateControllerText();
+    }
   }
 
   @override
@@ -266,9 +271,7 @@ class _AlignmentDimensionInputState extends State<_AlignmentDimensionInput> {
       controller: _controller,
       focusNode: _focusNode,
       onTap: () {},
-      onTapOutside: (_) {
-        widget.onValueChanged(double.parse(_controller.text));
-      },
+      onTapOutside: (_) {},
       onSubmitted: (_) => {},
       inputFormatters: [
         FilteringTextInputFormatter.allow(RegExp(r'^-?\d*\.?\d*')),

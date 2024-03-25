@@ -5,7 +5,8 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
 
-const _pointerSize = 24.0;
+const _pointerSize = 60.0;
+const _pointerIconSize = 24.0;
 const _halfPointerSize = _pointerSize / 2;
 
 class PreviewSection extends StatelessWidget {
@@ -65,27 +66,15 @@ class PreviewSection extends StatelessWidget {
                   _AlignmentPicker(
                     gradientViewModel: gradientViewModel,
                     alignment: direction.alignment,
-                    onAlignmentChanged: (newAlignment) {
-                      gradientViewModel.changeGradientDirection(
-                        GradientDirection.custom(
-                          alignment: newAlignment,
-                          endAlignment: direction.endAlignment,
-                        ),
-                      );
-                    },
+                    onAlignmentChanged: gradientViewModel
+                        .changeCustomGradientDirectionAlignment,
                   ),
                   if (gradient.getGradientStyle() == GradientStyle.linear)
                     _AlignmentPicker(
                       gradientViewModel: gradientViewModel,
                       alignment: direction.endAlignment,
-                      onAlignmentChanged: (newAlignment) {
-                        gradientViewModel.changeGradientDirection(
-                          GradientDirection.custom(
-                            alignment: direction.alignment,
-                            endAlignment: newAlignment,
-                          ),
-                        );
-                      },
+                      onAlignmentChanged: gradientViewModel
+                          .changeCustomGradientDirectionEndAlignment,
                     ),
                 ]
               ],
@@ -97,7 +86,7 @@ class PreviewSection extends StatelessWidget {
   }
 }
 
-class _AlignmentPicker extends StatelessWidget {
+class _AlignmentPicker extends StatefulWidget {
   const _AlignmentPicker({
     required this.gradientViewModel,
     required this.alignment,
@@ -109,6 +98,13 @@ class _AlignmentPicker extends StatelessWidget {
   final ValueChanged<Alignment> onAlignmentChanged;
 
   @override
+  State<_AlignmentPicker> createState() => _AlignmentPickerState();
+}
+
+class _AlignmentPickerState extends State<_AlignmentPicker> {
+  bool dragging = false;
+
+  @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       final BoxConstraints(:maxWidth, :maxHeight) = constraints;
@@ -116,26 +112,42 @@ class _AlignmentPicker extends StatelessWidget {
       void callAlignmentChanged(DragUpdateDetails details) {
         final Offset(:dx, :dy) = details.localPosition;
 
-        onAlignmentChanged(Alignment(
+        widget.onAlignmentChanged(Alignment(
           (dx / maxWidth) * 2 - 1,
           (dy / maxHeight) * 2 - 1,
         ));
       }
 
+      final top = (widget.alignment.y + 1) / 2 * maxHeight - _halfPointerSize;
+      final left = (widget.alignment.x + 1) / 2 * maxWidth - _halfPointerSize;
+
       return GestureDetector(
-        onVerticalDragUpdate: callAlignmentChanged,
-        onHorizontalDragUpdate: callAlignmentChanged,
+        onPanUpdate: callAlignmentChanged,
+        onTapDown: (_) => setState(() => dragging = true),
+        onTapUp: (_) => setState(() => dragging = false),
+        onPanEnd: (_) => setState(() => dragging = false),
         child: SizedBox.expand(
           child: Stack(
             children: [
               Positioned(
-                top: (alignment.y + 1) / 2 * maxHeight - _halfPointerSize,
-                left: (alignment.x + 1) / 2 * maxWidth - _halfPointerSize,
+                top: top,
+                left: left,
                 width: _pointerSize,
                 height: _pointerSize,
-                child: const Icon(
-                  Icons.add_circle_outline_sharp,
-                  color: Colors.white,
+                child: MouseRegion(
+                  cursor: dragging
+                      ? SystemMouseCursors.grabbing
+                      : SystemMouseCursors.grab,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: const Center(
+                      child: Icon(
+                        Icons.add_circle_outline_sharp,
+                        size: _pointerIconSize,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
               ),
             ],
