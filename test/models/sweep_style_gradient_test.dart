@@ -5,7 +5,7 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/sweep_style_gradient.dart';
 import 'package:test/test.dart';
 
-import '../matchers.dart';
+import 'matchers.dart';
 
 void main() {
   group('SweepStyleGradient', () {
@@ -48,6 +48,7 @@ void main() {
         GradientDirection.bottomLeft: Alignment.bottomLeft,
         GradientDirection.bottomCenter: Alignment.bottomCenter,
         GradientDirection.bottomRight: Alignment.bottomRight,
+        GradientDirection.custom(): const Alignment(-0.5, 0),
       };
 
       gradientDirectionToCenterAlignmentMap

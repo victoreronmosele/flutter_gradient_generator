@@ -5,7 +5,7 @@ import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/linear_style_gradient.dart';
 import 'package:test/test.dart';
 
-import '../matchers.dart';
+import 'matchers.dart';
 
 void main() {
   group('LinearStyleGradient', () {
@@ -49,6 +49,7 @@ void main() {
         GradientDirection.bottomLeft: Alignment.bottomLeft,
         GradientDirection.bottomCenter: Alignment.bottomCenter,
         GradientDirection.bottomRight: Alignment.bottomRight,
+        GradientDirection.custom(): const Alignment(-0.5, 0),
       };
 
       gradientDirectionToBeginAlignmentMap
@@ -77,6 +78,7 @@ void main() {
         GradientDirection.bottomLeft: Alignment.topRight,
         GradientDirection.bottomCenter: Alignment.topCenter,
         GradientDirection.bottomRight: Alignment.topLeft,
+        GradientDirection.custom(): const Alignment(0.5, 0),
       };
 
       gradientDirectionToEndAlignmentMap
