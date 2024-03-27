@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
+import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
+import 'package:flutter_gradient_generator/enums/gradient_style.dart';
 import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
+
+const _pointerSize = 60.0;
+const _pointerIconSize = 24.0;
+const _halfPointerSize = _pointerSize / 2;
 
 class PreviewSection extends StatelessWidget {
   static const _portraitBorderRadius = 16.0;
@@ -31,28 +37,125 @@ class PreviewSection extends StatelessWidget {
 
     final previewWidgetSize = screenHeight / 1.5;
 
-    final gradient = context.select<GradientViewModel, AbstractGradient>(
-        (GradientViewModel viewModel) => viewModel.gradient);
-
-    final flutterGradient = gradient.toFlutterGradient();
+    final (gradient, gradientDirection) = context
+        .select<GradientViewModel, (AbstractGradient, GradientDirection)>(
+      (viewModel) {
+        final gradient = viewModel.gradient;
+        return (gradient, gradient.getGradientDirection());
+      },
+    );
 
     return Center(
       child: Container(
         color: AppColors.previewBackground,
         child: Center(
-          child: Container(
+          child: ConstrainedBox(
             constraints: BoxConstraints.tight(
               Size.square(
                 previewWidgetSize,
               ),
             ),
-            decoration: BoxDecoration(
-              gradient: flutterGradient,
-              borderRadius: BorderRadius.circular(borderRadius),
+            child: Stack(
+              children: [
+                Positioned.fill(
+                  child: DecoratedBox(
+                    decoration: BoxDecoration(
+                      gradient: gradient.toFlutterGradient(),
+                      borderRadius: BorderRadius.circular(borderRadius),
+                    ),
+                  ),
+                ),
+                if (gradientDirection
+                    case final GradientDirectionCustom direction) ...[
+                  _AlignmentPicker(
+                    alignment: direction.alignment,
+                    onAlignmentChanged: context
+                        .read<GradientViewModel>()
+                        .changeCustomGradientDirectionAlignment,
+                  ),
+                  if (gradient.getGradientStyle() == GradientStyle.linear)
+                    _AlignmentPicker(
+                      alignment: direction.endAlignment,
+                      onAlignmentChanged: context
+                          .read<GradientViewModel>()
+                          .changeCustomGradientDirectionEndAlignment,
+                    ),
+                ]
+              ],
             ),
           ),
         ),
       ),
     );
+  }
+}
+
+class _AlignmentPicker extends StatefulWidget {
+  const _AlignmentPicker({
+    required this.alignment,
+    required this.onAlignmentChanged,
+  });
+
+  final Alignment alignment;
+  final ValueChanged<Alignment> onAlignmentChanged;
+
+  @override
+  State<_AlignmentPicker> createState() => _AlignmentPickerState();
+}
+
+class _AlignmentPickerState extends State<_AlignmentPicker> {
+  bool dragging = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final BoxConstraints(:maxWidth, :maxHeight) = constraints;
+
+      void callAlignmentChanged(DragUpdateDetails details) {
+        final Offset(:dx, :dy) = details.localPosition;
+
+        widget.onAlignmentChanged(Alignment(
+          (dx / maxWidth) * 2 - 1,
+          (dy / maxHeight) * 2 - 1,
+        ));
+      }
+
+      final top = (widget.alignment.y + 1) / 2 * maxHeight - _halfPointerSize;
+      final left = (widget.alignment.x + 1) / 2 * maxWidth - _halfPointerSize;
+
+      return GestureDetector(
+        onPanUpdate: callAlignmentChanged,
+        onTapDown: (_) => setState(() => dragging = true),
+        onTapUp: (_) => setState(() => dragging = false),
+        onPanEnd: (_) => setState(() => dragging = false),
+        child: SizedBox.expand(
+          child: Stack(
+            children: [
+              Positioned(
+                top: top,
+                left: left,
+                width: _pointerSize,
+                height: _pointerSize,
+                child: MouseRegion(
+                  cursor: dragging
+                      ? SystemMouseCursors.grabbing
+                      : SystemMouseCursors.grab,
+                  child: Container(
+                    color: Colors.transparent,
+                    child: const Center(
+                      child: Icon(
+                        Icons.add_circle_outline_sharp,
+                        size: _pointerIconSize,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

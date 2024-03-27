@@ -24,75 +24,40 @@ class LinearStyleGradient extends AbstractGradient {
       ''';
 
   @visibleForTesting
-  Alignment get beginAlignment {
-    Alignment alignment;
-    switch (getGradientDirection()) {
-      case GradientDirection.topLeft:
-        alignment = Alignment.topLeft;
-        break;
-      case GradientDirection.topCenter:
-        alignment = Alignment.topCenter;
-        break;
-      case GradientDirection.topRight:
-        alignment = Alignment.topRight;
-        break;
-      case GradientDirection.centerLeft:
-        alignment = Alignment.centerLeft;
-        break;
-      case GradientDirection.center:
-        alignment = Alignment.center;
-        break;
-      case GradientDirection.centerRight:
-        alignment = Alignment.centerRight;
-        break;
-      case GradientDirection.bottomLeft:
-        alignment = Alignment.bottomLeft;
-        break;
-      case GradientDirection.bottomCenter:
-        alignment = Alignment.bottomCenter;
-        break;
-      case GradientDirection.bottomRight:
-        alignment = Alignment.bottomRight;
-        break;
-    }
-
-    return alignment;
-  }
+  Alignment get beginAlignment => switch (getGradientDirection()) {
+        GradientDirectionTopLeft() => Alignment.topLeft,
+        GradientDirectionTopCenter() => Alignment.topCenter,
+        GradientDirectionTopRight() => Alignment.topRight,
+        GradientDirectionCenterLeft() => Alignment.centerLeft,
+        GradientDirectionCenter() => Alignment.center,
+        GradientDirectionCenterRight() => Alignment.centerRight,
+        GradientDirectionBottomLeft() => Alignment.bottomLeft,
+        GradientDirectionBottomCenter() => Alignment.bottomCenter,
+        GradientDirectionBottomRight() => Alignment.bottomRight,
+        GradientDirectionCustom(alignment: final alignment) => alignment,
+      };
 
   @visibleForTesting
-  Alignment get endAlignment {
-    Alignment alignment;
+  Alignment get endAlignment => switch (getGradientDirection()) {
+        GradientDirectionTopLeft() => Alignment.bottomRight,
+        GradientDirectionTopCenter() => Alignment.bottomCenter,
+        GradientDirectionTopRight() => Alignment.bottomLeft,
+        GradientDirectionCenterLeft() => Alignment.centerRight,
+        GradientDirectionCenter() => Alignment.center,
+        GradientDirectionCenterRight() => Alignment.centerLeft,
+        GradientDirectionBottomLeft() => Alignment.topRight,
+        GradientDirectionBottomCenter() => Alignment.topCenter,
+        GradientDirectionBottomRight() => Alignment.topLeft,
+        GradientDirectionCustom(endAlignment: final endAlignment) =>
+          endAlignment,
+      };
 
-    switch (getGradientDirection()) {
-      case GradientDirection.topLeft:
-        alignment = Alignment.bottomRight;
-        break;
-      case GradientDirection.topCenter:
-        alignment = Alignment.bottomCenter;
-        break;
-      case GradientDirection.topRight:
-        alignment = Alignment.bottomLeft;
-        break;
-      case GradientDirection.centerLeft:
-        alignment = Alignment.centerRight;
-        break;
-      case GradientDirection.center:
-        alignment = Alignment.center;
-        break;
-      case GradientDirection.centerRight:
-        alignment = Alignment.centerLeft;
-        break;
-      case GradientDirection.bottomLeft:
-        alignment = Alignment.topRight;
-        break;
-      case GradientDirection.bottomCenter:
-        alignment = Alignment.topCenter;
-        break;
-      case GradientDirection.bottomRight:
-        alignment = Alignment.topLeft;
-        break;
-    }
-    return alignment;
+  @override
+  GradientDirectionCustom gradientDirectionAsCustom() {
+    return GradientDirectionCustom(
+      alignment: beginAlignment,
+      endAlignment: endAlignment,
+    );
   }
 
   @override
