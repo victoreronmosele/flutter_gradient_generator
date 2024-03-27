@@ -39,6 +39,13 @@ class SweepStyleGradient extends AbstractGradient {
   }
 
   @override
+  GradientDirectionCustom gradientDirectionAsCustom() {
+    return GradientDirectionCustom(
+      alignment: centerAlignment,
+    );
+  }
+
+  @override
   String toWidgetString() {
     return _widgetStringTemplate;
   }

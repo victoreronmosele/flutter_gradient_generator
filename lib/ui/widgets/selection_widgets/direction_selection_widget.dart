@@ -128,9 +128,7 @@ class DirectionSelectionWidget extends StatelessWidget {
           CompactButton.text(
             text: AppStrings.custom,
             onPressed: () {
-              gradientViewModel.changeGradientDirection(
-                GradientDirection.custom(),
-              );
+              gradientViewModel.changeGradientDirectionToCustom();
             },
             foregroundColor: Colors.black,
             backgroundColor:
@@ -153,7 +151,7 @@ class DirectionSelectionWidget extends StatelessWidget {
                   alignment: customDirection.alignment,
                   onAlignmentChanged: (newAlignment) {
                     gradientViewModel.changeGradientDirection(
-                      GradientDirection.custom(
+                      GradientDirectionCustom(
                         alignment: newAlignment,
                         endAlignment: customDirection.endAlignment,
                       ),
@@ -168,7 +166,7 @@ class DirectionSelectionWidget extends StatelessWidget {
                     alignment: customDirection.endAlignment,
                     onAlignmentChanged: (newAlignment) {
                       gradientViewModel.changeGradientDirection(
-                        GradientDirection.custom(
+                        GradientDirectionCustom(
                           alignment: customDirection.alignment,
                           endAlignment: newAlignment,
                         ),

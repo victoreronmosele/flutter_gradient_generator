@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/enums/gradient_direction.dart';
 import 'package:flutter_gradient_generator/enums/gradient_style.dart';
+import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -36,10 +37,13 @@ class PreviewSection extends StatelessWidget {
 
     final previewWidgetSize = screenHeight / 1.5;
 
-    final gradientViewModel = context.watch<GradientViewModel>();
-    final gradient = gradientViewModel.gradient;
-
-    final flutterGradient = gradient.toFlutterGradient();
+    final (gradient, gradientDirection) = context
+        .select<GradientViewModel, (AbstractGradient, GradientDirection)>(
+      (viewModel) {
+        final gradient = viewModel.gradient;
+        return (gradient, gradient.getGradientDirection());
+      },
+    );
 
     return Center(
       child: Container(
@@ -56,24 +60,24 @@ class PreviewSection extends StatelessWidget {
                 Positioned.fill(
                   child: DecoratedBox(
                     decoration: BoxDecoration(
-                      gradient: flutterGradient,
+                      gradient: gradient.toFlutterGradient(),
                       borderRadius: BorderRadius.circular(borderRadius),
                     ),
                   ),
                 ),
-                if (gradient.getGradientDirection()
+                if (gradientDirection
                     case final GradientDirectionCustom direction) ...[
                   _AlignmentPicker(
-                    gradientViewModel: gradientViewModel,
                     alignment: direction.alignment,
-                    onAlignmentChanged: gradientViewModel
+                    onAlignmentChanged: context
+                        .read<GradientViewModel>()
                         .changeCustomGradientDirectionAlignment,
                   ),
                   if (gradient.getGradientStyle() == GradientStyle.linear)
                     _AlignmentPicker(
-                      gradientViewModel: gradientViewModel,
                       alignment: direction.endAlignment,
-                      onAlignmentChanged: gradientViewModel
+                      onAlignmentChanged: context
+                          .read<GradientViewModel>()
                           .changeCustomGradientDirectionEndAlignment,
                     ),
                 ]
@@ -88,12 +92,10 @@ class PreviewSection extends StatelessWidget {
 
 class _AlignmentPicker extends StatefulWidget {
   const _AlignmentPicker({
-    required this.gradientViewModel,
     required this.alignment,
     required this.onAlignmentChanged,
   });
 
-  final GradientViewModel gradientViewModel;
   final Alignment alignment;
   final ValueChanged<Alignment> onAlignmentChanged;
 

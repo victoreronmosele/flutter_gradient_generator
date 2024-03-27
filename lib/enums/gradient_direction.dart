@@ -12,16 +12,6 @@ sealed class GradientDirection {
   static const bottomLeft = GradientDirectionBottomLeft._();
   static const bottomCenter = GradientDirectionBottomCenter._();
   static const bottomRight = GradientDirectionBottomRight._();
-
-  factory GradientDirection.custom({
-    Alignment alignment = const Alignment(-0.5, 0),
-    Alignment endAlignment = const Alignment(0.5, 0),
-  }) {
-    return GradientDirectionCustom._(
-      alignment: alignment,
-      endAlignment: endAlignment,
-    );
-  }
 }
 
 class GradientDirectionTopLeft extends GradientDirection {
@@ -61,9 +51,9 @@ class GradientDirectionBottomRight extends GradientDirection {
 }
 
 class GradientDirectionCustom extends GradientDirection {
-  const GradientDirectionCustom._({
-    required this.alignment,
-    required this.endAlignment,
+  const GradientDirectionCustom({
+    this.alignment = Alignment.center,
+    this.endAlignment = Alignment.center,
   });
 
   final Alignment alignment;

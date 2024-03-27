@@ -31,9 +31,7 @@ void main() {
 
           expect(find.byIcon(Icons.add_circle_outline_sharp), findsNothing);
 
-          gradientViewModel.changeGradientDirection(
-            GradientDirection.custom(),
-          );
+          gradientViewModel.changeGradientDirectionToCustom();
 
           await tester.pumpAndSettle();
 
@@ -59,9 +57,7 @@ void main() {
 
           expect(find.byIcon(Icons.add_circle_outline_sharp), findsNothing);
 
-          gradientViewModel.changeGradientDirection(
-            GradientDirection.custom(),
-          );
+          gradientViewModel.changeGradientDirectionToCustom();
 
           await tester.pumpAndSettle();
 
@@ -84,9 +80,7 @@ void main() {
 
           expect(find.byIcon(Icons.add_circle_outline_sharp), findsNothing);
 
-          gradientViewModel.changeGradientDirection(
-            GradientDirection.custom(),
-          );
+          gradientViewModel.changeGradientDirectionToCustom();
 
           await tester.pumpAndSettle();
 
@@ -99,7 +93,9 @@ void main() {
         (WidgetTester tester) async {
           // This is actually the default value.
           gradientViewModel.changeGradientStyle(GradientStyle.linear);
-          final initialDirection = GradientDirection.custom();
+          const initialDirection = GradientDirectionCustom(
+            alignment: Alignment(-0.5, 0),
+          );
           gradientViewModel.changeGradientDirection(initialDirection);
           await tester.pumpWidget(
             MaterialApp(
@@ -124,7 +120,7 @@ void main() {
           // Should not change the end alignment.
           expect(
             customDirection.endAlignment,
-            equals((initialDirection as GradientDirectionCustom).endAlignment),
+            equals(initialDirection.endAlignment),
           );
         },
       );
@@ -133,7 +129,9 @@ void main() {
         (WidgetTester tester) async {
           // This is actually the default value.
           gradientViewModel.changeGradientStyle(GradientStyle.linear);
-          final initialDirection = GradientDirection.custom();
+          const initialDirection = GradientDirectionCustom(
+            endAlignment: Alignment(0.5, 0),
+          );
           gradientViewModel.changeGradientDirection(initialDirection);
           await tester.pumpWidget(
             MaterialApp(
@@ -158,7 +156,7 @@ void main() {
           // Should not change the alignment.
           expect(
             customDirection.alignment,
-            equals((initialDirection as GradientDirectionCustom).alignment),
+            equals(initialDirection.alignment),
           );
         },
       );
@@ -167,7 +165,7 @@ void main() {
         'should change the pointer to grab when hovering over the picker',
         (WidgetTester tester) async {
           gradientViewModel.changeGradientStyle(GradientStyle.radial);
-          gradientViewModel.changeGradientDirection(GradientDirection.custom());
+          gradientViewModel.changeGradientDirectionToCustom();
           await tester.pumpWidget(
             MaterialApp(
               home: ChangeNotifierProvider.value(
@@ -197,7 +195,7 @@ void main() {
         'should change the pointer to grabbing when dragging the picker',
         (WidgetTester tester) async {
           gradientViewModel.changeGradientStyle(GradientStyle.radial);
-          gradientViewModel.changeGradientDirection(GradientDirection.custom());
+          gradientViewModel.changeGradientDirectionToCustom();
           await tester.pumpWidget(
             MaterialApp(
               home: ChangeNotifierProvider.value(

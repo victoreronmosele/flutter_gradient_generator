@@ -47,7 +47,10 @@ void main() {
           expect(
             gradientViewModel.gradient.getGradientDirection(),
             equals(
-              GradientDirection.custom(),
+              const GradientDirectionCustom(
+                alignment: Alignment.topLeft,
+                endAlignment: Alignment.bottomRight,
+              ),
             ),
           );
 
@@ -62,7 +65,7 @@ void main() {
         'should change alignment and end alignment when typing in text fields',
         (tester) async {
           gradientViewModel.changeGradientDirection(
-            GradientDirection.custom(),
+            const GradientDirectionCustom(),
           );
 
           await tester.pumpWidget(

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
-import 'package:flutter_gradient_generator/firebase_options.dart';
+// import 'package:flutter_gradient_generator/firebase_options.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
@@ -13,9 +13,9 @@ import 'package:url_strategy/url_strategy.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   setPathUrlStrategy();
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // await Firebase.initializeApp(
+  //   options: DefaultFirebaseOptions.currentPlatform,
+  // );
 
   runApp(const MyApp());
 }

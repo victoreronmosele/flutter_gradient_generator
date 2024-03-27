@@ -11,7 +11,7 @@ void main() {
       late GradientDirection initialDirection;
 
       setUp(() {
-        initialDirection = GradientDirection.custom();
+        initialDirection = const GradientDirectionCustom();
         gradientViewModel = GradientViewModel();
         gradientViewModel.changeGradientDirection(initialDirection);
       });
@@ -19,24 +19,24 @@ void main() {
       test('should change alignment', () {
         const newAlignment = Alignment(0.5, 0);
         gradientViewModel.changeGradientDirection(
-          GradientDirection.custom(alignment: newAlignment),
+          const GradientDirectionCustom(alignment: newAlignment),
         );
 
         expect(
           gradientViewModel.gradient.getGradientDirection(),
-          equals(GradientDirection.custom(alignment: newAlignment)),
+          equals(const GradientDirectionCustom(alignment: newAlignment)),
         );
       });
 
       test('should change end alignment', () {
         const newEndAlignment = Alignment(0.5, 0);
         gradientViewModel.changeGradientDirection(
-          GradientDirection.custom(endAlignment: newEndAlignment),
+          const GradientDirectionCustom(endAlignment: newEndAlignment),
         );
 
         expect(
           gradientViewModel.gradient.getGradientDirection(),
-          equals(GradientDirection.custom(endAlignment: newEndAlignment)),
+          equals(const GradientDirectionCustom(endAlignment: newEndAlignment)),
         );
       });
     });

@@ -49,6 +49,9 @@ abstract class AbstractGradient {
   ///Returns the direction of the gradient
   GradientDirection getGradientDirection() => _gradientDirection;
 
+  ///Converts the current gradient direction to [GradientDirectionCustom]
+  GradientDirectionCustom gradientDirectionAsCustom();
+
   /// Returns the style of the gradient
   GradientStyle getGradientStyle();
 

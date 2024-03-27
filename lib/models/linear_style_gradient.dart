@@ -53,6 +53,14 @@ class LinearStyleGradient extends AbstractGradient {
       };
 
   @override
+  GradientDirectionCustom gradientDirectionAsCustom() {
+    return GradientDirectionCustom(
+      alignment: beginAlignment,
+      endAlignment: endAlignment,
+    );
+  }
+
+  @override
   String toWidgetString() {
     return _widgetStringTemplate;
   }

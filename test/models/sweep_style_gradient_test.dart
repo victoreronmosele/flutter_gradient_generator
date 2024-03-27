@@ -48,7 +48,8 @@ void main() {
         GradientDirection.bottomLeft: Alignment.bottomLeft,
         GradientDirection.bottomCenter: Alignment.bottomCenter,
         GradientDirection.bottomRight: Alignment.bottomRight,
-        GradientDirection.custom(): const Alignment(-0.5, 0),
+        const GradientDirectionCustom(alignment: Alignment(-0.5, 0)):
+            const Alignment(-0.5, 0),
       };
 
       gradientDirectionToCenterAlignmentMap

@@ -114,7 +114,7 @@ class GradientViewModel with ChangeNotifier {
   void changeCustomGradientDirectionAlignment(Alignment alignment) {
     if (_gradient.getGradientDirection()
         case final GradientDirectionCustom customDirection) {
-      final newGradientDirection = GradientDirection.custom(
+      final newGradientDirection = GradientDirectionCustom(
         alignment: alignment,
         endAlignment: customDirection.endAlignment,
       );
@@ -126,13 +126,19 @@ class GradientViewModel with ChangeNotifier {
   void changeCustomGradientDirectionEndAlignment(Alignment endAlignment) {
     if (_gradient.getGradientDirection()
         case final GradientDirectionCustom customDirection) {
-      final newGradientDirection = GradientDirection.custom(
+      final newGradientDirection = GradientDirectionCustom(
         alignment: customDirection.alignment,
         endAlignment: endAlignment,
       );
 
       changeGradientDirection(newGradientDirection);
     }
+  }
+
+  void changeGradientDirectionToCustom() {
+    changeGradientDirection(
+      gradient.gradientDirectionAsCustom(),
+    );
   }
 
   void changeGradientDirection(GradientDirection newGradientDirection) {
