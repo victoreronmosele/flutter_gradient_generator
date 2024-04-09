@@ -8,6 +8,7 @@ class AppStrings {
   static const colors = 'Colors';
   static const colorsAndStops = 'Colors & Stops';
   static const random = 'Random';
+  static const custom = 'Custom';
   static const direction = 'Direction';
   static const tapToEdit = 'Tap to edit';
   static const enterInPercentage = 'Enter in %';
@@ -25,6 +26,10 @@ class AppStrings {
   static const giveFeedback = 'Give Feedback';
   static const viewSourceCodeOnGitHub = 'View Source Code On GitHub';
   static const downloadGradientAsImage = 'Download Gradient As Image';
+  static const alignmentX = 'X:';
+  static const alignmentY = 'Y:';
+  static const alignment = 'Alignment:';
+  static const endAlignment = 'End Alignment:';
 
   /// URLs
   static const githubUrl =

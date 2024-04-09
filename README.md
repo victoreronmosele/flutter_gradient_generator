@@ -30,6 +30,7 @@ Flutter Gradient Generator is a web app that generates linear, radial and sweep 
    - bottom-left
    - bottom-center
    - bottom-right
+   - custom
 
 4. **Choose the gradient colors.** 
 

@@ -40,7 +40,7 @@ class ToolBar extends StatelessWidget {
                       onTap: () {
                         launchUrl(
                           Uri.parse('/'),
-                    
+
                           /// Open in current tab
                           webOnlyWindowName: '_self',
                         );
