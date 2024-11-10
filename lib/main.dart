@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
@@ -11,6 +12,7 @@ import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart'
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:web/web.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +48,7 @@ class _MyAppState extends State<MyApp> {
     );
     historyViewModel = HistoryViewModel(
       onUndoOrRedo: () {
-        final lastGradient = historyViewModel.history.lastOrNull;
+        final lastGradient = historyViewModel.liveHistory.lastOrNull;
 
         if (lastGradient == null) {
           gradientViewModel.setGradientToDefault(isNewGradient: false);
@@ -62,39 +64,78 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return OrientationBuilder(builder: (context, orientation) {
-      final screenSize = MediaQuery.of(context).size;
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        final screenSize = MediaQuery.of(context).size;
 
-      final width = screenSize.width;
-      final height = screenSize.height;
+        final width = screenSize.width;
+        final height = screenSize.height;
 
-      return MaterialApp(
-        title: AppStrings.appTitle,
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
-        home: AppDimensions(
-          orientation: orientation,
-          screenWidth: width,
-          screenHeight: height,
-          child: MultiProvider(
-            providers: [
-              ChangeNotifierProvider.value(
-                value: gradientViewModel,
+        return MaterialApp(
+          title: AppStrings.appTitle,
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(textTheme: AppFonts.getTextTheme(context)),
+          home: AppDimensions(
+            orientation: orientation,
+            screenWidth: width,
+            screenHeight: height,
+            child: MultiProvider(
+              providers: [
+                ChangeNotifierProvider.value(
+                  value: gradientViewModel,
+                ),
+                ChangeNotifierProvider.value(
+                  value: historyViewModel,
+                ),
+                Provider.value(
+                  value: analytics,
+                ),
+                Provider.value(
+                  value: gradientDownloader,
+                ),
+              ],
+              child: CallbackShortcuts(
+                bindings: () {
+                  final isMac =
+                      window.navigator.platform.toLowerCase().contains('mac');
+
+                  // Command + Z if Mac, Control + Z otherwise
+                  final undoShortcutActivator = SingleActivator(
+                    LogicalKeyboardKey.keyZ,
+                    meta: isMac,
+                    control: !isMac,
+                  );
+
+                  // Command + Shift + Z if Mac, Control + Y otherwise
+                  final redoShortcutActivator = SingleActivator(
+                    isMac ? LogicalKeyboardKey.keyZ : LogicalKeyboardKey.keyY,
+                    meta: isMac,
+                    control: !isMac,
+                    shift: isMac,
+                  );
+
+                  return {
+                    undoShortcutActivator: () {
+                      analytics.logUndoShortcutPressedEvent();
+
+                      historyViewModel.undo();
+                    },
+                    redoShortcutActivator: () {
+                      analytics.logRedoShortcutPressedEvent();
+
+                      historyViewModel.redo();
+                    },
+                  };
+                }(),
+                child: Focus(
+                  autofocus: true,
+                  child: const HomeScreen(),
+                ),
               ),
-              ChangeNotifierProvider.value(
-                value: historyViewModel,
-              ),
-              Provider.value(
-                value: analytics,
-              ),
-              Provider.value(
-                value: gradientDownloader,
-              ),
-            ],
-            child: const HomeScreen(),
+            ),
           ),
-        ),
-      );
-    });
+        );
+      },
+    );
   }
 }

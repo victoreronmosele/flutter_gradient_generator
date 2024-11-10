@@ -53,10 +53,10 @@ class ToolBar extends StatelessWidget {
                   ),
                 ),
                 ToolBarIconButton(
-                  toolTipMessage: historyViewModel.history.isEmpty
+                  toolTipMessage: historyViewModel.liveHistory.isEmpty
                       ? AppStrings.noActionsToUndo
                       : AppStrings.undo,
-                  onPressed: historyViewModel.history.isEmpty
+                  onPressed: historyViewModel.liveHistory.isEmpty
                       ? null
                       : () {
                           final analytics = context.read<Analytics>();

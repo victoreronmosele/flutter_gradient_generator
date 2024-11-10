@@ -119,14 +119,40 @@ class Analytics {
   /// Logs when the undo button is clicked.
   Future<void> logUndoButtonClickEvent() async {
     await logEventInReleaseMode(
-      FirebaseAnalyticsEvent.undoButtonClicked,
+      FirebaseAnalyticsEvent.undo,
+      parameters: <String, String>{
+        'source': 'button',
+      },
     );
   }
 
   /// Logs when the redo button is clicked.
   Future<void> logRedoButtonClickEvent() async {
     await logEventInReleaseMode(
-      FirebaseAnalyticsEvent.redoButtonClicked,
+      FirebaseAnalyticsEvent.redo,
+      parameters: <String, String>{
+        'source': 'button',
+      },
+    );
+  }
+
+  /// Logs when the undo shortcut is pressed.
+  Future<void> logUndoShortcutPressedEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.undo,
+      parameters: <String, String>{
+        'source': 'shortcut',
+      },
+    );
+  }
+
+  /// Logs when the redo shortcut is pressed.
+  Future<void> logRedoShortcutPressedEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.redo,
+      parameters: <String, String>{
+        'source': 'shortcut',
+      },
     );
   }
 }
@@ -148,8 +174,8 @@ enum FirebaseAnalyticsEvent {
   bugReportButtonClicked(key: 'bugReportButtonClicked'),
   viewSourceCodeOnGitHubButtonClicked(
       key: 'viewSourceCodeOnGitHubButtonClicked'),
-  undoButtonClicked(key: 'undoButtonClicked'),
-  redoButtonClicked(key: 'redoButtonClicked'),
+  undo(key: 'undo'),
+  redo(key: 'redo'),
   victorEronmoseleClicked(key: 'victorEronmoseleClicked');
 
   const FirebaseAnalyticsEvent({required this.key});
