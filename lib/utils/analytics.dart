@@ -14,7 +14,7 @@ class Analytics {
   @visibleForTesting
   Future<void> logEventInReleaseMode(
       FirebaseAnalyticsEvent firebaseAnalyticsEvent,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, Object>? parameters}) async {
     final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
     /// Return if not in release mode

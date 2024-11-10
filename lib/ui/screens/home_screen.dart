@@ -9,8 +9,8 @@ import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   HomeScreenState createState() => HomeScreenState();

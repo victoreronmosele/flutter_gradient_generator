@@ -11,42 +11,39 @@ class CompactButton extends StatelessWidget {
 
   /// Creates a [CompactButton] with an icon.
   CompactButton.icon({
-    Key? key,
+    super.key,
     required IconData icon,
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
     this.borderSide,
-  })  : child = Icon(
+  }) : child = Icon(
           icon,
           size: 12.0,
-        ),
-        super(key: key);
+        );
 
   /// Creates a [CompactButton] with a text.
   CompactButton.text({
-    Key? key,
+    super.key,
     required String text,
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
     this.borderSide,
-  })  : child = Text(
+  }) : child = Text(
           text,
           maxLines: 1,
           overflow: TextOverflow.ellipsis,
-        ),
-        super(key: key);
+        );
 
   /// Creates a [CompactButton] without any child.
   const CompactButton.empty({
-    Key? key,
+    super.key,
     required this.onPressed,
     required this.backgroundColor,
     required this.foregroundColor,
     this.borderSide,
-  })  : child = const SizedBox(),
-        super(key: key);
+  }) : child = const SizedBox();
 
   @override
   Widget build(BuildContext context) {
@@ -57,13 +54,13 @@ class CompactButton extends StatelessWidget {
     return TextButton(
       onPressed: onPressed,
       style: ButtonStyle(
-        backgroundColor: MaterialStateProperty.all(backgroundColor),
-        foregroundColor: MaterialStateProperty.all(foregroundColor),
-        textStyle: MaterialStateProperty.all(TextStyle(
+        backgroundColor: WidgetStateProperty.all(backgroundColor),
+        foregroundColor: WidgetStateProperty.all(foregroundColor),
+        textStyle: WidgetStateProperty.all(TextStyle(
             fontWeight: FontWeight.bold,
             fontFamily: AppFonts.getFontFamily(context))),
-        side: MaterialStateProperty.all(borderSide),
-        fixedSize: MaterialStateProperty.all(
+        side: WidgetStateProperty.all(borderSide),
+        fixedSize: WidgetStateProperty.all(
             (Size(compactButtonWidth, compactButtonHeight))),
       ),
       child: child,

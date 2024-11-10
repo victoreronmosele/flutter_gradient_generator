@@ -52,10 +52,10 @@ class GradientViewModel with ChangeNotifier {
   /// which means it is not a new gradient.
   /// In this case, the [isNewGradient] is set to `false` and the [onNewGradientSet]
   /// function is not called.
-  /// 
+  ///
   /// Note: Use this method instead of setting the [_gradient] directly to ensure
   /// that the [onNewGradientSet] function is called when a new gradient is set.
-  /// 
+  ///
   /// See also: [setGradientToDefault]
   void setGradientDetails({
     required AbstractGradient gradientToSet,

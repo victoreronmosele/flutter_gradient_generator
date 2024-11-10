@@ -6,8 +6,8 @@ import 'package:flutter_gradient_generator/ui/widgets/selection_widgets/style_se
 
 class GeneratorSection extends StatelessWidget {
   const GeneratorSection({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -10,12 +10,12 @@ class DirectionButton extends StatelessWidget {
   final void Function(GradientDirection) onGradientDirectionChanged;
 
   const DirectionButton({
-    Key? key,
+    super.key,
     required this.icon,
     required this.gradientDirection,
     required this.isSelected,
     required this.onGradientDirectionChanged,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

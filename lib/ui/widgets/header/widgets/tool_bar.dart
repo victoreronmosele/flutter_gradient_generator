@@ -12,8 +12,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 class ToolBar extends StatelessWidget {
   const ToolBar({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
