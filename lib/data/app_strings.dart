@@ -25,10 +25,26 @@ class AppStrings {
   static const giveFeedback = 'Give Feedback';
   static const viewSourceCodeOnGitHub = 'View Source Code On GitHub';
   static const downloadGradientAsImage = 'Download Gradient As Image';
-  static const undo = 'Undo';
   static const noActionsToUndo = 'No actions to undo';
-  static const redo = 'Redo';
   static const noActionsToRedo = 'No actions to redo';
+  static const undo = 'Undo';
+  static const redo = 'Redo';
+
+  static const macCommandKey = '⌘';
+  static const macShiftKey = '⇧';
+  static const windowsControlKey = 'Ctrl';
+
+  /// Returns:
+  /// * Undo ⌘Z, for macOs
+  /// * Undo CtrlZ, otherwise
+  static String getUndoShortcutText({required bool isMac}) =>
+      '${isMac ? macCommandKey : windowsControlKey}Z';
+
+  /// Returns:
+  /// * Redo ⌘⇧Z, for macOs
+  /// * Redo CtrlY, otherwise
+  static String getRedoShortcutText({required bool isMac}) =>
+      isMac ? '$macCommandKey${macShiftKey}Z' : '${windowsControlKey}Y';
 
   /// URLs
   static const githubUrl =

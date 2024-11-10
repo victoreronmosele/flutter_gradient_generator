@@ -8,11 +8,11 @@ import 'package:flutter_gradient_generator/firebase_options.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
+import 'package:flutter_gradient_generator/utils/platform_checker.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
-import 'package:web/web.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,6 +36,7 @@ class _MyAppState extends State<MyApp> {
   late final HistoryViewModel historyViewModel;
   late final Analytics analytics;
   late final GradientDownloader gradientDownloader;
+  late final PlatformChecker platformChecker;
 
   @override
   void initState() {
@@ -60,6 +61,7 @@ class _MyAppState extends State<MyApp> {
     );
     analytics = Analytics();
     gradientDownloader = GradientDownloader();
+    platformChecker = PlatformChecker();
   }
 
   @override
@@ -93,11 +95,13 @@ class _MyAppState extends State<MyApp> {
                 Provider.value(
                   value: gradientDownloader,
                 ),
+                Provider.value(
+                  value: platformChecker,
+                ),
               ],
               child: CallbackShortcuts(
                 bindings: () {
-                  final isMac =
-                      window.navigator.platform.toLowerCase().contains('mac');
+                  final isMac = platformChecker.isMac();
 
                   // Command + Z if Mac, Control + Z otherwise
                   final undoShortcutActivator = SingleActivator(

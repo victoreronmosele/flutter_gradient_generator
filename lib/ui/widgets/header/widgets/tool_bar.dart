@@ -4,6 +4,7 @@ import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
+import 'package:flutter_gradient_generator/utils/platform_checker.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/header/widgets/tool_bar_icon_button.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
@@ -20,6 +21,9 @@ class ToolBar extends StatelessWidget {
     final appDimensions = AppDimensions.of(context);
     final historyViewModel = context.watch<HistoryViewModel>();
     final gradientDownloader = context.read<GradientDownloader>();
+    final platformChecker = context.read<PlatformChecker>();
+
+    final isMac = platformChecker.isMac();
 
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
@@ -53,9 +57,22 @@ class ToolBar extends StatelessWidget {
                   ),
                 ),
                 ToolBarIconButton(
-                  toolTipMessage: historyViewModel.liveHistory.isEmpty
-                      ? AppStrings.noActionsToUndo
-                      : AppStrings.undo,
+                  toolTipMessage: ToolTipMessage(
+                    toolTipTextList: [
+                      ToolTipText(
+                        value: historyViewModel.liveHistory.isEmpty
+                            ? AppStrings.noActionsToUndo
+                            : AppStrings.undo,
+                        isKeyboardKey: false,
+                      ),
+                      const EmptySpaceToolTipText(),
+                      if (historyViewModel.liveHistory.isNotEmpty)
+                        ToolTipText(
+                          value: AppStrings.getUndoShortcutText(isMac: isMac),
+                          isKeyboardKey: true,
+                        ),
+                    ],
+                  ),
                   onPressed: historyViewModel.liveHistory.isEmpty
                       ? null
                       : () {
@@ -68,9 +85,22 @@ class ToolBar extends StatelessWidget {
                   icon: Icons.undo,
                 ),
                 ToolBarIconButton(
-                  toolTipMessage: historyViewModel.removedGradients.isEmpty
-                      ? AppStrings.noActionsToRedo
-                      : AppStrings.redo,
+                  toolTipMessage: ToolTipMessage(
+                    toolTipTextList: [
+                      ToolTipText(
+                        value: historyViewModel.removedGradients.isEmpty
+                            ? AppStrings.noActionsToRedo
+                            : AppStrings.redo,
+                        isKeyboardKey: false,
+                      ),
+                      const EmptySpaceToolTipText(),
+                      if (historyViewModel.removedGradients.isNotEmpty)
+                        ToolTipText(
+                          value: AppStrings.getRedoShortcutText(isMac: isMac),
+                          isKeyboardKey: true,
+                        ),
+                    ],
+                  ),
                   onPressed: historyViewModel.removedGradients.isEmpty
                       ? null
                       : () {
@@ -84,7 +114,14 @@ class ToolBar extends StatelessWidget {
                 ),
                 ToolBarIconButton(
                   icon: Icons.save_alt_outlined,
-                  toolTipMessage: AppStrings.downloadGradientAsImage,
+                  toolTipMessage: ToolTipMessage(
+                    toolTipTextList: [
+                      ToolTipText(
+                        value: AppStrings.downloadGradientAsImage,
+                        isKeyboardKey: false,
+                      ),
+                    ],
+                  ),
                   onPressed: () async {
                     final analytics = context.read<Analytics>();
 

@@ -13,7 +13,7 @@ class ToolBarIconButton extends StatelessWidget {
   });
 
   /// The message to show in the [ToolTip] when the icon is hovered over.
-  final String toolTipMessage;
+  final ToolTipMessage toolTipMessage;
   final IconData icon;
   final Color color;
   final VoidCallback? onPressed;
@@ -23,7 +23,18 @@ class ToolBarIconButton extends StatelessWidget {
     final appDimensions = AppDimensions.of(context);
 
     return Tooltip(
-      message: toolTipMessage,
+      richMessage: TextSpan(
+        children: toolTipMessage.toolTipTextList.map((text) {
+          return TextSpan(
+            text: text.value,
+            style: text.isKeyboardKey
+                ? TextStyle(
+                    color: Colors.white70,
+                  )
+                : null,
+          );
+        }).toList(),
+      ),
       child: IconButton(
         onPressed: onPressed,
         icon: Icon(icon),
@@ -35,4 +46,21 @@ class ToolBarIconButton extends StatelessWidget {
       ),
     );
   }
+}
+
+class ToolTipMessage {
+  const ToolTipMessage({required this.toolTipTextList});
+
+  final List<ToolTipText> toolTipTextList;
+}
+
+class ToolTipText {
+  const ToolTipText({required this.value, required this.isKeyboardKey});
+
+  final String value;
+  final bool isKeyboardKey;
+}
+
+class EmptySpaceToolTipText extends ToolTipText {
+  const EmptySpaceToolTipText() : super(value: '  ', isKeyboardKey: false);
 }
