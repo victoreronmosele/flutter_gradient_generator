@@ -8,12 +8,7 @@ import 'package:quiver/core.dart';
 // ignore: must_be_immutable
 class LinearStyleGradient extends AbstractGradient {
   LinearStyleGradient(
-      {required List<ColorAndStop> colorAndStopList,
-      required GradientDirection gradientDirection})
-      : super(
-          colorAndStopList: colorAndStopList,
-          gradientDirection: gradientDirection,
-        );
+      {required super.colorAndStopList, required super.gradientDirection});
 
   String get _widgetStringTemplate => '''LinearGradient(
           colors: ${getColorList()},

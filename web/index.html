@@ -55,13 +55,6 @@
     document.documentElement.style.setProperty("--vh", `${vh}px`);
   </script>
   <link rel="stylesheet" href="style.css" />
-
-  <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <script src="flutter.js" defer></script>
 </head>
 
 <body>
@@ -92,12 +85,13 @@
     </div>
   </main>
   <script>
+    {{flutter_js}}
+    {{flutter_build_config}}
+    {{flutter_service_worker_version}}
+    
     window.addEventListener('load', function (ev) {
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
+
+      _flutter.loader.load({
         onEntrypointLoaded: function (engineInitializer) {
           engineInitializer.initializeEngine(
           ).then(function (appRunner) {

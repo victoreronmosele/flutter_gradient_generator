@@ -18,8 +18,8 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.2.6 <4.0.0"
-  flutter: ">=3.16.9"
+  sdk: ^3.5.0
+  flutter: ">=3.24.0"
   
 dependencies:
   flutter:
@@ -31,28 +31,27 @@ dependencies:
       url: https://github.com/victoreronmosele/flutter-vector-icons.git
       ref: v3.0.0
   collection: ^1.15.0
-  url_strategy: ^0.2.0
+  url_strategy: ^0.3.0
   quiver: ^3.0.1+1
-  google_fonts: ^4.0.3
+  google_fonts: ^6.2.1
   url_launcher: ^6.0.12
-  firebase_core: ^2.7.1
-  firebase_analytics: ^10.1.5
+  firebase_core: ^3.7.0
+  firebase_analytics: ^11.3.4
   provider: ^6.0.5
-  html_color_input:
-    git:
-      url: https://github.com/victoreronmosele/flutter_html_color_input.git
-      ref: feature/implement-html-color-input
+  web_color_picker: ^2.0.0
   tinycolor2: ^3.0.1
   meta: ^1.10.0
-  screenshot: ^2.1.0
+  screenshot: ^3.0.0
   image_downloader_web: ^2.0.4
+  web: ^1.1.0
+  intl: ^0.19.0
   
 
 dev_dependencies:
-  flutter_lints: ^2.0.1
+  flutter_lints: ^5.0.0
   flutter_test:
     sdk: flutter
-  test:
+  test: ^1.25.7
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -10,8 +10,8 @@ import 'package:provider/provider.dart';
 
 class CopyGradientButton extends StatefulWidget {
   const CopyGradientButton({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<CopyGradientButton> createState() => _CopyGradientButtonState();
@@ -24,11 +24,11 @@ class _CopyGradientButtonState extends State<CopyGradientButton> {
       ? AppStrings.gradientCodeCopied
       : AppStrings.copyGradientCode;
 
-  Color _getBackgroundColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
+  Color _getBackgroundColor(Set<WidgetState> states) {
+    const Set<WidgetState> interactiveStates = <WidgetState>{
+      WidgetState.pressed,
+      WidgetState.hovered,
+      WidgetState.focused,
     };
     if (states.any(interactiveStates.contains)) {
       return AppColors.darkGrey;
@@ -36,11 +36,11 @@ class _CopyGradientButtonState extends State<CopyGradientButton> {
     return AppColors.grey;
   }
 
-  Color _getForegroundColor(Set<MaterialState> states) {
-    const Set<MaterialState> interactiveStates = <MaterialState>{
-      MaterialState.pressed,
-      MaterialState.hovered,
-      MaterialState.focused,
+  Color _getForegroundColor(Set<WidgetState> states) {
+    const Set<WidgetState> interactiveStates = <WidgetState>{
+      WidgetState.pressed,
+      WidgetState.hovered,
+      WidgetState.focused,
     };
     if (states.any(interactiveStates.contains)) {
       return AppColors.white;
@@ -85,15 +85,13 @@ class _CopyGradientButtonState extends State<CopyGradientButton> {
           });
         },
         style: ButtonStyle(
-          backgroundColor:
-              MaterialStateProperty.resolveWith(_getBackgroundColor),
-          foregroundColor:
-              MaterialStateProperty.resolveWith(_getForegroundColor),
-          textStyle: MaterialStateProperty.all(TextStyle(
+          backgroundColor: WidgetStateProperty.resolveWith(_getBackgroundColor),
+          foregroundColor: WidgetStateProperty.resolveWith(_getForegroundColor),
+          textStyle: WidgetStateProperty.all(TextStyle(
               fontWeight: FontWeight.bold,
               fontFamily: AppFonts.getFontFamily(context))),
-          padding: MaterialStateProperty.all(EdgeInsets.all(wideButtonPadding)),
-          fixedSize: MaterialStateProperty.all(
+          padding: WidgetStateProperty.all(EdgeInsets.all(wideButtonPadding)),
+          fixedSize: WidgetStateProperty.all(
               (Size(wideButtonWidth, wideButtonHeight))),
         ),
         child: Text(_buttonText),

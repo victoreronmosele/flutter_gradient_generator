@@ -14,7 +14,7 @@ class Analytics {
   @visibleForTesting
   Future<void> logEventInReleaseMode(
       FirebaseAnalyticsEvent firebaseAnalyticsEvent,
-      {Map<String, dynamic>? parameters}) async {
+      {Map<String, Object>? parameters}) async {
     final FirebaseAnalytics analytics = FirebaseAnalytics.instance;
 
     /// Return if not in release mode
@@ -115,6 +115,60 @@ class Analytics {
       FirebaseAnalyticsEvent.victorEronmoseleClicked,
     );
   }
+
+  /// Logs when the undo button is clicked.
+  Future<void> logUndoButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.undo,
+      parameters: <String, String>{
+        'source': 'button',
+      },
+    );
+  }
+
+  /// Logs when the redo button is clicked.
+  Future<void> logRedoButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.redo,
+      parameters: <String, String>{
+        'source': 'button',
+      },
+    );
+  }
+
+  /// Logs when the undo shortcut is pressed.
+  Future<void> logUndoShortcutPressedEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.undo,
+      parameters: <String, String>{
+        'source': 'shortcut',
+      },
+    );
+  }
+
+  /// Logs when the redo shortcut is pressed.
+  Future<void> logRedoShortcutPressedEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.redo,
+      parameters: <String, String>{
+        'source': 'shortcut',
+      },
+    );
+  }
+
+  /// Logs when the version history button is clicked.
+  Future<void> logVersionHistoryButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.versionHistoryButtonClicked,
+    );
+  }
+
+  /// Logs when a version history item is clicked.
+  Future<void> logVersionHistoryItemClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.versionHistoryItemClicked,
+    );
+  }
 }
 
 /// The list of Firebase Analytics events to log.
@@ -134,7 +188,11 @@ enum FirebaseAnalyticsEvent {
   bugReportButtonClicked(key: 'bugReportButtonClicked'),
   viewSourceCodeOnGitHubButtonClicked(
       key: 'viewSourceCodeOnGitHubButtonClicked'),
-  victorEronmoseleClicked(key: 'victorEronmoseleClicked');
+  undo(key: 'undo'),
+  redo(key: 'redo'),
+  victorEronmoseleClicked(key: 'victorEronmoseleClicked'),
+  versionHistoryButtonClicked(key: 'versionHistoryButtonClicked'),
+  versionHistoryItemClicked(key: 'versionHistoryItemClicked');
 
   const FirebaseAnalyticsEvent({required this.key});
 

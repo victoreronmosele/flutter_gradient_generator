@@ -4,8 +4,8 @@ import 'package:flutter_gradient_generator/ui/widgets/header/widgets/banner_ad.d
 
 class Header extends StatefulWidget {
   const Header({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   State<Header> createState() => _HeaderState();
@@ -51,7 +51,7 @@ class _HeaderState extends State<Header> with SingleTickerProviderStateMixin {
             },
           ),
         ),
-        ToolBar(),
+        const ToolBar(),
       ],
     );
   }

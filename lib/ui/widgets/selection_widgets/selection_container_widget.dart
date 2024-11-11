@@ -75,7 +75,7 @@ class _SelectionWidgetContainerState extends State<SelectionWidgetContainer>
 
   @override
   Widget build(BuildContext context) {
-    final AppDimensions appDimensions = AppDimensions.of(context);
+    final appDimensions = AppDimensions.of(context);
 
     final expansionIconSize = appDimensions.expansionIconSize;
 
@@ -114,10 +114,12 @@ class _SelectionWidgetContainerState extends State<SelectionWidgetContainer>
                   width: 4.0,
                 ),
                 Expanded(
-                  child: Text(widget.title,
-                      style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          )),
+                  child: Text(
+                    widget.title,
+                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                  ),
                 ),
                 if (widget.titleTrailingWidget != null)
                   widget.titleTrailingWidget!,

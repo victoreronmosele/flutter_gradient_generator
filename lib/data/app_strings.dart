@@ -30,6 +30,27 @@ class AppStrings {
   static const alignmentY = 'Y:';
   static const alignment = 'Alignment:';
   static const endAlignment = 'End Alignment:';
+  static const noActionsToUndo = 'No actions to undo';
+  static const noActionsToRedo = 'No actions to redo';
+  static const undo = 'Undo';
+  static const redo = 'Redo';
+  static const versionHistory = 'Version History';
+
+  static const macCommandKey = '⌘';
+  static const macShiftKey = '⇧';
+  static const windowsControlKey = 'Ctrl';
+
+  /// Returns:
+  /// * Undo ⌘Z, for macOs
+  /// * Undo CtrlZ, otherwise
+  static String getUndoShortcutText({required bool isMac}) =>
+      '${isMac ? macCommandKey : windowsControlKey}Z';
+
+  /// Returns:
+  /// * Redo ⌘⇧Z, for macOs
+  /// * Redo CtrlY, otherwise
+  static String getRedoShortcutText({required bool isMac}) =>
+      isMac ? '$macCommandKey${macShiftKey}Z' : '${windowsControlKey}Y';
 
   /// URLs
   static const githubUrl =
