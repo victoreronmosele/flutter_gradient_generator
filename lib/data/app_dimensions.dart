@@ -80,6 +80,7 @@ class AppDimensions extends InheritedWidget {
   double get toolBarHeight => 48;
 
   double get chooseRandomGradientIconButtonSize => 16;
+  double get versionHistoryCloseIconButtonSize => 16;
 
   double get sampleTitleBottomMargin => 2.0;
 

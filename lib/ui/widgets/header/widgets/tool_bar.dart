@@ -8,6 +8,7 @@ import 'package:flutter_gradient_generator/utils/platform_checker.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/widgets/header/widgets/tool_bar_icon_button.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
+import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -19,7 +20,10 @@ class ToolBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
+
     final historyViewModel = context.watch<HistoryViewModel>();
+    final homeViewModel = context.watch<HomeViewModel>();
+
     final gradientDownloader = context.read<GradientDownloader>();
     final platformChecker = context.read<PlatformChecker>();
 
@@ -111,6 +115,27 @@ class ToolBar extends StatelessWidget {
                           historyViewModel.redo();
                         },
                   icon: Icons.redo,
+                ),
+                ToolBarIconButton(
+                  icon: Icons.history_outlined,
+                  toolTipMessage: ToolTipMessage(
+                    toolTipTextList: [
+                      ToolTipText(
+                        value: AppStrings.versionHistory,
+                        isKeyboardKey: false,
+                      ),
+                    ],
+                  ),
+                  onPressed: homeViewModel.isShowingVersionHistory ||
+                          historyViewModel.fullHistory.isEmpty
+                      ? null
+                      : () async {
+                          final analytics = context.read<Analytics>();
+
+                          homeViewModel.showVersionHistory();
+
+                          analytics.logVersionHistoryButtonClickEvent();
+                        },
                 ),
                 ToolBarIconButton(
                   icon: Icons.save_alt_outlined,

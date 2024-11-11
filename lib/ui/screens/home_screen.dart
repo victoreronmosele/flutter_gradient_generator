@@ -2,35 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/left_section.dart';
 import 'package:flutter_gradient_generator/ui/widgets/header/header.dart';
-import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/generator_section.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
+import 'package:flutter_gradient_generator/ui/screens/sections/version_history_section.dart';
+import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
 import 'package:provider/provider.dart';
 
-class HomeScreen extends StatefulWidget {
+class HomeScreen extends StatelessWidget {
   const HomeScreen({
     super.key,
   });
-
-  @override
-  HomeScreenState createState() => HomeScreenState();
-}
-
-class HomeScreenState extends State<HomeScreen> {
-  late GradientViewModel gradientService;
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      gradientService = context.read<GradientViewModel>();
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     final appDimensions = AppDimensions.of(context);
+
+    final homeViewModel = context.watch<HomeViewModel>();
 
     //TODO: Handle portrait UI
     // ignore: unused_local_variable
@@ -61,7 +47,9 @@ class HomeScreenState extends State<HomeScreen> {
                     ),
                     SizedBox(
                       width: generatorScreenWidth,
-                      child: const GeneratorSection(),
+                      child: homeViewModel.isShowingVersionHistory
+                          ? const VersionHistorySection()
+                          : const GeneratorSection(),
                     ),
                   ],
                 ),

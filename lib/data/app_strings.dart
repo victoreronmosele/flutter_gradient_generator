@@ -34,6 +34,7 @@ class AppStrings {
   static const noActionsToRedo = 'No actions to redo';
   static const undo = 'Undo';
   static const redo = 'Redo';
+  static const versionHistory = 'Version History';
 
   static const macCommandKey = '⌘';
   static const macShiftKey = '⇧';

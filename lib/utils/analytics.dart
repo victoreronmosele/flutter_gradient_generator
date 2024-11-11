@@ -155,6 +155,20 @@ class Analytics {
       },
     );
   }
+
+  /// Logs when the version history button is clicked.
+  Future<void> logVersionHistoryButtonClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.versionHistoryButtonClicked,
+    );
+  }
+
+  /// Logs when a version history item is clicked.
+  Future<void> logVersionHistoryItemClickEvent() async {
+    await logEventInReleaseMode(
+      FirebaseAnalyticsEvent.versionHistoryItemClicked,
+    );
+  }
 }
 
 /// The list of Firebase Analytics events to log.
@@ -176,7 +190,9 @@ enum FirebaseAnalyticsEvent {
       key: 'viewSourceCodeOnGitHubButtonClicked'),
   undo(key: 'undo'),
   redo(key: 'redo'),
-  victorEronmoseleClicked(key: 'victorEronmoseleClicked');
+  victorEronmoseleClicked(key: 'victorEronmoseleClicked'),
+  versionHistoryButtonClicked(key: 'versionHistoryButtonClicked'),
+  versionHistoryItemClicked(key: 'versionHistoryItemClicked');
 
   const FirebaseAnalyticsEvent({required this.key});
 

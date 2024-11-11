@@ -11,6 +11,7 @@ import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/utils/platform_checker.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
+import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_strategy/url_strategy.dart';
 
@@ -34,6 +35,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   late final GradientViewModel gradientViewModel;
   late final HistoryViewModel historyViewModel;
+  late final HomeViewModel homeViewModel;
   late final Analytics analytics;
   late final GradientDownloader gradientDownloader;
   late final PlatformChecker platformChecker;
@@ -59,6 +61,7 @@ class _MyAppState extends State<MyApp> {
         }
       },
     );
+    homeViewModel = HomeViewModel();
     analytics = Analytics();
     gradientDownloader = GradientDownloader();
     platformChecker = PlatformChecker();
@@ -88,6 +91,9 @@ class _MyAppState extends State<MyApp> {
                 ),
                 ChangeNotifierProvider.value(
                   value: historyViewModel,
+                ),
+                ChangeNotifierProvider.value(
+                  value: homeViewModel,
                 ),
                 Provider.value(
                   value: analytics,
