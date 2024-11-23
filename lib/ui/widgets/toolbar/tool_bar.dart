@@ -2,20 +2,47 @@ import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_colors.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
+import 'package:flutter_gradient_generator/models/banner_ad_config.dart';
+import 'package:flutter_gradient_generator/ui/widgets/toolbar/widgets/banner_ad.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/utils/platform_checker.dart';
+import 'package:flutter_gradient_generator/utils/remote_config.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
-import 'package:flutter_gradient_generator/ui/widgets/header/widgets/tool_bar_icon_button.dart';
+import 'package:flutter_gradient_generator/ui/widgets/toolbar/widgets/tool_bar_icon_button.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ToolBar extends StatelessWidget {
+class ToolBar extends StatefulWidget {
   const ToolBar({
     super.key,
   });
+
+  @override
+  State<ToolBar> createState() => _ToolBarState();
+}
+
+class _ToolBarState extends State<ToolBar> {
+  BannerAdConfig? bannerAdConfig;
+
+  @override
+  void initState() {
+    super.initState();
+
+    fetchBannerAdConfig();
+  }
+
+  Future<void> fetchBannerAdConfig() async {
+    final remoteConfig = context.read<RemoteConfig>();
+
+    bannerAdConfig = await remoteConfig.getBannerAdConfig();
+
+    setState(() {
+      // Refresh the page after fetching the banner ad
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +59,8 @@ class ToolBar extends StatelessWidget {
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
 
+    final foregroundColor = AppColors.white;
+
     return Container(
         color: AppColors.toolBar,
         height: appDimensions.toolBarHeight,
@@ -43,21 +72,36 @@ class ToolBar extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: InkWell(
-                      onTap: () {
-                        /// Launch the root URL in the current tab
-                        launchUrl(Uri.parse('/'), webOnlyWindowName: '_self');
-                      },
-                      child: Text(
-                        AppStrings.appTitle,
-                        style: Theme.of(context)
-                            .textTheme
-                            .labelLarge
-                            ?.copyWith(color: AppColors.white),
+                  child: Row(
+                    children: [
+                      Align(
+                        alignment: Alignment.centerLeft,
+                        child: InkWell(
+                          onTap: () {
+                            /// Launch the root URL in the current tab
+                            launchUrl(Uri.parse('/'),
+                                webOnlyWindowName: '_self');
+                          },
+                          child: Text(
+                            AppStrings.appTitle,
+                            style: Theme.of(context)
+                                .textTheme
+                                .labelLarge
+                                ?.copyWith(color: foregroundColor),
+                          ),
+                        ),
                       ),
-                    ),
+                      Flexible(
+                        child: AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          child: bannerAdConfig == null
+                              ? SizedBox.shrink()
+                              : BannerAd(
+                                  bannerAdConfig: bannerAdConfig!,
+                                ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
                 ToolBarIconButton(

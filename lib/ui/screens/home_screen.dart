@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/left_section.dart';
-import 'package:flutter_gradient_generator/ui/widgets/header/header.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/generator_section.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/preview_section.dart';
 import 'package:flutter_gradient_generator/ui/screens/sections/version_history_section.dart';
+import 'package:flutter_gradient_generator/ui/widgets/toolbar/tool_bar.dart';
 import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +30,7 @@ class HomeScreen extends StatelessWidget {
         body: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            const Header(),
+            const ToolBar(),
             Expanded(
               child: SingleChildScrollView(
                 scrollDirection: Axis.horizontal,

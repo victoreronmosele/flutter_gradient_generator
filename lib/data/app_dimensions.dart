@@ -75,8 +75,6 @@ class AppDimensions extends InheritedWidget {
   double get selectionContainerMainTitleWidth => (generatorScreenContentWidth -
       (compactButtonWidth + (2 * compactButtonMargin) + expansionIconSize));
 
-  double get bannerAdHorizontalPadding => generatorScreenHorizontalPadding;
-
   double get toolBarHeight => 48;
 
   double get chooseRandomGradientIconButtonSize => 16;

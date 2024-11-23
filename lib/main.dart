@@ -9,6 +9,7 @@ import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/utils/platform_checker.dart';
+import 'package:flutter_gradient_generator/utils/remote_config.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/history_view_model.dart';
 import 'package:flutter_gradient_generator/view_models/home_view_model.dart';
@@ -39,6 +40,7 @@ class _MyAppState extends State<MyApp> {
   late final Analytics analytics;
   late final GradientDownloader gradientDownloader;
   late final PlatformChecker platformChecker;
+  late final RemoteConfig remoteConfig;
 
   @override
   void initState() {
@@ -65,6 +67,7 @@ class _MyAppState extends State<MyApp> {
     analytics = Analytics();
     gradientDownloader = GradientDownloader();
     platformChecker = PlatformChecker();
+    remoteConfig = RemoteConfig();
   }
 
   @override
@@ -103,6 +106,9 @@ class _MyAppState extends State<MyApp> {
                 ),
                 Provider.value(
                   value: platformChecker,
+                ),
+                Provider.value(
+                  value: remoteConfig,
                 ),
               ],
               child: CallbackShortcuts(

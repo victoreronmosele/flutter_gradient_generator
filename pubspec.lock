@@ -13,10 +13,10 @@ packages:
     dependency: transitive
     description:
       name: _flutterfire_internals
-      sha256: "5a0296da7ae717ffb7444dee8439ca25ac80e162a345b933aa57f0a4a48dca2c"
+      sha256: "71c01c1998c40b3af1944ad0a5f374b4e6fef7f3d2df487f3970dbeadaeb25a1"
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.45"
+    version: "1.3.46"
   _macros:
     dependency: transitive
     description: dart
@@ -170,10 +170,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_core
-      sha256: e59141ff83e70a9ba571a1f8733c5598cf57e6e68037ab185581d7fc0a436738
+      sha256: "2438a75ad803e818ad3bd5df49137ee619c46b6fc7101f4dbc23da07305ce553"
       url: "https://pub.dev"
     source: hosted
-    version: "3.7.0"
+    version: "3.8.0"
   firebase_core_platform_interface:
     dependency: transitive
     description:
@@ -190,6 +190,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.18.1"
+  firebase_remote_config:
+    dependency: "direct main"
+    description:
+      name: firebase_remote_config
+      sha256: "29619302396823622dd9d0ccb8ac2b48804c518c0c82aa85ef3d86b91fdf55ca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.5"
+  firebase_remote_config_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_remote_config_platform_interface
+      sha256: ae899364a77fdf706c2ec37f1336df1dd3cc6777f8cd6ce7cf0cae65830bf1cf
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.46"
+  firebase_remote_config_web:
+    dependency: transitive
+    description:
+      name: firebase_remote_config_web
+      sha256: "6f018a0d7ce4b67784d29ec7193806e494adc243a4c880a4fab49e59afca212f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.4"
   fixnum:
     dependency: transitive
     description:

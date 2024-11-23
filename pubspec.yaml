@@ -45,6 +45,7 @@ dependencies:
   image_downloader_web: ^2.0.4
   web: ^1.1.0
   intl: ^0.19.0
+  firebase_remote_config: ^5.1.5
   
 
 dev_dependencies:

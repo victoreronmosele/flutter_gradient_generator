@@ -74,13 +74,6 @@ class Analytics {
     );
   }
 
-  /// Logs when the banner ad close button is clicked.
-  Future<void> logBannerAdCloseButtonClickEvent() async {
-    await logEventInReleaseMode(
-      FirebaseAnalyticsEvent.bannerAdCloseButtonClicked,
-    );
-  }
-
   /// Logs when the feature request button is clicked.
   Future<void> logFeatureRequestButtonClickEvent() async {
     await logEventInReleaseMode(
@@ -182,7 +175,6 @@ enum FirebaseAnalyticsEvent {
   randomGradientSampleButtonClicked(key: 'randomGradientSampleButtonClicked'),
   gradientSampleClicked(key: 'gradientSampleClicked'),
   bannerAdCTAButtonClicked(key: 'bannerAdCTAButtonClicked'),
-  bannerAdCloseButtonClicked(key: 'bannerAdCloseButtonClicked'),
   featureRequestButtonClicked(key: 'featureRequestButtonClicked'),
   feedbackButtonClicked(key: 'feedbackButtonClicked'),
   bugReportButtonClicked(key: 'bugReportButtonClicked'),
