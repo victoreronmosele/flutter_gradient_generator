@@ -88,19 +88,6 @@ class AppDimensions extends InheritedWidget {
 
   double get footerVerticalPadding => 8.0;
 
-  double get samplesListViewSize =>
-      screenHeight -
-      ((chooseRandomGradientIconButtonSize * 2) +
-          sampleTitleBottomMargin +
-          (2 * sampleSectionVerticalPadding) +
-          (2 * toolBarHeight) +
-          (2 * footerVerticalPadding) +
-          (4 * sampleSectionVerticalPadding) +
-          16.0 +
-          (3 * 14.0) +
-          (3 * 8.0) +
-          (2 * sampleSectionVerticalPadding));
-
   double get _minimumPreviewSectionWidth => generatorScreenWidth;
 
   double get previewSectionWidth => max(

@@ -17,6 +17,7 @@ class SelectionWidgetContainer extends StatefulWidget {
     required this.selectionWidget,
     this.titleTrailingWidget,
     this.titleBottomMargin = 16.0,
+    this.scrollSelectionWidgetBelowTitle = false,
   });
 
   final String title;
@@ -28,6 +29,10 @@ class SelectionWidgetContainer extends StatefulWidget {
   ///
   /// See [ColorAndStopSelectionWidget] for reference.
   final double titleBottomMargin;
+
+  /// Determines if the selection widget should be scrolled below the title
+  /// or not.
+  final bool scrollSelectionWidgetBelowTitle;
 
   @override
   State<SelectionWidgetContainer> createState() =>
@@ -85,63 +90,70 @@ class _SelectionWidgetContainerState extends State<SelectionWidgetContainer>
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
 
+    final titleWidget = Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: generatorScreenHorizontalPadding,
+      ),
+      child: SizedBox(
+        width: generatorScreenContentWidth,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            RotationTransition(
+              turns: _expansionIconTurns,
+              child: GestureDetector(
+                onTap: _toggleExpansion,
+                child: Icon(
+                  Icons.arrow_drop_down,
+                  size: expansionIconSize,
+                  color: Colors.black,
+                ),
+              ),
+            ),
+            const SizedBox(
+              width: 4.0,
+            ),
+            Expanded(
+              child: Text(
+                widget.title,
+                style: Theme.of(context).textTheme.labelLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
+              ),
+            ),
+            if (widget.titleTrailingWidget != null) widget.titleTrailingWidget!,
+          ],
+        ),
+      ),
+    );
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: generatorScreenHorizontalPadding,
-          ),
-          child: SizedBox(
-            width: generatorScreenContentWidth,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                RotationTransition(
-                  turns: _expansionIconTurns,
-                  child: GestureDetector(
-                    onTap: _toggleExpansion,
-                    child: Icon(
-                      Icons.arrow_drop_down,
-                      size: expansionIconSize,
-                      color: Colors.black,
-                    ),
-                  ),
-                ),
-                const SizedBox(
-                  width: 4.0,
-                ),
-                Expanded(
-                  child: Text(
-                    widget.title,
-                    style: Theme.of(context).textTheme.labelLarge?.copyWith(
-                          fontWeight: FontWeight.w600,
-                        ),
-                  ),
-                ),
-                if (widget.titleTrailingWidget != null)
-                  widget.titleTrailingWidget!,
-              ],
+        titleWidget,
+        Flexible(
+          flex: widget.scrollSelectionWidgetBelowTitle ? 1 : 0,
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: generatorScreenHorizontalPadding),
+            child: SizeTransition(
+              sizeFactor: _selectionWidgetSizeFactor,
+              child: FadeTransition(
+                  opacity: _selectionWidgetOpacity,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: widget.titleBottomMargin,
+                      ),
+                      Flexible(
+                        flex: widget.scrollSelectionWidgetBelowTitle ? 1 : 0,
+                        child: widget.selectionWidget,
+                      )
+                    ],
+                  )),
             ),
-          ),
-        ),
-        Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: generatorScreenHorizontalPadding),
-          child: SizeTransition(
-            sizeFactor: _selectionWidgetSizeFactor,
-            child: FadeTransition(
-                opacity: _selectionWidgetOpacity,
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: widget.titleBottomMargin,
-                    ),
-                    widget.selectionWidget
-                  ],
-                )),
           ),
         ),
       ],

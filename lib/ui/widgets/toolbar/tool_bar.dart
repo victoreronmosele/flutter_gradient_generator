@@ -59,8 +59,6 @@ class _ToolBarState extends State<ToolBar> {
     final generatorScreenHorizontalPadding =
         appDimensions.generatorScreenHorizontalPadding;
 
-    final foregroundColor = AppColors.white;
-
     return Container(
         color: AppColors.toolBar,
         height: appDimensions.toolBarHeight,
@@ -87,7 +85,9 @@ class _ToolBarState extends State<ToolBar> {
                             style: Theme.of(context)
                                 .textTheme
                                 .labelLarge
-                                ?.copyWith(color: foregroundColor),
+                                ?.copyWith(
+                                  color: AppColors.toolBarIcon,
+                                ),
                           ),
                         ),
                       ),

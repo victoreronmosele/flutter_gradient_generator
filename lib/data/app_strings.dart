@@ -60,6 +60,6 @@ class AppStrings {
   static const featureRequestUrl =
       '$githubUrl/issues/new?assignees=&labels=&projects=&template=feature_request.md&title=';
   static const feedbackUrl = '$githubUrl/discussions/new?category=general';
-  static const victorEronmoseleWebsiteUrl = 'http://victoreronmosele.com/';
+  static const victorEronmoseleWebsiteUrl = 'https://victoreronmosele.com/';
   static const appWebsiteUrl = 'https://fluttergradientgenerator.com/';
 }
