@@ -82,44 +82,61 @@ class SampleSelectionWidget extends StatelessWidget {
     return SelectionWidgetContainer(
       title: AppStrings.samples,
       scrollSelectionWidgetBelowTitle: true,
-      selectionWidget: ListView.builder(
-        prototypeItem: getSampleItem(
-          context: context,
-          gradientViewModel: gradientViewModel,
-
-          /// index is set to 1 so that the top margin is added in
-          /// the prototype item since items with index 0 do not have a top
-          /// margin.
-          ///
-          /// Setting this to 0 would break the layout of the actual items,
-          /// causing them to overflow by the height of the top margin.
-          ///
-          /// See the `getSampleItem` method for more details
-          index: 1,
-          name: 'Sample',
-          gradient: const LinearGradient(
-            colors: [Colors.black, Colors.white],
-          ),
-        ),
-        shrinkWrap: true,
-        itemCount: gradientSamples.length,
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-          final sample = gradientSamples[index];
-
-          final name = sample.name;
-          final colors = sample.colors;
-
-          final gradient = currentFlutterGradientConverter(colors: colors);
-
-          return getSampleItem(
+      selectionWidget: ShaderMask(
+        shaderCallback: (bounds) => LinearGradient(
+          begin: Alignment.topCenter,
+          end: Alignment.bottomCenter,
+          colors: [
+            Colors.transparent,
+            Colors.black.withOpacity(0.5),
+            Colors.black,
+          ],
+          stops: const [
+            0.8,
+            0.9,
+            1,
+          ],
+        ).createShader(bounds),
+        blendMode: BlendMode.dstOut,
+        child: ListView.builder(
+          prototypeItem: getSampleItem(
             context: context,
             gradientViewModel: gradientViewModel,
-            index: index,
-            name: name,
-            gradient: gradient,
-          );
-        },
+
+            /// index is set to 1 so that the top margin is added in
+            /// the prototype item since items with index 0 do not have a top
+            /// margin.
+            ///
+            /// Setting this to 0 would break the layout of the actual items,
+            /// causing them to overflow by the height of the top margin.
+            ///
+            /// See the `getSampleItem` method for more details
+            index: 1,
+            name: 'Sample',
+            gradient: const LinearGradient(
+              colors: [Colors.black, Colors.white],
+            ),
+          ),
+          shrinkWrap: true,
+          itemCount: gradientSamples.length,
+          padding: EdgeInsets.zero,
+          itemBuilder: (context, index) {
+            final sample = gradientSamples[index];
+
+            final name = sample.name;
+            final colors = sample.colors;
+
+            final gradient = currentFlutterGradientConverter(colors: colors);
+
+            return getSampleItem(
+              context: context,
+              gradientViewModel: gradientViewModel,
+              index: index,
+              name: name,
+              gradient: gradient,
+            );
+          },
+        ),
       ),
       titleTrailingWidget: Tooltip(
         message: AppStrings.chooseRandomGradient,
