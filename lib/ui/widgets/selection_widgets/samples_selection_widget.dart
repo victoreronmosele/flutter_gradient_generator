@@ -7,10 +7,43 @@ import 'package:flutter_gradient_generator/utils/analytics.dart';
 import 'package:flutter_gradient_generator/view_models/gradient_view_model.dart';
 import 'package:provider/provider.dart';
 
-class SampleSelectionWidget extends StatelessWidget {
+class SampleSelectionWidget extends StatefulWidget {
   const SampleSelectionWidget({
     super.key,
   });
+
+  @override
+  State<SampleSelectionWidget> createState() => _SampleSelectionWidgetState();
+}
+
+class _SampleSelectionWidgetState extends State<SampleSelectionWidget> {
+  final scrollController = ScrollController();
+
+  bool showFadingGradient = true;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController.addListener(() {
+      final maxScrollExtent = scrollController.position.maxScrollExtent;
+      final currentScrollExtent = scrollController.offset;
+
+      final bool shouldShowFadingGradient =
+          currentScrollExtent < maxScrollExtent;
+
+      if (shouldShowFadingGradient != showFadingGradient) {
+        setState(() {
+          showFadingGradient = shouldShowFadingGradient;
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
 
   Widget getSampleItem({
     required BuildContext context,
@@ -88,8 +121,10 @@ class SampleSelectionWidget extends StatelessWidget {
           end: Alignment.bottomCenter,
           colors: [
             Colors.transparent,
-            Colors.black.withOpacity(0.5),
-            Colors.black,
+            showFadingGradient
+                ? Colors.black.withOpacity(0.5)
+                : Colors.transparent,
+            showFadingGradient ? Colors.black : Colors.transparent,
           ],
           stops: const [
             0.8,
@@ -99,6 +134,7 @@ class SampleSelectionWidget extends StatelessWidget {
         ).createShader(bounds),
         blendMode: BlendMode.dstOut,
         child: ListView.builder(
+          controller: scrollController,
           prototypeItem: getSampleItem(
             context: context,
             gradientViewModel: gradientViewModel,
