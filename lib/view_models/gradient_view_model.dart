@@ -17,8 +17,12 @@ import 'package:flutter_gradient_generator/utils/color_and_stop_util.dart';
 class GradientViewModel with ChangeNotifier {
   GradientViewModel({
     required this.onNewGradientSet,
+    required this.onSetGradientDetails,
   });
 
+  /// Called when the gradient details are set.
+  final void Function(AbstractGradient) onSetGradientDetails;
+  
   /// Called when a new gradient is set.
   ///
   /// This should not be called when the gradient is set as a result of an undo
@@ -73,6 +77,8 @@ class GradientViewModel with ChangeNotifier {
     if (isNewGradient) {
       onNewGradientSet(gradientToSet);
     }
+
+    onSetGradientDetails(gradientToSet);
   }
 
   /// Sets the gradient to the default gradient.
