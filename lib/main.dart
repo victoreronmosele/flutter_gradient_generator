@@ -1,12 +1,17 @@
+import 'dart:async';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_gradient_generator/data/app_dimensions.dart';
 import 'package:flutter_gradient_generator/data/app_fonts.dart';
 import 'package:flutter_gradient_generator/data/app_strings.dart';
 import 'package:flutter_gradient_generator/firebase_options.dart';
+import 'package:flutter_gradient_generator/models/abstract_gradient.dart';
 import 'package:flutter_gradient_generator/ui/screens/home_screen.dart';
 import 'package:flutter_gradient_generator/utils/analytics.dart';
+import 'package:flutter_gradient_generator/utils/favicon_changer.dart';
 import 'package:flutter_gradient_generator/utils/gradient_downloader.dart';
 import 'package:flutter_gradient_generator/utils/platform_checker.dart';
 import 'package:flutter_gradient_generator/utils/remote_config.dart';
@@ -41,6 +46,45 @@ class _MyAppState extends State<MyApp> {
   late final GradientDownloader gradientDownloader;
   late final PlatformChecker platformChecker;
   late final RemoteConfig remoteConfig;
+  late final FaviconChanger faviconChanger;
+
+  DateTime? lastFaviconChangeTime;
+  Timer? faviconChangeDebounceTimer;
+
+  void generateAndChangeFavicon(AbstractGradient gradient) async {
+    SchedulerBinding.instance.scheduleTask(() async {
+      final gradientDataUrl =
+          await gradientDownloader.getGradientDataUrl(gradient);
+      faviconChanger.changeFavicon(dataUrl: gradientDataUrl);
+
+      lastFaviconChangeTime = DateTime.now();
+    }, Priority.idle);
+  }
+
+  void setFavicon(AbstractGradient gradient) async {
+    final cooldownDuration = Duration(seconds: 2);
+
+    final lastFaviconChangeTimeLocal = lastFaviconChangeTime;
+
+    if (lastFaviconChangeTimeLocal == null) {
+      generateAndChangeFavicon(gradient);
+    } else {
+      final timeSinceLastChange =
+          DateTime.now().difference(lastFaviconChangeTimeLocal);
+
+      if (timeSinceLastChange > cooldownDuration) {
+        generateAndChangeFavicon(gradient);
+      } else {
+        faviconChangeDebounceTimer?.cancel();
+        faviconChangeDebounceTimer = Timer(
+          cooldownDuration,
+          () {
+            generateAndChangeFavicon(gradient);
+          },
+        );
+      }
+    }
+  }
 
   @override
   void initState() {
@@ -49,6 +93,9 @@ class _MyAppState extends State<MyApp> {
     gradientViewModel = GradientViewModel(
       onNewGradientSet: (gradient) {
         historyViewModel.addNewGradientToHistory(gradient);
+      },
+      onSetGradientDetails: (gradient) async {
+        setFavicon(gradient);
       },
     );
     historyViewModel = HistoryViewModel(
@@ -68,6 +115,14 @@ class _MyAppState extends State<MyApp> {
     gradientDownloader = GradientDownloader();
     platformChecker = PlatformChecker();
     remoteConfig = RemoteConfig();
+    faviconChanger = FaviconChanger();
+    setFavicon(gradientViewModel.gradient);
+  }
+
+  @override
+  void dispose() {
+    faviconChangeDebounceTimer?.cancel();
+    super.dispose();
   }
 
   @override
